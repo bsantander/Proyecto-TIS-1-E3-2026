@@ -1,6 +1,12 @@
 <?php
 session_start();
 require_once 'conexion.php';
+require_once 'models/Mod_Funcionarios.php';
+
+if (isset($_GET['logout'])) {
+    session_destroy();
+    $_SESSION = array();
+}
 
 if (isset($_SESSION['id_funcionario'])) {
     header('Location: index.php');
@@ -17,10 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Por favor completa todos los campos.';
     } else {
         try {
-            $sql = "SELECT id_funcionario, nombre_completo, rol FROM funcionario WHERE rut = ? AND contrasena = ?";
-            $stmt = $conexion->prepare($sql);
-            $stmt->execute([$rut, $contrasena]);
-            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+            $mod_funcionarios = new Mod_Funcionarios($conexion);
+            $usuario = $mod_funcionarios->autenticar($rut, $contrasena);
 
             if ($usuario) {
                 $_SESSION['id_funcionario'] = $usuario['id_funcionario'];
@@ -31,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $error = 'RUT o contraseña incorrectos.';
             }
-        } catch (PDOException $e) {
-            $error = 'Error en la base de datos: ' . $e->getMessage();
+        } catch (Exception $e) {
+            $error = $e->getMessage();
         }
     }
 }
@@ -47,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="assets/style.css">
+    <script src="assets/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
