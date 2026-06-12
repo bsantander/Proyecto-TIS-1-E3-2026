@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipos - NodoActivo</title>
+    <title>NodoActivo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/style.css">
-    <script src="assets/script.js" defer></script>
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 </head>
 <body>
+
 <div class="Container d-flex flex-row vh-100 overflow-hidden">
 
-    <div class="Barra_Lateral d-flex flex-column  justify-content-between p-3" style="background-color: #BBBFBF;">
+    <div class="Barra_Lateral d-flex flex-column justify-content-between p-3" style="background-color: #BBBFBF;">
         <div class="Superior d-flex flex-column justify-content-start align-items-start gap-2">
 
             <div class="Inicio p-2 d-flex flex-row justify-content-start gap-0 ">
@@ -27,14 +29,14 @@
             <hr class="m-0 w-100" style="color: #000000;">
 
             <div class="Inicio">
-                <a href="index.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                <a href="index_admin.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">house</span>
                     <p class="m-0 fs-6">Inicio</p>
                 </a>
             </div>
 
             <div class="Equipos">
-                <a href="equipos.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                <a href="equipos.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">computer</span>
                     <p class="m-0 fs-6">Equipos</p>
                 </a>
@@ -67,14 +69,14 @@
         
         <div class="Inferior">
             <div class="Configuracion" >
-                <a href="configuracion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
+                <a href="#" id="configuracion" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2   ">
                     <span class="material-symbols-outlined">build</span>                   
                     <p class="m-0 fs-6">Configuracion</p>
                 </a>
             </div>
 
             <div class="Cerrar_Sesion">
-                <a href="secion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
+                <a href="../secion.php?logout=1" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>
@@ -82,49 +84,56 @@
         </div>
     </div>
     
-    
-    <div class="flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
-        
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Inventario de Equipos</h2>
-            
-            <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
-                <span class="material-symbols-outlined fs-5">add_to_queue</span>
-                <p class="m-0">Agregar equipo</p>
-            </button>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
-            <div class="input-group" style="max-width: 450px;">
-                <span class="input-group-text bg-white border-end-0 rounded-start-3" style="border-color: #dbe4e2;">
-                    <span class="material-symbols-outlined text-secondary fs-5">search</span>
-                </span>
-                <input type="text" class="Buscador form-control border-start-0 rounded-end-3 py-2" placeholder="Buscar por ID, marca o tipo...">
+    <div class="contenido-fluid flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
+        <div class="d-flex flex-column gap-4">
+            <div>
+                <h1 class="fs-3 fw-bold mb-2">Bienvenido (Nombre del Usuario)</h1>
+                <p class="text-secondary mb-0">Selecciona una opción en el menú para ver los detalles aquí.</p>
             </div>
-
-            <button class="Filtros btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 fw-medium">
-                <span class="material-symbols-outlined fs-5">filter_list</span>
-                <p class="m-0">Filtros</p>
-            </button>
-        </div>
-        
-        <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
-            <div class="card-body p-0">
-                <table class="table table-hover m-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Equipo</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Tipo</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Marca / Modelo</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Estado</th>
-                        </tr>
-                    </thead>
-                </table>
+            <div class="row g-3">
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="fs-5 fw-semibold">Estado actual</h2>
+                            <p class="text-muted mb-0">Resumen rápido de equipos y solicitudes recientes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="fs-5 fw-semibold">Tareas pendientes</h2>
+                            <p class="text-muted mb-0">Revisa los mantenimientos y acciones por completar.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="fs-5 fw-semibold">Actividad reciente</h2>
+                            <p class="text-muted mb-0">Últimos registros de historial y uso del sistema.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<dialog class="miniventana" id="ventanaConfiguracion">
+    <p>Configuracion<p>
+    <div class="d-flex justify-content-end gap-2 mt-2">
+        <button id="Cancelar" class="btn btn-light border fw-medium px-4">Cancelar</button>
+        <button id="Guardar" class="btn button fw-medium px-4">Guardar</button>
+    </div>
+</dialog>
+
+
+</body>
+</html>
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

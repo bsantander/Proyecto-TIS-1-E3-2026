@@ -1,3 +1,8 @@
+<?php
+require('../conexion.php');
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,8 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/style.css">
-    <script src="assets/script.js" defer></script>
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -28,7 +33,7 @@
             <hr class="m-0 w-100" style="color: #000000;">
 
             <div class="Inicio">
-                <a href="index.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                <a href="index_admin.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">house</span>
                     <p class="m-0 fs-6">Inicio</p>
                 </a>
@@ -76,7 +81,7 @@
             </div>
 
             <div class="Cerrar_Sesion">
-                <a href="logout.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
+                <a href="../secion.php?logout=1" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>
@@ -113,35 +118,36 @@
         
         <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
             <div class="card-body p-0">
+                <?php
+                $consulta = "SELECT DISTINCT id_departamento, nombre_departamento FROM departamento";
+                $resultado = mysqli_query($conexion, $consulta);
+                if (!$resultado) {
+                    die('Error en la consulta: ' . mysqli_error($conexion));
+                    }
+                    ?>
+                
                 <table class="table table-hover m-0 align-middle">
                     <thead class="table-light">
                         <tr>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 10%;">ID</th>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 40%;">Nombre del Departamento</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 30%;">ID Encargado (Jefe)</th>
-                            <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600; width: 20%;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php
+                        while($row = mysqli_fetch_assoc($resultado)){
+                            $id_departamento = $row["id_departamento"];
+                            $nombre_departamento = $row["nombre_departamento"];
+
+                        ?>
                         <tr>
-                            <td class="p-3 text-muted fw-semibold">2</td>
-                            <td class="p-3 text-dark fw-medium">Recursos Humanos</td>
-                            <td class="p-3">
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="material-symbols-outlined text-secondary fs-5">person</span>
-                                    <span class="text-muted">Funcionario #1</span>
-                                </div>
-                            </td>
-                            <td class="p-3 text-center">
-                                <button class="btn btn-sm btn-light border text-secondary me-1" title="Editar">
-                                    <span class="material-symbols-outlined" style="font-size: 1.1rem;">edit</span>
-                                </button>
-                                <button class="btn btn-sm btn-light border text-danger" title="Eliminar">
-                                    <span class="material-symbols-outlined" style="font-size: 1.1rem;">delete</span>
-                                </button>
-                            </td>
+                          <th scope="row"><?php echo $id_departamento; ?></th>
+                          <td><?php echo $nombre_departamento; ?></td>
                         </tr>
-                        </tbody>
+                        <?php
+                        }
+                        ?>  
+                    </tbody>
                 </table>
             </div>
         </div>
