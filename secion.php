@@ -1,15 +1,9 @@
 <?php
-session_start();
-require_once 'conexion.php';
-require_once 'models/Mod_Funcionarios.php';
+require_once __DIR__ . '/includes(Cod reciclado)/auth.php';
 
 if (isset($_GET['logout'])) {
-    session_destroy();
-    $_SESSION = array();
-}
-
-if (isset($_SESSION['id_funcionario'])) {
-    header('Location: index.php');
+    cerrarSesion();
+    header('Location: secion.php');
     exit();
 }
 
@@ -27,11 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuario = $mod_funcionarios->autenticar($rut, $contrasena);
 
             if ($usuario) {
-                $_SESSION['id_funcionario'] = $usuario['id_funcionario'];
-                $_SESSION['nombre_completo'] = $usuario['nombre_completo'];
-                $_SESSION['rol'] = $usuario['rol'];
-                header('Location: index.php');
-                exit();
+                guardarSesionUsuario($usuario);
+                redirigirPorRol();
             } else {
                 $error = 'RUT o contraseña incorrectos.';
             }
@@ -100,4 +91,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
-
