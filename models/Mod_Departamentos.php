@@ -25,6 +25,28 @@ class Mod_Departamentos{
 
         $sql = "INSERT INTO departamento(nombre_departamento)
                 VALUES(?)";
+        $this->conexion->execute_query(
+            $sql,
+            [$nombre_departamento]
+        );
+
+        return "Departamento registrado correctamente"; 
+    }
+    
+    // editar departamento
+    public function editarDepartamento(
+        $id_departamento,
+        $nombre_departamento
+    ){
+        $sql = "UPDATE departamento 
+                SET nombre_departamento = ?
+                WHERE id_departamento = ?";
+        $this->conexion->execute_query(
+            $sql,
+            [$nombre_departamento, $id_departamento]
+        );
+        return "Departamento actualizado correctamente";
+
     }
 }
 
