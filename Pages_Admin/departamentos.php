@@ -3,9 +3,30 @@
     require('../models/Mod_Departamentos.php');
     $modelo = new Mod_Departamentos($conexion);
 
-    if(isset($_GET['eliminar'])){
-    $mensaje = $modelo->eliminarDepartamento($_GET['eliminar']);
+
+    if(isset($_POST['agregar'])){
+        $nombre = $_POST['nombre_departamento'];
+        $mensaje = $modelo->agregarDepartamento($nombre);
     }
+
+    if(isset($_GET['eliminar'])){
+        $mensaje = $modelo->eliminarDepartamento($_GET['eliminar']);
+    }
+    $editar = null;
+
+    if(isset($_GET['editar'])){
+        $id = $_GET['editar'];
+
+        $res = mysqli_query($conexion, "SELECT * FROM departamento WHERE id_departamento=$id");
+        $editar = mysqli_fetch_assoc($res);
+    }
+    if(isset($_POST['guardar'])){
+        $id = $_POST['id_departamento'];
+        $nombre = $_POST['nombre_departamento'];
+
+        $mensaje = $modelo->editarDepartamento($id, $nombre);
+    }   
+
 ?>
 
 
