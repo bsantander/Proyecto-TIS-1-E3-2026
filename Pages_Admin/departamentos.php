@@ -1,5 +1,11 @@
 <?php
     require('../conexion.php');
+    require('../models/Mod_Departamentos.php');
+    $modelo = new Mod_Departamentos($conexion);
+
+    if(isset($_GET['eliminar'])){
+    $mensaje = $modelo->eliminarDepartamento($_GET['eliminar']);
+    }
 ?>
 
 
@@ -102,6 +108,12 @@
             </button>
         </div>
 
+        <?php if(isset($mensaje)){ ?>
+            <div class="alert alert-info">
+                <?php echo $mensaje; ?>
+            </div>
+        <?php } ?>
+
         <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
             <div class="input-group" style="max-width: 450px;">
                 <span class="input-group-text bg-white border-end-0 rounded-start-3" style="border-color: #dbe4e2;">
@@ -147,7 +159,11 @@
 
                           <td>
                             <button class="btn btn-warning btn-sm">Editar</button>
-                            <button class="btn btn-danger btn-sm">Eliminar</button>
+                            <a href="departamentos.php?eliminar=<?php echo $id_departamento; ?>"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Está seguro de eliminar este departamento?')">
+                                    Eliminar
+                            </a>
                           </td>
                         </tr>
                         <?php
