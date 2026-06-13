@@ -1,4 +1,5 @@
     <?php
+
         require('../conexion.php');
         require('../models/Mod_Departamentos.php');
         $modelo = new Mod_Departamentos($conexion);
@@ -6,12 +7,16 @@
 
         if(isset($_POST['agregar'])){
             $nombre = $_POST['nombre_departamento'];
-            $mensaje = $modelo->agregarDepartamento($nombre);
+            $_SESSION['mensaje'] = $modelo->agregarDepartamento($nombre);
+            header("Location: departamentos.php");
+            exit;
         }
 
         if(isset($_GET['eliminar'])){
             $id = (int) $_GET['eliminar'];
-            $mensaje = $modelo->eliminarDepartamento($id);
+            $_SESSION['mensaje'] = $modelo->eliminarDepartamento($id);
+            header("Location: departamentos.php");
+            exit;
         }
         $editar = null;
 
@@ -25,7 +30,9 @@
             $id = (int) $_POST['id_departamento'];
             $nombre = trim($_POST['nombre_departamento']);
 
-            $mensaje = $modelo->editarDepartamento($id, $nombre);
+            $_SESSION['mensaje'] = $modelo->editarDepartamento($id, $nombre);
+            header("Location: departamentos.php");
+            exit;
         }   
 
     ?>
@@ -130,9 +137,12 @@
                 </button>
             </div>
 
-            <?php if(isset($mensaje)){ ?>
+            <?php if(isset($_SESSION['mensaje'])){ ?>
                 <div class="alert alert-info">
-                    <?php echo $mensaje; ?>
+                    <?php 
+                        echo $_SESSION['mensaje']; 
+                        unset ($_SESSION['mensaje']);
+                    ?>
                 </div>
             <?php } ?>
 
