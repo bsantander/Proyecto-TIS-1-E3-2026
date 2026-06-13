@@ -1,5 +1,5 @@
     <?php
-
+        session_start();
         require('../conexion.php');
         require('../models/Mod_Departamentos.php');
         $modelo = new Mod_Departamentos($conexion);
