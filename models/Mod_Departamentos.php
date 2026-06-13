@@ -48,6 +48,33 @@ class Mod_Departamentos{
         return "Departamento actualizado correctamente";
 
     }
+
+    //eliminar departamento
+    public function eliminarDepartamento($id_departamento){
+
+        $sql = "SELECT *
+                FROM funcionario
+                WHERE id_departamento = ?";
+
+        $resultado = $this->conexion->execute_query(
+            $sql,
+            [$id_departamento]
+        );
+
+        if($resultado->num_rows > 0){
+            return "No se puede eliminar el departamento porque tiene funcionarios asociados";
+        }
+
+        $sql = "DELETE FROM departamento
+                WHERE id_departamento = ?";
+
+        $this->conexion->execute_query(
+            $sql,
+            [$id_departamento]
+        );
+
+    return "Departamento eliminado correctamente";
+    }
 }
 
 
