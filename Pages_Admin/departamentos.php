@@ -179,7 +179,14 @@
                             <td><?php echo $nombre_departamento; ?></td>
 
                             <td>
-                                <button class="btn btn-warning btn-sm">Editar</button>
+                                <button class="btn btn-warning btn-sm"
+                                onclick='abrirEditar(
+                                    <?php echo $id_departamento; ?>,
+                                    <?php echo json_encode($nombre_departamento); ?>
+                                )'>
+                                        Editar
+                                
+                                </button>
                                 <a href="departamentos.php?eliminar=<?php echo $id_departamento; ?>"
                                     class="btn btn-danger btn-sm"
                                     onclick="return confirm('¿Está seguro de eliminar este departamento?')">
@@ -230,6 +237,57 @@
     </div>
     </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-    </html>
+    <div class="modal fade" id="modalEditarDepartamento" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title">Editar Departamento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <form method="POST">
+            <div class="modal-body">
+
+            <input type="hidden" name="id_departamento" id="edit_id">
+
+            <label class="form-label">Nombre del departamento</label>
+
+            <input type="text"
+                    name="nombre_departamento"
+                    id="edit_nombre"
+                    class="form-control"
+                    required>
+
+            </div>
+
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+            </button>
+
+            <button type="submit" name="guardar" class="btn btn-primary">
+                Guardar cambios
+            </button>
+            </div>
+
+        </form>
+
+        </div>
+    </div>
+</div>
+<script>
+function abrirEditar(id, nombre){
+    document.getElementById("edit_id").value = id;
+    document.getElementById("edit_nombre").value = nombre;
+
+    const modal = new bootstrap.Modal(
+        document.getElementById("modalEditarDepartamento")
+    );
+
+    modal.show();
+}
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
