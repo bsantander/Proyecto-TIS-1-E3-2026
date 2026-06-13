@@ -10,19 +10,20 @@
         }
 
         if(isset($_GET['eliminar'])){
-            $mensaje = $modelo->eliminarDepartamento($_GET['eliminar']);
+            $id = (int) $_GET['eliminar'];
+            $mensaje = $modelo->eliminarDepartamento($id);
         }
         $editar = null;
 
         if(isset($_GET['editar'])){
-            $id = $_GET['editar'];
+            $id = (int) $_GET['editar'];
 
             $res = mysqli_query($conexion, "SELECT * FROM departamento WHERE id_departamento=$id");
             $editar = mysqli_fetch_assoc($res);
         }
         if(isset($_POST['guardar'])){
-            $id = $_POST['id_departamento'];
-            $nombre = $_POST['nombre_departamento'];
+            $id = (int) $_POST['id_departamento'];
+            $nombre = trim($_POST['nombre_departamento']);
 
             $mensaje = $modelo->editarDepartamento($id, $nombre);
         }   
@@ -152,7 +153,7 @@
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
                 <div class="card-body p-0">
                     <?php
-                    $consulta = "SELECT DISTINCT id_departamento, nombre_departamento FROM departamento";
+                    $consulta = "SELECT id_departamento, nombre_departamento FROM departamento";
                     $resultado = mysqli_query($conexion, $consulta);
                     if (!$resultado) {
                         die('Error en la consulta: ' . mysqli_error($conexion));
