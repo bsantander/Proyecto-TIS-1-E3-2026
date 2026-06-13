@@ -131,6 +131,7 @@ require('../conexion.php');
                         <tr>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 10%;">ID</th>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 40%;">Nombre del Departamento</th>
+                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -143,6 +144,11 @@ require('../conexion.php');
                         <tr>
                           <th scope="row"><?php echo $id_departamento; ?></th>
                           <td><?php echo $nombre_departamento; ?></td>
+
+                          <td>
+                            <button class="btn btn-warning btn-sm">Editar</button>
+                            <button class="btn btn-danger btn-sm">Eliminar</button>
+                          </td>
                         </tr>
                         <?php
                         }
