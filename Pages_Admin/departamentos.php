@@ -197,7 +197,7 @@
                             <td><?php echo $nombre_departamento; ?></td>
 
                             <td>
-                                <button class="btn btn-warning btn-sm"
+                                <button class="btn btn-outline-dark btn-sm"
                                 onclick='abrirEditar(
                                     <?php echo $id_departamento; ?>,
                                     <?php echo json_encode($nombre_departamento); ?>
@@ -206,7 +206,7 @@
                                 
                                 </button>
                                 <a href="departamentos.php?eliminar=<?php echo $id_departamento; ?>"
-                                    class="btn btn-danger btn-sm"
+                                    class="btn btn-outline-danger btn-sm"
                                     onclick="return confirm('¿Está seguro de eliminar este departamento?')">
                                         Eliminar
                                 </a>
