@@ -57,7 +57,7 @@
 
     <div class="Container d-flex flex-row vh-100 overflow-hidden">
 
-        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3" style="background-color: #BBBFBF;">
+        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3">
             <div class="Superior d-flex flex-column justify-content-start align-items-start gap-2">
 
                 <div class="Inicio p-2 d-flex flex-row justify-content-start gap-0 ">
@@ -138,11 +138,18 @@
             </div>
 
             <?php if(isset($_SESSION['mensaje'])){ ?>
-                <div class="alert alert-info">
-                    <?php 
-                        echo $_SESSION['mensaje']; 
-                        unset ($_SESSION['mensaje']);
-                    ?>
+                <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+                    <div id="toastMensaje" class="toast align-items-center text-white bg-success border-0" role="alert">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                <?php 
+                                    echo $_SESSION['mensaje']; 
+                                    unset($_SESSION['mensaje']);
+                                ?>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>
                 </div>
             <?php } ?>
 
@@ -298,6 +305,18 @@ function abrirEditar(id, nombre){
 
     modal.show();
 }
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toastEl = document.getElementById("toastMensaje");
+    if (toastEl) {
+        const toast = new bootstrap.Toast(toastEl, {
+            delay: 3000
+        });
+        toast.show();
+    }
+});
 </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
