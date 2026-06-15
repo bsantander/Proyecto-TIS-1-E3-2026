@@ -214,6 +214,14 @@
                                     class="btn btn-outline-success btn-sm">
                                         QR
                                 </a>
+                                <a href="ver_departamento.php?id=<?php echo $id_departamento; ?>"
+                                    class="btn btn-ouline-info btn-sm">
+
+                                        <span class="material-symbols-outlined">
+                                            visibility
+                                        </span>
+
+                                </a>
                             </td>
                             </tr>
                             <?php
