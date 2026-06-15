@@ -210,6 +210,10 @@
                                     onclick="return confirm('¿Está seguro de eliminar este departamento?')">
                                         Eliminar
                                 </a>
+                                <a href="qr_departamento.php?id=<?php echo $id_departamento; ?>"
+                                    class="btn btn-outline-success btn-sm">
+                                        QR
+                                </a>
                             </td>
                             </tr>
                             <?php
