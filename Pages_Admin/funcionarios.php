@@ -1,5 +1,51 @@
 <?php
-require('../conexion.php');
+    session_start();
+    require('../conexion.php');
+    require('../models/Mod_Funcionarios.php');
+    $modelo = new Mod_Funcionarios($conexion);
+
+    if(isset($_POST['agregar'])){
+        $rut = $_POST['rut'];
+        $nombre_completo = $_POST['nombre_completo'];
+        $id_equipo = $_POST['id_equipo'];
+        $id_departamento = $_POST['id_departamento'];
+        $rol = $_POST['rol'];
+        $contrasena = $_POST['contrasena'];
+        $_SESSION['mensaje'] = $modelo->agregarFuncionario($rut, $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena);
+            header("Location: funcionarios.php");
+            exit;
+    }
+
+    if(isset($_GET['eliminar'])){
+        $id_funcionario = (int) $_GET['eliminar'];
+        $_SESSION['mensaje'] = $modelo->eliminarFuncionario($id_funcionario);
+        header("Location: departamentos.php");
+        exit;
+   }
+   $editar = null;
+
+    if(isset($_GET['editar'])){
+        $id_funcionario = (int) $_GET['editar'];
+
+        $res = mysqli_query($conexion, "SELECT * FROM funcionario WHERE id_funcionario=$id_funcionario");
+        $editar = mysqli_fetch_assoc($res);
+    }
+
+    if(isset($_POST['guardar'])){
+        $id_funcionario = (int) $_POST['id_departamento'];
+        $rut = (int) $_POST['rut'];
+        $nombre_completo = trim($_POST['nombre_completo']);
+        $id_equipo = (int) $_POST['id_equipo'];
+        $id_departamento = (int) $_POST['id_departamento'];
+        $rol = trim($_POST['rol']);
+        $contrasena = (int) $_POST['contrasena'];
+
+        $_SESSION['mensaje'] = $modelo->editarFuncionario($id_funcionario, $rut, $nombre_completo, $id_equipo,$id_departamento,$rol,$contrasena);
+        header("Location: funcionarios.php");
+        exit;
+    }
+
+    $departamentos = mysqli_query($conexion, "SELECT id_departamento, nombre_departamento FROM departamento");
 ?>
 
 
@@ -100,6 +146,19 @@ require('../conexion.php');
             </button>
         </div>
 
+        <?php if (isset($_SESSION['mensaje'])): ?>
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+            <div id="toastMensaje" class="toast align-items-center text-white bg-success border-0" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <?php echo $_SESSION['mensaje']; unset($_SESSION['mensaje']); ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
                 <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
             <div class="input-group" style="max-width: 450px;">
                 <span class="input-group-text bg-white border-end-0 rounded-start-3" style="border-color: #dbe4e2;">
@@ -158,6 +217,134 @@ require('../conexion.php');
     </div>
 
 </div>
+
+<div class="modal fade" id="modalAgregarFuncionario" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agregar Funcionario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body d-flex flex-column gap-3">
+
+                    <div>
+                        <label class="form-label">RUT</label>
+                        <input type="text" name="rut" class="form-control" placeholder="12.345.678-9" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Nombre Completo</label>
+                        <input type="text" name="nombre_completo" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Departamento</label>
+                        <select name="id_departamento" class="form-select" required>
+                            <option value="">Seleccionar...</option>
+                            <?php
+                            // Rebobinar el resultado de departamentos por si ya se usó
+                            mysqli_data_seek($departamentos, 0);
+                            while ($dep = mysqli_fetch_assoc($departamentos)):
+                            ?>
+                            <option value="<?php echo $dep['id_departamento']; ?>">
+                                <?php echo $dep['nombre_departamento']; ?>
+                            </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Equipo asignado</label>
+                        <select name="id_equipo" class="form-select" required>
+                            <input type="text" name="equipo" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Rol</label>
+                        <input type="text" name="rol" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" name="contrasena" class="form-control" required>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="agregar" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarFuncionario" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Funcionario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body d-flex flex-column gap-3">
+
+                    <input type="hidden" name="id_funcionario" id="edit_id">
+
+                    <div>
+                        <label class="form-label">RUT</label>
+                        <input type="text" name="rut" id="edit_rut" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Nombre Completo</label>
+                        <input type="text" name="nombre_completo" id="edit_nombre" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Departamento</label>
+                        <select name="id_departamento" id="edit_departamento" class="form-select" required>
+                            <option value="">Seleccionar...</option>
+                            <?php
+                            mysqli_data_seek($departamentos, 0);
+                            while ($dep = mysqli_fetch_assoc($departamentos)):
+                            ?>
+                            <option value="<?php echo $dep['id_departamento']; ?>">
+                                <?php echo $dep['nombre_departamento']; ?>
+                            </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Equipo asignado</label>
+                        <input type="text" name="equipo" id="edit_equipo" class="form-control" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Rol</label>
+                        <input type="text" name="rol" id="edit_rol" class="form-control" required>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="guardar" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function abrirEditar(id, rut, nombre, id_equipo, id_departamento, rol) {
+    document.getElementById('edit_id').value           = id;
+    document.getElementById('edit_rut').value          = rut;
+    document.getElementById('edit_nombre').value       = nombre;
+    document.getElementById('edit_equipo').value       = id_equipo;
+    document.getElementById('edit_departamento').value = id_departamento;
+    document.getElementById('edit_rol').value          = rol;
+
+    new bootstrap.Modal(document.getElementById('modalEditarFuncionario')).show();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const toastEl = document.getElementById('toastMensaje');
+    if (toastEl) new bootstrap.Toast(toastEl, { delay: 3000 }).show();
+});
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
