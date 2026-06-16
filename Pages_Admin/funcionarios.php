@@ -19,7 +19,7 @@
     if(isset($_GET['eliminar'])){
         $id_funcionario = (int) $_GET['eliminar'];
         $_SESSION['mensaje'] = $modelo->eliminarFuncionario($id_funcionario);
-        header("Location: departamentos.php");
+        header("Location: funcionarios.php");
         exit;
    }
    $editar = null;
@@ -32,20 +32,20 @@
     }
 
     if(isset($_POST['guardar'])){
-        $id_funcionario = (int) $_POST['id_departamento'];
+        $id_funcionario = (int) $_POST['id_funcionario'];
         $rut = (int) $_POST['rut'];
         $nombre_completo = trim($_POST['nombre_completo']);
         $id_equipo = (int) $_POST['id_equipo'];
         $id_departamento = (int) $_POST['id_departamento'];
         $rol = trim($_POST['rol']);
-        $contrasena = (int) $_POST['contrasena'];
+        $contrasena = trim($_POST['contrasena']);
 
         $_SESSION['mensaje'] = $modelo->editarFuncionario($id_funcionario, $rut, $nombre_completo, $id_equipo,$id_departamento,$rol,$contrasena);
         header("Location: funcionarios.php");
         exit;
     }
 
-    $departamentos = mysqli_query($conexion, "SELECT id_departamento, nombre_departamento FROM departamento");
+    $funcionarios = mysqli_query($conexion, "SELECT id_funcionario, rut, nombre_completo, id_equipo, id_departamento, rol, contrasena FROM funcionario");
 ?>
 
 
@@ -140,7 +140,12 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Nómina de Funcionarios</h2>
             
-            <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
+            <button
+                class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold"
+                style="border-radius: 10px;"
+                data-bs-toggle="modal"
+                data-bs-target="#modalAgregarFuncionario">
+
                 <span class="material-symbols-outlined fs-5">person_add</span>
                 <p class="m-0">Agregar funcionario</p>
             </button>
@@ -191,6 +196,7 @@
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">RUT</th>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Nombre Completo</th>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Rol</th>
+                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -206,6 +212,22 @@
                           <td><?php echo $rut; ?></td>
                           <td><?php echo $nombre_completo; ?></td>
                           <td><?php echo $rol; ?></td>  
+                          <td>
+                                <button class="btn btn-outline-dark btn-sm"
+                                onclick='abrirEditar(
+                                    <?php echo $id_funcionario; ?>,
+                                    <?php echo json_encode($nombre_completo); ?>
+                                )'>
+                                        Editar
+
+                                </button>
+                                <a href="funcionarios.php?eliminar=<?php echo $id_funcionario; ?>"
+                                    class="btn btn-outline-danger btn-sm"
+                                    onclick="return confirm('¿Está seguro de eliminar este funcionario?')">
+                                        Eliminar
+                                </a>
+                                
+</td>
                         </tr>
                         <?php
                         }
@@ -242,8 +264,8 @@
                             <option value="">Seleccionar...</option>
                             <?php
                             // Rebobinar el resultado de departamentos por si ya se usó
-                            mysqli_data_seek($departamentos, 0);
-                            while ($dep = mysqli_fetch_assoc($departamentos)):
+                            mysqli_data_seek($funcionarios, 0);
+                            while ($dep = mysqli_fetch_assoc($funcionarios)):
                             ?>
                             <option value="<?php echo $dep['id_departamento']; ?>">
                                 <?php echo $dep['nombre_departamento']; ?>
@@ -253,7 +275,6 @@
                     </div>
                     <div>
                         <label class="form-label">Equipo asignado</label>
-                        <select name="id_equipo" class="form-select" required>
                             <input type="text" name="equipo" class="form-control" required>
                     </div>
                     <div>
@@ -300,8 +321,8 @@
                         <select name="id_departamento" id="edit_departamento" class="form-select" required>
                             <option value="">Seleccionar...</option>
                             <?php
-                            mysqli_data_seek($departamentos, 0);
-                            while ($dep = mysqli_fetch_assoc($departamentos)):
+                            mysqli_data_seek($funcionarios, 0);
+                            while ($dep = mysqli_fetch_assoc($funcionarios)):
                             ?>
                             <option value="<?php echo $dep['id_departamento']; ?>">
                                 <?php echo $dep['nombre_departamento']; ?>

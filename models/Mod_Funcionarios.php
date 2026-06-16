@@ -38,13 +38,13 @@ class Mod_Funcionarios {
 
     public function editarFuncionario($id_funcionario, $rut,
     $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena){
-        $sql = "UPDATE departamento 
+        $sql = "UPDATE funcionario 
                 SET rut = ?,
                 nombre_completo = ?,
                 id_equipo = ?,
-                id_departamento = ?;
-                rol = ?;
-                contrasena = ?;
+                id_departamento = ?,
+                rol = ?,
+                contrasena = ?,
                 WHERE id_funcionario = ?";
         $this->conexion->execute_query(
             $sql,
