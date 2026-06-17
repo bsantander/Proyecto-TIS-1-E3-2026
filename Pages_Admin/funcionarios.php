@@ -46,6 +46,11 @@
     }
 
     $funcionarios = mysqli_query($conexion, "SELECT id_funcionario, rut, nombre_completo, id_equipo, id_departamento, rol, contrasena FROM funcionario");
+
+    $departamentos = mysqli_query(
+    $conexion,
+    "SELECT id_departamento, nombre_departamento FROM departamento"
+);
 ?>
 
 
@@ -264,8 +269,8 @@
                             <option value="">Seleccionar...</option>
                             <?php
                             // Rebobinar el resultado de departamentos por si ya se usó
-                            mysqli_data_seek($funcionarios, 0);
-                            while ($dep = mysqli_fetch_assoc($funcionarios)):
+                            mysqli_data_seek($departamentos, 0);
+                            while ($dep = mysqli_fetch_assoc($departamentos)):
                             ?>
                             <option value="<?php echo $dep['id_departamento']; ?>">
                                 <?php echo $dep['nombre_departamento']; ?>
@@ -321,8 +326,9 @@
                         <select name="id_departamento" id="edit_departamento" class="form-select" required>
                             <option value="">Seleccionar...</option>
                             <?php
-                            mysqli_data_seek($funcionarios, 0);
-                            while ($dep = mysqli_fetch_assoc($funcionarios)):
+                            // Rebobinar el resultado de departamentos por si ya se usó
+                            mysqli_data_seek($departamentos, 0);
+                            while ($dep = mysqli_fetch_assoc($departamentos)):
                             ?>
                             <option value="<?php echo $dep['id_departamento']; ?>">
                                 <?php echo $dep['nombre_departamento']; ?>
