@@ -296,7 +296,7 @@
                 Cancelar
             </button>
 
-            <button type="submit" name="guardar" class="btn btn-primary">
+            <button type="submit" name="guardar" class="btn btn-success">
                 Guardar cambios
             </button>
             </div>
