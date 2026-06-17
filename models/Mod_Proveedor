@@ -1,0 +1,9 @@
+
+<?php
+require('conexion.php');
+$nombre_completo = $_POST['nombre_completo'];
+$rut_proveedor   = $_POST['rut_proveedor'];
+$contacto        = $_POST['contacto'];
+$consulta = "INSERT INTO proveedor (nombre_completo, rut_proveedor, contacto)  VALUES ('$nombre_completo', '$rut_proveedor', '$contacto')";
+$resultado = mysqli_query($conexion, $consulta);
+?>

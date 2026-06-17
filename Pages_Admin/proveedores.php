@@ -39,7 +39,7 @@ require('../conexion.php');
             </div>
 
             <div class="Equipos">
-                <a href="equipos.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                <a href="equipos.php" class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">computer</span>
                     <p class="m-0 fs-6">Equipos</p>
                 </a>
@@ -57,7 +57,7 @@ require('../conexion.php');
                 </a>
             </div>
             <div class="Departamentos">
-                <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                <a href="proveedores.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined">person_4</span>                    
                         <p class="m-0 fs-6">Proveedores</p>
                 </a>
@@ -98,44 +98,27 @@ require('../conexion.php');
         
         <div id="vista-tabla">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Inventario de Equipos</h2>
-
-                <div class="d-flex justify-content-between align-items-center gap-4">
-                    <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
-                        <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
-                        <a href="equipos_agregar.php" class="m-0 text-decoration-none text-white">Agregar equipo</a>
-                </button>
+                <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Nomina de Proveedores</h2>
 
                     <button type="button" class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;"
                     data-bs-toggle="modal" data-bs-target="#modalProveedor">
                         <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
                         <p class="m-0 text-decoration-none text-white">Agregar Proveedor</p>
                 </button>
-                </div>
             </div>
             
             <div class=" my-3 d-flex flex-row justify-content-between ">
                 <div class="input-group flex-nowrap" style="max-width: 450px">
                     <span class=" input-group-text material-symbols-outlined">search</span>
-                    <input type="text" id="inputBusqueda" onkeyup="filtrarTabla()" class="Buscador form-control" placeholder="Buscar por ID, Modelo, Tipo, etc" >
+                    <input type="text" id="inputBusqueda" onkeyup="filtrarTabla()" class="Buscador form-control" placeholder="Buscar por Nombre, Rut, etc..." >
                 </div>
-
-
-                <select id="filtroTipo" onchange="filtrarTabla()" class="Filtro form-select" style="max-width: 200px;">
-                    <option value="">Todos los tipos</option>
-                    <option value="Computador">Computador</option>
-                    <option value="Notebook">Notebook</option>
-                    <option value="Impresora">Impresora</option>
-                    <option value="Proyector">Proyector</option>
-                    <option value="Servidor">Servidor</option>
-                </select>
             </div>
 
             
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
                 <div class="card-body p-0">
                     <?php
-                    $consulta = "SELECT id_equipo, tipo, marca, modelo FROM vista_equipos";
+                    $consulta = "SELECT id_proveedor, rut_proveedor, nombre_completo, contacto FROM proveedor";
                     $resultado = mysqli_query($conexion, $consulta);
                     
                     if (!$resultado) {
@@ -146,37 +129,33 @@ require('../conexion.php');
                     <table class="table table-hover m-0 align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Equipo</th>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Tipo</th>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Marca</th>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Modelo</th>
-                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Gestionar Equipo</th>
-                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Codigo QR</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Proveeor</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Nombre </th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Rut</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Contacto</th>
+                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Gestionar proveedor</th>
                             </tr>
                         </thead>
                         <tbody id="tablaEquiposBody" >
                             <?php
                             while($row = mysqli_fetch_assoc($resultado)){
-                                $id_equipo = $row["id_equipo"];
-                                $tipo      = $row["tipo"];
-                                $marca     = $row["marca"];
-                                $modelo    = $row["modelo"];
+                                $id_proveedor    = $row["id_proveedor"];
+                                $rut_proveedor   = $row["rut_proveedor"];
+                                $nombre_completo = $row["nombre_completo"];
+                                $contacto        = $row["contacto"];
+
                             ?>
                             <tr>
-                              <th scope="row" class="p-3 text-muted"><?php echo $id_equipo; ?></th>
-                              <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $tipo; ?></td>
-                              <td class="p-3 fw-medium text-dark"><?php echo $marca; ?></td>
-                              <td class="p-3 text-secondary"><?php echo $modelo; ?></td>
+                              <th scope="row" class="p-3 text-muted"><?php echo $id_proveedor; ?></th>
+                              <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $nombre_completo; ?></td>
+                              <td class="p-3 fw-medium text-dark"><?php echo $rut_proveedor; ?></td>
+                              <td class="p-3 fw-medium text-dark"><?php echo $contacto; ?></td>
                               
                               <td class="p-3 text-center">
-                                <a href="equipos_detalle.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
-                                    <span class="material-symbols-outlined align-middle">visibility</span>
+                                <a href="equipos_detalle.php?id=<?php echo $id_proveedor; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
+                                    <span class="material-symbols-outlined">edit</span>
                                 </a>
                               </td>
-                              <td class="p-3 text-center">
-                                <a href="equipos_QR.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
-                                    <span class="material-symbols-outlined align-middle">qr_code</span>
-                                </a>
                             </tr>
                             <?php
                             }
@@ -192,7 +171,8 @@ require('../conexion.php');
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <div class="modal fade" id="modalProveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    
+<div class="modal fade" id="modalProveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -203,15 +183,15 @@ require('../conexion.php');
       <form action="procesar_proveedor.php" method="POST"> <div class="modal-body">
             <div class="mb-3">
                 <label class="form-label">Nombre del Proveedor</label>
-                <input type="text" name="nombre" class="form-control" required>
+                <input type="text" name="nombre_completo" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Rut / Identificación</label>
-                <input type="text" name="rut" class="form-control" required>
+                <label class="form-label">Rut</label>
+                <input type="text" name="rut_proveedor" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Contacto</label>
-                <input type="email" name="email" class="form-control" placeholder="ejemplo@correo.com">
+                <input type="email" name="contacto" class="form-control" placeholder="ejemplo@correo.com">
             </div>
         </div>
         <div class="modal-footer">
@@ -219,7 +199,6 @@ require('../conexion.php');
             <button type="submit" class="btn btn-primary" style="background-color: #05ad98; border: none;">Guardar Proveedor</button>
         </div>
       </form>
-      
     </div>
   </div>
 </div>

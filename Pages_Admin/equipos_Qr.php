@@ -1,0 +1,85 @@
+<?php
+require_once '../conexion.php'; 
+require_once '../models/Mod_Equipos.php';
+
+$id = $_GET['id'];
+$tipo = $_GET['tipo'];
+
+$data = obtenerDatosCompletos($conexion, $id, $tipo);
+$equipo = $data['equipo'];
+$funcionario = $data['funcionario'];
+?>
+
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha Técnica - <?php echo $tipo; ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="bg-light p-3 p-md-5">
+
+<div class="container" style="max-width: 700px;">
+    
+    <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #05ad98;">
+        <div class="card-header bg-white p-4">
+            <h3 class="fs-5 fw-bold m-0 text-dark">Información del Equipo</h3>
+        </div>
+        <div class="card-body p-4">
+            <ul class="list-group list-group-flush">
+                <li class='list-group-item d-flex justify-content-between px-0 py-3'>
+                    <span class='text-muted fw-semibold'>Tipo de Equipo</span>
+                    <span class='text-primary fw-bold'><?php echo $tipo; ?></span>
+                </li>
+                <?php foreach ($equipo as $col => $val): ?>
+                    <li class='list-group-item d-flex justify-content-between px-0 py-3'>
+                        <span class='text-muted fw-semibold text-capitalize'><?php echo str_replace('_', ' ', $col); ?></span>
+                        <span class='text-dark fw-bold'><?php echo $val; ?></span>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #6c757d;">
+        <div class="card-header bg-white p-4">
+            <h3 class="fs-5 fw-bold m-0 text-dark">Funcionario Responsable</h3>
+        </div>
+        <div class="card-body p-4">
+            <ul class="list-group list-group-flush">
+                <?php foreach ($funcionario as $col => $val): ?>
+                    <li class='list-group-item d-flex justify-content-between px-0 py-3'>
+                        <span class='text-muted fw-semibold'><?php echo $col; ?></span>
+                        <span class='text-dark fw-bold'><?php echo $val; ?></span>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3 mb-4 text-center">
+        <div class="card-body p-4">
+            <h5 class="text-muted mb-3">Compartir esta ficha</h5>
+            <div id="qrcode" class="d-flex justify-content-center"></div>
+            <p class="mt-3 small text-muted">Escanea este código para abrir este link en otro dispositivo.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        new QRCode(document.getElementById("qrcode"), {
+            text: window.location.href,
+            width: 150,
+            height: 150,
+            colorDark : "#000000",
+            colorLight : "#ffffff"
+        });
+    };
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

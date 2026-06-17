@@ -1,26 +1,15 @@
 
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('ventanaConfiguracion');
-    const Abrir = document.getElementById('configuracion');
-    const Cancelar = document.getElementById('Cancelar');
-    const Guardar = document.getElementById('Guardar');
+function filtrarTabla() {
+    const input = document.getElementById('inputBusqueda').value.toLowerCase();
+    const filtroTipo = document.getElementById('filtroTipo').value.toLowerCase();
+    const filas = document.querySelectorAll('#tablaEquiposBody tr');
 
-    if (Abrir) {
-        Abrir.addEventListener('click', (evento) => {
-            evento.preventDefault(); 
-            modal.showModal();
-        });
-    }
+    filas.forEach(fila => {
+        const textoFila = fila.textContent.toLowerCase();
+        const tipoFila = fila.getElementsByTagName('td')[0].textContent.toLowerCase();
+        const coincideBusqueda = textoFila.includes(input);
+        const coincideTipo = (filtroTipo === "" || tipoFila.includes(filtroTipo));
 
-    if (Cancelar) {
-        Cancelar.addEventListener('click', () => {
-            modal.close();
-        });
-    }
-
-    if (Guardar) {
-        Guardar.addEventListener('click', () => {
-            modal.close();
-        });
-    }
-});
+        fila.style.display = (coincideBusqueda && coincideTipo) ? "" : "none";
+    });
+}
