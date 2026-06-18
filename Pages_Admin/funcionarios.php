@@ -286,7 +286,7 @@
                     </div>
                     <div>
                         <label class="form-label">Equipo asignado</label>
-                            <input type="text" name="id_equipo" class="form-control" required>
+                            <input type="number" name="id_equipo" class="form-control" required>
                     </div>
                     <div>
                         <label class="form-label">Rol</label>
@@ -365,9 +365,9 @@ function abrirEditar(id, rut, nombre, id_equipo, id_departamento, rol) {
     document.getElementById('edit_id').value           = id;
     document.getElementById('edit_rut').value          = rut;
     document.getElementById('edit_nombre').value       = nombre;
-    document.getElementById('edit_equipo').value       = id_equipo;
-    document.getElementById('edit_departamento').value = id_departamento;
-    document.getElementById('edit_rol').value          = rol;
+    document.getElementById('edit_equipo').value = id_equipo  ||"";
+    document.getElementById('edit_departamento').value = id_departamento  ||"";
+    document.getElementById('edit_rol').value = rol;
 
     new bootstrap.Modal(document.getElementById('modalEditarFuncionario')).show();
 }
