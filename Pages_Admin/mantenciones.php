@@ -51,6 +51,12 @@
                     <p class="m-0 fs-6">Departamentos</p>
                 </a>
             </div>
+                <div class="Proovedores">
+                    <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                        <span class="material-symbols-outlined">person_4</span>                    
+                        <p class="m-0 fs-6">Proveedores</p>
+                    </a>
+                </div>
             <div class="Mantenciones">
                 <a href="mantenciones.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">handyman</span>
