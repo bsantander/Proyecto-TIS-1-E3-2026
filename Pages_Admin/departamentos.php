@@ -57,7 +57,7 @@
 
     <div class="Container d-flex flex-row vh-100 overflow-hidden">
 
-        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3">
+        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3" style="background-color: #BBBFBF;">
             <div class="Superior d-flex flex-column justify-content-start align-items-start gap-2">
 
                 <div class="Inicio p-2 d-flex flex-row justify-content-start gap-0 ">
@@ -91,6 +91,12 @@
                     <a href="departamentos.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                         <span class="material-symbols-outlined fs-5">apartment</span>
                         <p class="m-0 fs-6">Departamentos</p>
+                    </a>
+                </div>
+                <div class="Proovedores">
+                    <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                        <span class="material-symbols-outlined">person_4</span>                    
+                        <p class="m-0 fs-6">Proveedores</p>
                     </a>
                 </div>
                 <div class="Mantenciones">

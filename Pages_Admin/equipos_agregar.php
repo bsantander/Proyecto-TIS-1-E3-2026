@@ -70,11 +70,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </select>
                     </div>
                     
-                    <div class="col-md-4 mb-3"><label>Marca</label><input type="text" name="marca" class="form-control"></div>
-                    <div class="col-md-4 mb-3"><label>N° Serie</label><input type="number" name="numero_serie" class="form-control"></div>
-                    <div class="col-md-6 mb-3"><label>Fecha Compra</label><input type="date" name="fecha_compra" class="form-control"></div>
-                    <div class="col-md-6 mb-3"><label>Fecha Garantía</label><input type="date" name="fecha_garantia" class="form-control"></div>
-                    <div class="col-md-12 mb-3"><label>Valor Equipo</label><input type="number" step="any" name="valor_equipo" class="form-control"></div>
+                    <div class="col-md-4 mb-3">
+                        <label>Marca</label>
+                        <input type="text" name="marca" class="form-control">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label>N° Serie</label>
+                        <input type="number" name="numero_serie" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Fecha Compra</label>
+                        <input type="date" name="fecha_compra" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Fecha Garantía</label>
+                        <input type="date" name="fecha_garantia" class="form-control">
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label>Valor Equipo</label>
+                        <input type="number" step="any" name="valor_equipo" class="form-control">
+                    </div>
                 </div>
             </div>
         </div>
