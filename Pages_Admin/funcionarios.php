@@ -35,7 +35,7 @@
         $id_funcionario = (int) $_POST['id_funcionario'];
         $rut = (int) $_POST['rut'];
         $nombre_completo = trim($_POST['nombre_completo']);
-        $id_equipo = (int) $_POST['id_equipo'];
+        $id_equipo = isset($_POST['id_equipo']) ? (int) $_POST['id_equipo'] : null;
         $id_departamento = (int) $_POST['id_departamento'];
         $rol = trim($_POST['rol']);
         $contrasena = trim($_POST['contrasena']);
