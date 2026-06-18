@@ -216,33 +216,30 @@
                             $rut             = $row["rut"];
                         ?>
                         <tr>
-                          <th scope="row"><?php echo $id_funcionario; ?></th>
-                          <td><?php echo $rut; ?></td>
-                          <td><?php echo $nombre_completo; ?></td>
-                          <td><?php echo $id_equipo; ?></td>
-                          <td><?php echo $id_departamento; ?></td>
-                          <td><?php echo $rol; ?></td>  
-                          <td>
-                                <button class="btn btn-outline-dark btn-sm"
-                                onclick='abrirEditar(
-                                    <?php echo (int) $id_funcionario; ?>,
-                                    <?php echo json_encode($rut); ?>,
-                                    <?php echo json_encode($nombre_completo); ?>,
-                                    <?php echo (int) $id_equipo; ?>,
-                                    <?php echo (int) $id_departamento; ?>,
-                                    <?php echo json_encode($rol); ?>
-                                )'>
-                                        Editar
+                            <th><?php echo $id_funcionario; ?></th>
+                            <td><?php echo $rut; ?></td>
+                            <td><?php echo $nombre_completo; ?></td>
+                            <td><?php echo $rol; ?></td>
+                            <td>
+                            <button class="btn btn-outline-dark btn-sm"
+                            onclick='abrirEditar(
+                                <?php echo (int) $id_funcionario; ?>,
+                                <?php echo json_encode($rut); ?>,
+                                <?php echo json_encode($nombre_completo); ?>,
+                                <?php echo (int) $id_equipo; ?>,
+                                <?php echo (int) $id_departamento; ?>,
+                                <?php echo json_encode($rol); ?>
+                            )'>
+                            Editar
+                            </button>
 
-                                </button>
-                                <a href="funcionarios.php?eliminar=<?php echo $id_funcionario; ?>"
-                                    class="btn btn-outline-danger btn-sm"
-                                    onclick="return confirm('¿Está seguro de eliminar este funcionario?')">
-                                        Eliminar
-                                </a>
-                                
-</td>
-                        </tr>
+                            <a href="funcionarios.php?eliminar=<?php echo $id_funcionario; ?>"
+                                class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('¿Está seguro de eliminar este funcionario?')">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
                         <?php
                         }
                         ?>  
