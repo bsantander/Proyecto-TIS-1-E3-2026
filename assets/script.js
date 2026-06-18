@@ -1,14 +1,13 @@
 
 function filtrarEquipos() {
-    const input = document.getElementById('inputBusquedaEquipo').value.toLowerCase();
+    const inputBusqueda = document.getElementById('inputBusquedaEquipo').value.toLowerCase();
     const filtroTipo = document.getElementById('filtroTipo').value.toLowerCase();
-    const filas = document.querySelectorAll('#tablaEquipos tr');
+    const filas = document.querySelectorAll('#tablaEquiposBody tr');
 
     filas.forEach(fila => {
         const textoFila = fila.textContent.toLowerCase();
-        const tipoFila = fila.getElementsByTagName('td')[0].textContent.toLowerCase();
-        const coincideBusqueda = textoFila.includes(input);
-        const coincideTipo = (filtroTipo === "" || tipoFila.includes(filtroTipo));
+        const coincideBusqueda = textoFila.includes(inputBusqueda);
+        const coincideTipo = (filtroTipo === "" || textoFila.includes(filtroTipo));
         fila.style.display = (coincideBusqueda && coincideTipo) ? "" : "none";
     });
 }

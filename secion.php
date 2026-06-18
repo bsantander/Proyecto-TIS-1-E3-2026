@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="h-100 p-5">
                     <div class="d-flex flex-row align-items-center gap-0 mb-3">
                         <p class="fs-2 m-0 fw-bold" style="color: #05ad98;">Nodo</p>
-                        <p class="fs-2 m-0 text-black fw-bold">Active</p>
+                        <p class="fs-2 m-0 text-black fw-bold">Activo</p>
                     </div>
                     <h1 class="h3 mt-4">Conéctate con tu cuenta</h1>
                     <p class="text-secondary">Accede a tu panel de control para revisar equipos, funcionarios y mantenciones de forma rápida.</p>
