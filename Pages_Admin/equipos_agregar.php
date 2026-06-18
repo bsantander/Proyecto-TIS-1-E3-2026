@@ -2,6 +2,7 @@
 require_once '../conexion.php'; 
 require_once '../models/Mod_Equipos.php';
 $listaFuncionarios = obtenerTodosFuncionarios($conexion);
+$listaProveedores = obtenerTodosProveedores($conexion);     
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (insertarEquipo($conexion, $_POST['tipo'], $_POST)) {
@@ -60,6 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-semibold">Proveedor del Equipo</label>
+                        <select name="id_proveedor" class="form-select">
+                            <?php foreach ($listaProveedores as $p): ?>
+                                <option value="<?php echo $p['id_proveedor']; ?>"><?php echo $p['nombre_completo']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
                     <div class="col-md-4 mb-3"><label>Marca</label><input type="text" name="marca" class="form-control"></div>
                     <div class="col-md-4 mb-3"><label>N° Serie</label><input type="number" name="numero_serie" class="form-control"></div>
                     <div class="col-md-6 mb-3"><label>Fecha Compra</label><input type="date" name="fecha_compra" class="form-control"></div>

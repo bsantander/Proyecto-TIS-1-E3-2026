@@ -10,32 +10,39 @@ function _obtenerTabla($tipo) {
     ];
     return $mapa[$tipo] ?? null;
 }
+
 function obtenerDatosCompletos($conexion, $id, $tipo) {
     $tabla = _obtenerTabla($tipo);
-    
-    $sql = "SELECT e.*, f.nombre_completo, f.rut, f.rol 
-            FROM $tabla e 
-            LEFT JOIN funcionario f ON e.id_funcionario = f.id_funcionario 
-            WHERE e.id_equipo = $id";
+    $sql = "SELECT $tabla.*, 
+                   funcionario.nombre_completo AS nombre_funcionario, 
+                   proveedor.nombre_completo AS nombre_proveedor, 
+                   proveedor.contacto AS contacto_proveedor
+            FROM $tabla
+            LEFT JOIN funcionario ON $tabla.id_funcionario = funcionario.id_funcionario 
+            LEFT JOIN proveedor ON $tabla.id_proveedor = proveedor.id_proveedor
+            WHERE $tabla.id_equipo = $id";
             
     $resultado = mysqli_query($conexion, $sql);
     $row = mysqli_fetch_assoc($resultado);
     
     $funcionario = [
-        'Nombre Completo' => $row['nombre_completo']
+        'Nombre Completo' => $row['nombre_funcionario'] ?? 'Sin asignar'
     ];
     
-    $id_funcionario = $row['id_funcionario'];
+    $proveedor = [
+        'id_proveedor'    => $row['id_proveedor'] ?? 0,
+        'nombre_completo' => $row['nombre_proveedor'] ?? 'Sin asignar',
+        'contacto'        => $row['contacto_proveedor'] ?? 'Sin contacto'
+    ];
     
-    unset($row['nombre_completo'], $row['rut'], $row['rol']);
+    unset($row['nombre_funcionario'], $row['nombre_proveedor'], $row['contacto_proveedor']);
     
     return [
         'equipo' => $row,
         'funcionario' => $funcionario,
-        'id_funcionario' => $id_funcionario
+        'proveedor' => $proveedor
     ];
 }
-
 function obtenerTodosFuncionarios($conexion) {
     $sql = "SELECT id_funcionario, nombre_completo FROM funcionario";
     $resultado = mysqli_query($conexion, $sql);
@@ -44,6 +51,16 @@ function obtenerTodosFuncionarios($conexion) {
         $funcionarios[] = $row;
     }
     return $funcionarios;
+}
+
+function obtenerTodosProveedores($conexion) {
+    $sql = "SELECT id_proveedor, nombre_completo, contacto FROM proveedor"; 
+    $resultado = mysqli_query($conexion, $sql);
+    $proveedores = [];
+    while ($row = mysqli_fetch_assoc($resultado)) {
+        $proveedores[] = $row;
+    }
+    return $proveedores;
 }
 
 function actualizarEquipo($conexion, $id, $tipo, $datos) {
@@ -72,14 +89,14 @@ function insertarEquipo($conexion, $tipo, $datos) {
         'Impresora' => 'impresora', 'Notebook' => 'notebook', 
         'Servidor' => 'servidor', 'Otro Dispositivo' => 'otro_dispositivo'
     ];
-    
+
     $columnas_permitidas = [
-        'computador' => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'procesador', 'memoria_ram', 'almacenamiento', 'id_funcionario', 'modelo_procesador', 'cantidad_ram', 'cantidad_almacenamiento'],
-        'proyector'  => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'calidad_imagen', 'modelo', 'id_funcionario'],
-        'impresora'  => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'volumen_impresion', 'modelo', 'tipo', 'id_funcionario'],
-        'notebook'   => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'procesador', 'memoria_ram', 'modelo', 'almacenamiento', 'id_funcionario', 'cantidad_ram', 'cantidad_almacenamiento', 'modelo_procesador'],
-        'servidor'   => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'funcion', 'id_funcionario'],
-        'otro_dispositivo' => ['id_equipo', 'marca', 'fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'modelo', 'id_funcionario']
+        'computador' => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'procesador', 'memoria_ram', 'almacenamiento', 'id_funcionario', 'id_proveedor', 'modelo_procesador', 'cantidad_ram', 'cantidad_almacenamiento'],
+        'proyector'  => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'calidad_imagen', 'modelo', 'id_funcionario', 'id_proveedor'],
+        'impresora'  => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'volumen_impresion', 'modelo', 'tipo', 'id_funcionario', 'id_proveedor'],
+        'notebook'   => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'procesador', 'memoria_ram', 'modelo', 'almacenamiento', 'id_funcionario', 'id_proveedor', 'cantidad_ram', 'cantidad_almacenamiento', 'modelo_procesador'],
+        'servidor'   => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'funcion', 'id_funcionario', 'id_proveedor'],
+        'otro_dispositivo' => ['id_equipo', 'marca', 'fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'modelo', 'id_funcionario', 'id_proveedor']
     ];
 
     $tabla = $tablas[$tipo];

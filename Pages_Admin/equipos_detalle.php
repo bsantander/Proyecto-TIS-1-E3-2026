@@ -16,6 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $data = obtenerDatosCompletos($conexion, $id, $tipo);
 $listaFuncionarios = obtenerTodosFuncionarios($conexion);
+$listaproovedores = obtenerTodosProveedores($conexion);
+
 ?>
 
 <!doctype html>
@@ -92,6 +94,33 @@ $listaFuncionarios = obtenerTodosFuncionarios($conexion);
                 </ul>
             </div>
         </div>
+        <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #6c757d;">
+            <div class="card-header bg-white p-4">
+                <h3 class="fs-5 fw-bold m-0 text-dark">Datos del Proveedor</h3>
+            </div>
+            <div class="card-body p-4">
+                <ul class="list-group list-group-flush">
+                    <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-3'>
+                        <span class='text-muted fw-semibold'>Proveedor del equipo</span>
+                        
+                        <?php if ($modo == 'editar'): ?>
+                            <select name="id_proveedor" class="form-select w-50">
+                                <?php foreach ($listaproovedores as $f): ?>
+                                    <option value="<?php echo $f['id_proveedor']; ?>" 
+                                            <?php echo ($f['id_proveedor'] == $data['proveedor']['id_proveedor']) ? 'selected' : ''; ?>>
+                                        <?php echo $f['nombre_completo']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php else: ?>
+                            <span class='text-dark fw-bold'>
+                                <?php echo $data['proveedor']['nombre_completo'] ?? 'Sin asignar'; ?>
+                            </span>
+                        <?php endif; ?>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <div class="text-end">
             <?php if ($modo == 'ver'): ?>
@@ -102,19 +131,6 @@ $listaFuncionarios = obtenerTodosFuncionarios($conexion);
             <?php endif; ?>
         </div>
     </form>
-    <div class="row mt-5 p-4 bg-white border-top rounded shadow-sm align-items-center">
-        <div class="col-md-6 text-center text-md-start">
-            <h5 class="fw-bold text-dark">Acceso Público</h5>
-            <p class="text-muted small mb-3">Escanea el código o usa el enlace para ver la ficha sin inicio de sesión.</p>
-            <a href="ficha_publica.php?id=<?php echo $id; ?>&tipo=<?php echo urlencode($tipo); ?>" 
-               target="_blank" class="btn btn-outline-primary">
-               <i class="bi bi-box-arrow-up-right"></i> Ver Ficha Pública
-            </a>
-        </div>
-        <div class="col-md-6 text-center">
-            <div id="qrcode" class="d-inline-block"></div>
-        </div>
-    </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>

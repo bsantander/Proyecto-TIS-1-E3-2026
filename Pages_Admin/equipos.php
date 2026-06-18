@@ -117,11 +117,11 @@ require('../conexion.php');
             <div class=" my-3 d-flex flex-row justify-content-between ">
                 <div class="input-group flex-nowrap" style="max-width: 450px">
                     <span class=" input-group-text material-symbols-outlined">search</span>
-                    <input type="text" id="inputBusqueda" onkeyup="filtrarTabla()" class="Buscador form-control" placeholder="Buscar por ID, Modelo, Tipo, etc" >
+                    <input type="text" id="inputBusquedaEquipo" onkeyup="filtrarEquipos()" class="Buscador form-control" placeholder="Buscar por ID, Modelo, Tipo, etc" >
                 </div>
 
 
-                <select id="filtroTipo" onchange="filtrarTabla()" class="Filtro form-select" style="max-width: 200px;">
+                <select id="filtroTipo" onchange="filtrarEquipos()" class="Filtro form-select" style="max-width: 200px;">
                     <option value="">Todos los tipos</option>
                     <option value="Computador">Computador</option>
                     <option value="Notebook">Notebook</option>
