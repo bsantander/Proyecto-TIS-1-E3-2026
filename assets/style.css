@@ -10,6 +10,13 @@
 /*Barra_Lateral */
 .Barra_Izquierda_Index_active {
     background-color: #05ad98;
+<<<<<<< HEAD
+    transition: background-color 0.2s ease;
+    width: 150px;
+
+}
+
+=======
     color: white !important;
     border-radius: 8px;
 
@@ -34,6 +41,7 @@
         background-color: rgba(0, 0, 0, 0.08);
 }
 
+>>>>>>> origin/molavef
 
 /* Secion */
 .inicio_secion {
