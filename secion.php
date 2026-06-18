@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
-<body class="d-flex align-items-center justify-content-center py-5">
+<body class="d-flex align-items-center justify-content-center py-5 "style="background-color:#d3d3d3">
     <div class="container">
         <div class="row gx-4 gy-4 justify-content-center mt-5">
             <div class="col-12 col-lg-5">

@@ -83,12 +83,6 @@ $proveedor = $data['proveedor'];
             </ul>
         </div>
     </div>
-
-    <div class="card shadow-sm border-0 rounded-3 mb-4 text-center">
-        <div class="card-body p-4">
-            <div id="qrcode" class="d-flex justify-content-center"></div>
-        </div>
-    </div>
 </div>
 
 <script>

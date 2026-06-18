@@ -99,19 +99,10 @@ require('../conexion.php');
         <div id="vista-tabla">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Inventario de Equipos</h2>
-
-                <div class="d-flex justify-content-between align-items-center gap-4">
                     <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
                         <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
                         <a href="equipos_agregar.php" class="m-0 text-decoration-none text-white">Agregar equipo</a>
                 </button>
-
-                    <button type="button" class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;"
-                    data-bs-toggle="modal" data-bs-target="#modalProveedor">
-                        <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
-                        <p class="m-0 text-decoration-none text-white">Agregar Proveedor</p>
-                </button>
-                </div>
             </div>
             
             <div class=" my-3 d-flex flex-row justify-content-between ">
