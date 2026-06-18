@@ -1,5 +1,21 @@
 <?php
-require('../conexion.php');
+    session_start();
+    require('../conexion.php');
+    require('../models/Mod_Proveedores.php');
+    $modelo = new Mod_Proveedores($conexion);
+
+    if(isset($_POST['agregar'])) { 
+        $_SESSION['mensaje'] = $modelo->agregarProveedor(); 
+    }
+
+    if(isset($_POST['guardar'])) { 
+        $_SESSION['mensaje'] = $modelo->editarProveedor(); 
+    }
+
+    if(isset($_GET['eliminar'])){
+        $id_proveedor = (int) $_GET['eliminar']; 
+        $_SESSION['mensaje'] = $modelo->eliminarProveedor($id_proveedor);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -39,7 +55,7 @@ require('../conexion.php');
             </div>
 
             <div class="Equipos">
-                <a href="equipos.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                <a href="equipos.php" class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">computer</span>
                     <p class="m-0 fs-6">Equipos</p>
                 </a>
@@ -57,7 +73,7 @@ require('../conexion.php');
                 </a>
             </div>
             <div class="Departamentos">
-                <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                <a href="proveedores.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined">person_4</span>                    
                         <p class="m-0 fs-6">Proveedores</p>
                 </a>
@@ -98,44 +114,27 @@ require('../conexion.php');
         
         <div id="vista-tabla">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Inventario de Equipos</h2>
-
-                <div class="d-flex justify-content-between align-items-center gap-4">
-                    <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
-                        <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
-                        <a href="equipos_agregar.php" class="m-0 text-decoration-none text-white">Agregar equipo</a>
-                </button>
+                <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Nomina de Proveedores</h2>
 
                     <button type="button" class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;"
-                    data-bs-toggle="modal" data-bs-target="#modalProveedor">
+                    data-bs-toggle="modal" data-bs-target="#modalProveedoragregar">
                         <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
                         <p class="m-0 text-decoration-none text-white">Agregar Proveedor</p>
                 </button>
-                </div>
             </div>
             
             <div class=" my-3 d-flex flex-row justify-content-between ">
                 <div class="input-group flex-nowrap" style="max-width: 450px">
                     <span class=" input-group-text material-symbols-outlined">search</span>
-                    <input type="text" id="inputBusquedaEquipo" onkeyup="filtrarEquipos()" class="Buscador form-control" placeholder="Buscar por ID, Modelo, Tipo, etc" >
+                    <input type="text" id="inputBusquedaproveedor" onkeyup="filtrarProveedores()" class="Buscador form-control" placeholder="Buscar por Nombre, Rut, etc..." >
                 </div>
-
-
-                <select id="filtroTipo" onchange="filtrarEquipos()" class="Filtro form-select" style="max-width: 200px;">
-                    <option value="">Todos los tipos</option>
-                    <option value="Computador">Computador</option>
-                    <option value="Notebook">Notebook</option>
-                    <option value="Impresora">Impresora</option>
-                    <option value="Proyector">Proyector</option>
-                    <option value="Servidor">Servidor</option>
-                </select>
             </div>
 
             
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
                 <div class="card-body p-0">
                     <?php
-                    $consulta = "SELECT id_equipo, tipo, marca, modelo FROM vista_equipos";
+                    $consulta = "SELECT id_proveedor, rut_proveedor, nombre_completo, contacto FROM proveedor";
                     $resultado = mysqli_query($conexion, $consulta);
                     
                     if (!$resultado) {
@@ -146,37 +145,36 @@ require('../conexion.php');
                     <table class="table table-hover m-0 align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Equipo</th>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Tipo</th>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Marca</th>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Modelo</th>
-                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Gestionar Equipo</th>
-                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Codigo QR</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Proveeor</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Nombre </th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Rut</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Contacto</th>
+                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Gestionar proveedor</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaEquiposBody" >
+                        <tbody id="tablaProveedores" >
                             <?php
                             while($row = mysqli_fetch_assoc($resultado)){
-                                $id_equipo = $row["id_equipo"];
-                                $tipo      = $row["tipo"];
-                                $marca     = $row["marca"];
-                                $modelo    = $row["modelo"];
+                                $id_proveedor    = $row["id_proveedor"];
+                                $rut_proveedor   = $row["rut_proveedor"];
+                                $nombre_completo = $row["nombre_completo"];
+                                $contacto        = $row["contacto"];
+
                             ?>
                             <tr>
-                              <th scope="row" class="p-3 text-muted"><?php echo $id_equipo; ?></th>
-                              <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $tipo; ?></td>
-                              <td class="p-3 fw-medium text-dark"><?php echo $marca; ?></td>
-                              <td class="p-3 text-secondary"><?php echo $modelo; ?></td>
+                              <th scope="row" class="p-3 text-muted"><?php echo $id_proveedor; ?></th>
+                              <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $nombre_completo; ?></td>
+                              <td class="p-3 fw-medium text-dark"><?php echo $rut_proveedor; ?></td>
+                              <td class="p-3 fw-medium text-dark"><?php echo $contacto; ?></td>
                               
                               <td class="p-3 text-center">
-                                <a href="equipos_detalle.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
-                                    <span class="material-symbols-outlined align-middle">visibility</span>
-                                </a>
+
+                              <button class="btn btn-sm btn-outline-dark" 
+                            onclick="abrirEditar(<?php echo $row['id_proveedor']; ?>, '<?php echo $row['nombre_completo']; ?>', '<?php echo $row['rut_proveedor']; ?>', '<?php echo $row['contacto']; ?>')">
+                        Editar
+                    </button>
+
                               </td>
-                              <td class="p-3 text-center">
-                                <a href="equipos_QR.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
-                                    <span class="material-symbols-outlined align-middle">qr_code</span>
-                                </a>
                             </tr>
                             <?php
                             }
@@ -188,41 +186,96 @@ require('../conexion.php');
         </div> 
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <div class="modal fade" id="modalProveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalProveedoragregar" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Agregar Nuevo Proveedor</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Agregar Nuevo Proveedor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      
-      <form action="procesar_proveedor.php" method="POST"> <div class="modal-body">
+
+      <form method="POST"> 
+        <div class="modal-body">
             <div class="mb-3">
-                <label class="form-label">Nombre del Proveedor</label>
-                <input type="text" name="nombre" class="form-control" required>
+                <label class="form-label">Rut del Proveedor</label>
+                <input type="number" name="rut_proveedor" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Rut / Identificación</label>
-                <input type="text" name="rut" class="form-control" required>
+                <label class="form-label">Nombre del Proveedor</label>
+                <input type="text" name="nombre_completo" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Contacto</label>
-                <input type="email" name="email" class="form-control" placeholder="ejemplo@correo.com">
+                <input type="email" name="contacto" class="form-control" placeholder="ejemplo@correo.com">
             </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary" style="background-color: #05ad98; border: none;">Guardar Proveedor</button>
+            <button type="submit" name="agregar" class="btn btn-primary" style="background-color: #05ad98; border: none;">Guardar Proveedor</button>
         </div>
       </form>
-      
     </div>
   </div>
 </div>
 
+<div class="modal fade" id="modalProveedoreditar" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Proveedor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form method="POST"> 
+        <div class="modal-body">
+            <input type="hidden" name="id_proveedor" id="edit_id">
+
+            <div class="mb-3">
+                <label class="form-label">Rut del Proveedor</label>
+                <input type="number" name="rut_proveedor" id="edit_rut" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nombre del Proveedor</label>
+                <input type="text" name="nombre_completo" id="edit_nombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contacto</label>
+                <input type="email" name="contacto" id="edit_contacto" class="form-control">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <a href="#" id="btn_eliminar_modal" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este proveedor?');">Eliminar</a>
+            <button type="submit" name="guardar" class="btn btn-primary" style="background-color: #05ad98; border: none;">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+    
+<script>
+function abrirEditar(id, nombre, rut, contacto) {
+    document.getElementById("edit_id").value = id;
+    document.getElementById("edit_nombre").value = nombre;
+    document.getElementById("edit_rut").value = rut;
+    document.getElementById("edit_contacto").value = contacto;
+    const btnEliminar = document.getElementById("btn_eliminar_modal");
+    if (btnEliminar) {
+        btnEliminar.href = "proveedores.php?eliminar=" + id;
+    }
+
+    const modalElement = document.getElementById("modalProveedoreditar");
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+}
+</script>
+
+
 </body>
 </html>
+

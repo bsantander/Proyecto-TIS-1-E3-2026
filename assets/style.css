@@ -83,24 +83,8 @@
     border-color: #049a86;
 }
 
-/*Buscador*/
 
-.Buscador{
-        box-shadow: none; 
-        border-color: #dbe4e2; 
-        background-color: #f8fbfa;
-}
-
-/*Filtros*/
-
-.Filtros{
-        border-radius: 10px; 
-        border-color: #dbe4e2; 
-        background-color: #ffffff;
-}
-
-
-/*Ventana Modal*/
+/*Mini ventana configuracion*/
 
 .miniventana {
     border: none;
@@ -117,3 +101,44 @@
 .miniventana:focus-visible {
     outline: none;
 }
+
+
+/*Equipos*/
+
+.Buttons_equipo:hover{
+        border-color: #05ad98;
+        color: #05ad98;
+
+}
+
+.Buttons_equipo{
+        margin: 0 5px;
+        padding:10px;
+        font-weight: bold;
+        border-color: black;
+        
+}
+
+/*Buscador*/
+
+.Buscador::placeholder {
+    color: black;
+}
+
+.Buscador:focus {
+    border-color: #05ad98;
+    box-shadow: 0 0 0 0.2rem rgba(5, 173, 152, 0.25);
+}
+
+/*Filtro*/
+
+.Filtro::placeholder {  
+    color: black;
+}
+
+.Filtro:focus {
+    border-color: #05ad98;
+    box-shadow: 0 0 0 0.2rem rgba(5, 173, 152, 0.25);
+}
+
+
