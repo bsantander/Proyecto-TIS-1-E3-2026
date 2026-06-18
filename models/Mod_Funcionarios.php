@@ -44,7 +44,7 @@ class Mod_Funcionarios {
                 id_equipo = ?,
                 id_departamento = ?,
                 rol = ?,
-                contrasena = ?,
+                contrasena = ?
                 WHERE id_funcionario = ?";
         $this->conexion->execute_query(
             $sql,

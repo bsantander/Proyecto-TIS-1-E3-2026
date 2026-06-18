@@ -187,7 +187,8 @@
         <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
             <div class="card-body p-0">
                 <?php
-                $consulta = "SELECT DISTINCT id_funcionario, rut, nombre_completo, rol FROM funcionario";
+                $consulta = "SELECT id_funcionario, rut, nombre_completo, rol, id_equipo, id_departamento
+                FROM funcionario";
                 $resultado = mysqli_query($conexion, $consulta);
                 if (!$resultado) {
                     die('Error en la consulta: ' . mysqli_error($conexion));
@@ -209,6 +210,8 @@
                         while($row = mysqli_fetch_assoc($resultado)){
                             $id_funcionario  = $row["id_funcionario"];
                             $nombre_completo = $row["nombre_completo"];
+                            $id_equipo       = $row["id_equipo"];
+                            $id_departamento = $row["id_departamento"];
                             $rol             = $row["rol"];
                             $rut             = $row["rut"];
                         ?>
@@ -216,12 +219,18 @@
                           <th scope="row"><?php echo $id_funcionario; ?></th>
                           <td><?php echo $rut; ?></td>
                           <td><?php echo $nombre_completo; ?></td>
+                          <td><?php echo $id_equipo; ?></td>
+                          <td><?php echo $id_departamento; ?></td>
                           <td><?php echo $rol; ?></td>  
                           <td>
                                 <button class="btn btn-outline-dark btn-sm"
                                 onclick='abrirEditar(
-                                    <?php echo $id_funcionario; ?>,
-                                    <?php echo json_encode($nombre_completo); ?>
+                                    <?php echo (int) $id_funcionario; ?>,
+                                    <?php echo json_encode($rut); ?>,
+                                    <?php echo json_encode($nombre_completo); ?>,
+                                    <?php echo (int) $id_equipo; ?>,
+                                    <?php echo (int) $id_departamento; ?>,
+                                    <?php echo json_encode($rol); ?>
                                 )'>
                                         Editar
 
@@ -280,7 +289,7 @@
                     </div>
                     <div>
                         <label class="form-label">Equipo asignado</label>
-                            <input type="text" name="equipo" class="form-control" required>
+                            <input type="text" name="id_equipo" class="form-control" required>
                     </div>
                     <div>
                         <label class="form-label">Rol</label>
@@ -338,13 +347,12 @@
                     </div>
                     <div>
                         <label class="form-label">Equipo asignado</label>
-                        <input type="text" name="equipo" id="edit_equipo" class="form-control" required>
+                        <input type="text" name="id_equipo" id="edit_equipo" class="form-control" required>
                     </div>
                     <div>
                         <label class="form-label">Rol</label>
                         <input type="text" name="rol" id="edit_rol" class="form-control" required>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
