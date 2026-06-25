@@ -1,3 +1,6 @@
+<?php
+require_once("../conexion.php");
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -83,9 +86,46 @@
         </div>
     </div>
 
-    <p>Historial<p>
+    <h2>Hoja de Vida del Equipo</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID Equipo</th>
+            <th>MantenciÃ³n</th>
+            <th>Costo</th>
+        </tr>
+    </thead>
+    <tbody>
+
+<?php
+
+$sql = "
+SELECT
+    r.id_equipo,
+    r.id_mantencion,
+    co.costo
+FROM realiza r
+LEFT JOIN correctiva co
+ON r.id_mantencion = co.id_mantencion
+";
+
+$resultado = mysqli_query($conexion,$sql);
+
+while($fila = mysqli_fetch_assoc($resultado))
+{
+    echo "
+    <tr>
+        <td>{$fila['id_equipo']}</td>
+        <td>{$fila['id_mantencion']}</td>
+        <td>$ {$fila['costo']}</td>
+    </tr>";
+}
+?>
+
+    </tbody>
+</table>
 </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

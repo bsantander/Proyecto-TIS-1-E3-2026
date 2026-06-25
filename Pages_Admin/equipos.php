@@ -1,3 +1,7 @@
+<?php
+require_once("../conexion.php");
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -113,13 +117,46 @@
                 <table class="table table-hover m-0 align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Equipo</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Tipo</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Marca / Modelo</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Estado</th>
+                            <th>ID</th>
+                            <th>Marca</th>
+                            <th>Estado</th>
+                            <th>Criticidad</th>
                         </tr>
                     </thead>
-                </table>
+                    <tbody>
+
+                <?php
+                $sql = "
+SELECT
+    c.id_equipo,
+    c.marca,
+    COUNT(co.id_mantencion) AS fallas
+FROM computador c
+LEFT JOIN realiza r ON c.id_equipo = r.id_equipo
+LEFT JOIN correctiva co ON r.id_mantencion = co.id_mantencion
+GROUP BY c.id_equipo
+";
+
+$resultado = mysqli_query($conexion,$sql);
+
+while($fila = mysqli_fetch_assoc($resultado))
+{
+    $critico = ($fila['fallas'] >= 3)
+        ? "<span class='badge bg-danger'>CrÃ­tico</span>"
+        : "<span class='badge bg-success'>Normal</span>";
+
+    echo "
+    <tr>
+        <td>{$fila['id_equipo']}</td>
+        <td>{$fila['marca']}</td>
+        <td>Operativo</td>
+        <td>$critico</td>
+    </tr>";
+}
+?>
+
+    </tbody>
+</table>
             </div>
         </div>
     </div>
