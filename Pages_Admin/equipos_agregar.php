@@ -2,7 +2,8 @@
 require_once '../conexion.php'; 
 require_once '../models/Mod_Equipos.php';
 $listaFuncionarios = obtenerTodosFuncionarios($conexion);
-$listaProveedores = obtenerTodosProveedores($conexion);     
+$listaProveedores = obtenerTodosProveedores($conexion); 
+$fecha_hoy = date('Y-m-d');    
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (insertarEquipo($conexion, $_POST['tipo'], $_POST)) {
@@ -35,51 +36,70 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <a href="equipos.php" class="btn btn-secondary mb-4">Volver</a>
 
     <form method="POST">
-        <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #05ad98;">
-            <div class="card-header bg-white p-4">
-                <h3 class="fs-5 fw-bold m-0 text-dark">Información General</h3>
-            </div>
-            <div class="card-body p-4">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="fw-semibold">Tipo de Equipo</label>
-                        <select name="tipo" id="tipoSelect" class="form-select" onchange="mostrarCampos()" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Computador">Computador</option>
-                            <option value="Notebook">Notebook</option>
-                            <option value="Proyector">Proyector</option>
-                            <option value="Impresora">Impresora</option>
-                            <option value="Servidor">Servidor</option>
-                            <option value="Otro Dispositivo">Otro Dispositivo</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="fw-semibold">Funcionario Responsable</label>
-                        <select name="id_funcionario" class="form-select">
-                            <?php foreach ($listaFuncionarios as $f): ?>
-                                <option value="<?php echo $f['id_funcionario']; ?>"><?php echo $f['nombre_completo']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="fw-semibold">Proveedor del Equipo</label>
-                        <select name="id_proveedor" class="form-select">
-                            <?php foreach ($listaProveedores as $p): ?>
-                                <option value="<?php echo $p['id_proveedor']; ?>"><?php echo $p['nombre_completo']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    
-                    <div class="col-md-4 mb-3"><label>Marca</label><input type="text" name="marca" class="form-control"></div>
-                    <div class="col-md-4 mb-3"><label>N° Serie</label><input type="number" name="numero_serie" class="form-control"></div>
-                    <div class="col-md-6 mb-3"><label>Fecha Compra</label><input type="date" name="fecha_compra" class="form-control"></div>
-                    <div class="col-md-6 mb-3"><label>Fecha Garantía</label><input type="date" name="fecha_garantia" class="form-control"></div>
-                    <div class="col-md-12 mb-3"><label>Valor Equipo</label><input type="number" step="any" name="valor_equipo" class="form-control"></div>
+    <div class="card border-0 rounded-3 mb-4" style="border-top: 3px solid #05ad98;">
+        <div class="card-header bg-white p-4 pb-2 border-0">
+            <h3 class="fs-5 fw-bold m-0 text-dark">Información General</h3>
+        </div>
+        <div class="card-body p-4 pt-2">
+            <div class="row g-3">
+                
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold mb-1">Tipo de Equipo <span class="text-danger">*</span></label>
+                    <select name="tipo" id="tipoSelect" class="form-select" onchange="mostrarCampos()" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Computador">Computador</option>
+                        <option value="Notebook">Notebook</option>
+                        <option value="Proyector">Proyector</option>
+                        <option value="Impresora">Impresora</option>
+                        <option value="Servidor">Servidor</option>
+                        <option value="Otro Dispositivo">Otro Dispositivo</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold mb-1">Funcionario Responsable <span class="text-danger">*</span></label>
+                    <select name="id_funcionario" class="form-select" required>
+                        <option value="">Seleccione...</option>
+                        <?php foreach ($listaFuncionarios as $f): ?>
+                            <option value="<?php echo $f['id_funcionario']; ?>"><?php echo $f['nombre_completo']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold mb-1">Proveedor del Equipo <span class="text-danger">*</span></label>
+                    <select name="id_proveedor" class="form-select" required>
+                        <option value="">Seleccione...</option>
+                        <?php foreach ($listaProveedores as $p): ?>
+                            <option value="<?php echo $p['id_proveedor']; ?>"><?php echo $p['nombre_completo']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold mb-1">Marca <span class="text-danger">*</span></label>
+                    <input type="text" name="marca" class="form-control" required>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold mb-1">N° Serie <span class="text-danger">*</span></label>
+                    <input type="text" name="numero_serie" class="form-control" required>
+                </div>
+
+                <input type="hidden" name="fecha_compra" value="<?php echo date('Y-m-d'); ?>">
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold mb-1">Fecha Garantía <span class="text-danger">*</span></label>
+                    <input type="date" name="fecha_garantia" class="form-control" required>
+                </div>
+                
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold mb-1">Valor Equipo <span class="text-danger">*</span></label>
+                    <input type="number" step="any" name="valor_equipo" class="form-control" required>
                 </div>
             </div>
         </div>
-
-        <div id="contenedorCampos" class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #6c757d; display:none;">
+        <div id="contenedorCampos" class="card border-0 rounded-3 mb-4" style="border-top: 3px solid #6c757d; display:none;">
             <div class="card-header bg-white p-4"><h3 class="fs-5 fw-bold m-0 text-dark">Detalles Específicos</h3></div>
             <div class="card-body p-4">
                 <div id="camposComputador" class="tipo-campos" style="display:none;">

@@ -40,98 +40,111 @@ $listaproovedores = obtenerTodosProveedores($conexion);
 </head>
 <body class="bg-light">
 
-<div class="container my-5" style="max-width: 800px;">
-    <a href="equipos.php" class="btn btn-secondary mb-4" style="background-color: #05ad98; border-color: #05ad98;" >Volver</a>
+<div class="container my-5" style="max-width: 1000px;">
+    <a href="equipos.php" class="btn btn-secondary mb-4" style="background-color: #05ad98; border-color: #05ad98;">Volver</a>
 
     <form method="POST">
         <input type="hidden" name="id" value="<?php echo $id; ?>">
         <input type="hidden" name="tipo" value="<?php echo $tipo; ?>">
 
         <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #05ad98;">
-            <div class="card-header bg-white p-4">
+            <div class="card-header bg-white p-4 border-0 pb-2">
                 <h3 class="fs-5 fw-bold m-0 text-dark">Información del Equipo</h3>
             </div>
-            <div class="card-body p-4">
-                <ul class="list-group list-group-flush">
-                    <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-3'>
-                        <span class='text-muted fw-semibold'>Tipo de Equipo</span>
-                        <span class='text-primary fw-bold'><?php echo $tipo; ?></span>
-                    </li>
+            <div class="card-body p-4 pt-2">
+                
+                <div class="row g-3">
+                    
+                    <div class="col-md-6">
+                        <div class="input-group shadow-sm h-100">
+                            <span class="input-group-text bg-light text-muted fw-semibold" style="width: 40%; min-width: 140px;">Tipo de Equipo</span>
+                            <div class="form-control bg-white text-primary fw-bold"><?php echo $tipo; ?></div>
+                        </div>
+                    </div>
+
                     <?php foreach ($data['equipo'] as $col => $val): ?>
-                        <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-3'>
-                            <span class='text-muted fw-semibold text-capitalize'><?php echo str_replace('_', ' ', $col); ?></span>
-                            <?php if ($modo == 'editar'): ?>
-                                <input type="text" name="<?php echo $col; ?>" value="<?php echo $val; ?>" class="form-control w-50">
-                            <?php else: ?>
-                                <span class='text-dark fw-bold'><?php echo $val; ?></span>
-                            <?php endif; ?>
-                        </li>
+                        <div class="col-md-6">
+                            <div class="input-group shadow-sm h-100">
+                                <span class="input-group-text bg-light text-muted fw-semibold text-capitalize" style="width: 40%; min-width: 140px;">
+                                    <?php echo str_replace('_', ' ', $col); ?>
+                                </span>
+                                
+                                <?php if ($modo == 'editar'): ?>
+                                    <input type="text" name="<?php echo $col; ?>" value="<?php echo $val; ?>" class="form-control">
+                                <?php else: ?>
+                                    <div class="form-control bg-white text-dark fw-bold"><?php echo $val; ?></div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     <?php endforeach; ?>
-                </ul>
-            </div>
+
+                </div> </div>
         </div>
 
-        <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #6c757d;">
-            <div class="card-header bg-white p-4">
-                <h3 class="fs-5 fw-bold m-0 text-dark">Datos del Funcionario a Cargo</h3>
+        <div class="row g-4 mb-4">
+            
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 rounded-3 h-100" style="border-top: 3px solid #6c757d;">
+                    <div class="card-header bg-white p-4 border-0 pb-2">
+                        <h3 class="fs-5 fw-bold m-0 text-dark">Funcionario a Cargo</h3>
+                    </div>
+                    <div class="card-body p-4 pt-2">
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-light text-muted fw-semibold" style="width: 40%; min-width: 130px;">Responsable</span>
+                            
+                            <?php if ($modo == 'editar'): ?>
+                                <select name="id_funcionario" class="form-select">
+                                    <?php foreach ($listaFuncionarios as $f): ?>
+                                        <option value="<?php echo $f['id_funcionario']; ?>" <?php echo ($f['nombre_completo'] == $data['funcionario']['Nombre Completo']) ? 'selected' : ''; ?>>
+                                            <?php echo $f['nombre_completo']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php else: ?>
+                                <div class="form-control bg-white text-dark fw-bold"><?php echo $data['funcionario']['Nombre Completo']; ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-4">
-                <ul class="list-group list-group-flush">
-                    <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-3'>
-                        <span class='text-muted fw-semibold'>Funcionario Responsable</span>
-                        <?php if ($modo == 'editar'): ?>
-                            <select name="id_funcionario" class="form-select w-50">
-                                <?php foreach ($listaFuncionarios as $f): ?>
-                                    <option value="<?php echo $f['id_funcionario']; ?>" <?php echo ($f['nombre_completo'] == $data['funcionario']['Nombre Completo']) ? 'selected' : ''; ?>>
-                                        <?php echo $f['nombre_completo']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        <?php else: ?>
-                            <span class='text-dark fw-bold'><?php echo $data['funcionario']['Nombre Completo']; ?></span>
-                        <?php endif; ?>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #6c757d;">
-            <div class="card-header bg-white p-4">
-                <h3 class="fs-5 fw-bold m-0 text-dark">Datos del Proveedor</h3>
-            </div>
-            <div class="card-body p-4">
-                <ul class="list-group list-group-flush">
-                    <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-3'>
-                        <span class='text-muted fw-semibold'>Proveedor del equipo</span>
-                        
-                        <?php if ($modo == 'editar'): ?>
-                            <select name="id_proveedor" class="form-select w-50">
-                                <?php foreach ($listaproovedores as $f): ?>
-                                    <option value="<?php echo $f['id_proveedor']; ?>" 
-                                            <?php echo ($f['id_proveedor'] == $data['proveedor']['id_proveedor']) ? 'selected' : ''; ?>>
-                                        <?php echo $f['nombre_completo']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        <?php else: ?>
-                            <span class='text-dark fw-bold'>
-                                <?php echo $data['proveedor']['nombre_completo'] ?? 'Sin asignar'; ?>
-                            </span>
-                        <?php endif; ?>
-                    </li>
-                </ul>
-            </div>
-        </div>
 
-        <div class="text-end">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 rounded-3 h-100" style="border-top: 3px solid #6c757d;">
+                    <div class="card-header bg-white p-4 border-0 pb-2">
+                        <h3 class="fs-5 fw-bold m-0 text-dark">Datos del Proveedor</h3>
+                    </div>
+                    <div class="card-body p-4 pt-2">
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-light text-muted fw-semibold" style="width: 40%; min-width: 130px;">Proveedor</span>
+                            
+                            <?php if ($modo == 'editar'): ?>
+                                <select name="id_proveedor" class="form-select">
+                                    <?php foreach ($listaproovedores as $f): ?>
+                                        <option value="<?php echo $f['id_proveedor']; ?>" <?php echo ($f['id_proveedor'] == $data['proveedor']['id_proveedor']) ? 'selected' : ''; ?>>
+                                            <?php echo $f['nombre_completo']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php else: ?>
+                                <div class="form-control bg-white text-dark fw-bold">
+                                    <?php echo $data['proveedor']['nombre_completo'] ?? 'Sin asignar'; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <div class="text-end">
             <?php if ($modo == 'ver'): ?>
-                <a href="?id=<?php echo $id; ?>&tipo=<?php echo urlencode($tipo); ?>&modo=editar" class="btn" style="background-color: #05ad98; color: white;">Editar</a>
-            <?php else: ?>
-                <a href="?id=<?php echo $id; ?>&tipo=<?php echo urlencode($tipo); ?>" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn" style="background-color: #05ad98; color: white;">Guardar Cambios</button>
+                <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>&modo=editar" class="btn px-5 shadow-sm" style="background-color: #05ad98; color: white;">Editar</a> 
+                <?php else: ?>
+                    <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>" class="btn btn-secondary px-4 me-2 shadow-sm">Cancelar</a>                
+                    <button type="submit" class="btn px-5 shadow-sm" style="background-color: #05ad98; color: white;">Guardar Cambios</button>
             <?php endif; ?>
         </div>
     </form>
-    
+</div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
 </body>
