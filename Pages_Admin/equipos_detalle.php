@@ -58,7 +58,7 @@ $listaproovedores = obtenerTodosProveedores($conexion);
                     <div class="col-md-6">
                         <div class="input-group shadow-sm h-100">
                             <span class="input-group-text bg-light text-muted fw-semibold" style="width: 40%; min-width: 140px;">Tipo de Equipo</span>
-                            <div class="form-control bg-white text-primary fw-bold"><?php echo $tipo; ?></div>
+                            <div class="form-control bg-white fw-bold" style ="color:#05ad98" ><?php echo $tipo; ?></div>
                         </div>
                     </div>
 
@@ -78,73 +78,79 @@ $listaproovedores = obtenerTodosProveedores($conexion);
                         </div>
                     <?php endforeach; ?>
 
-                </div> </div>
-        </div>
-
-        <div class="row g-4 mb-4">
-            
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0 rounded-3 h-100" style="border-top: 3px solid #6c757d;">
-                    <div class="card-header bg-white p-4 border-0 pb-2">
-                        <h3 class="fs-5 fw-bold m-0 text-dark">Funcionario a Cargo</h3>
-                    </div>
-                    <div class="card-body p-4 pt-2">
-                        <div class="input-group shadow-sm">
-                            <span class="input-group-text bg-light text-muted fw-semibold" style="width: 40%; min-width: 130px;">Responsable</span>
-                            
-                            <?php if ($modo == 'editar'): ?>
-                                <select name="id_funcionario" class="form-select">
-                                    <?php foreach ($listaFuncionarios as $f): ?>
-                                        <option value="<?php echo $f['id_funcionario']; ?>" <?php echo ($f['nombre_completo'] == $data['funcionario']['Nombre Completo']) ? 'selected' : ''; ?>>
-                                            <?php echo $f['nombre_completo']; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php else: ?>
-                                <div class="form-control bg-white text-dark fw-bold"><?php echo $data['funcionario']['Nombre Completo']; ?></div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0 rounded-3 h-100" style="border-top: 3px solid #6c757d;">
-                    <div class="card-header bg-white p-4 border-0 pb-2">
-                        <h3 class="fs-5 fw-bold m-0 text-dark">Datos del Proveedor</h3>
-                    </div>
-                    <div class="card-body p-4 pt-2">
-                        <div class="input-group shadow-sm">
-                            <span class="input-group-text bg-light text-muted fw-semibold" style="width: 40%; min-width: 130px;">Proveedor</span>
-                            
-                            <?php if ($modo == 'editar'): ?>
-                                <select name="id_proveedor" class="form-select">
-                                    <?php foreach ($listaproovedores as $f): ?>
-                                        <option value="<?php echo $f['id_proveedor']; ?>" <?php echo ($f['id_proveedor'] == $data['proveedor']['id_proveedor']) ? 'selected' : ''; ?>>
-                                            <?php echo $f['nombre_completo']; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php else: ?>
-                                <div class="form-control bg-white text-dark fw-bold">
-                                    <?php echo $data['proveedor']['nombre_completo'] ?? 'Sin asignar'; ?>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="card shadow-sm border-0 rounded-3 h-100" style="border-top: 3px solid #6c757d;">
+                                <div class="card-header bg-white p-4 border-0 pb-2">
+                                    <h3 class="fs-5 fw-bold m-0 text-dark">Funcionario a Cargo</h3>
                                 </div>
-                            <?php endif; ?>
+                                <div class="card-body p-4 pt-2">
+                                    <div class="input-group shadow-sm mb-2">
+                                        <span class="input-group-text bg-light text-muted fw-semibold" style="width: 40%; min-width: 130px;">Responsable</span>
+                                        <?php if ($modo == 'editar'): ?>
+                                            <select name="id_funcionario" class="form-select">
+                                                <?php foreach ($listaFuncionarios as $f): ?>
+                                                    <option value="<?php echo $f['id_funcionario']; ?>" <?php echo ($f['id_funcionario'] == ($data['funcionario']['id_funcionario'] ?? '')) ? 'selected' : ''; ?>>
+                                                        <?php echo $f['nombre_completo']; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        <?php else: ?>
+                                            <div class="form-control bg-white text-dark fw-bold">
+                                                <?php echo $data['funcionario']['nombre'] ?? 'Sin asignar'; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-light text-muted fw-semibold" style="width: 40%; min-width: 130px;">Departamento</span>
+                                        <div class="form-control bg-light text-muted fw-bold">
+                                            <?php echo $data['funcionario']['nombre_departamento'] ?? 'Sin asignar'; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="col-md-6">
+                            <div class="card shadow-sm border-0 rounded-3 h-100" style="border-top: 3px solid #6c757d;">
+                                <div class="card-header bg-white p-4 border-0 pb-2">
+                                    <h3 class="fs-5 fw-bold m-0 text-dark">Datos del Proveedor</h3>
+                                </div>
+                                <div class="card-body p-4 pt-2">
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-light text-muted fw-semibold" style="width: 40%; min-width: 130px;">Proveedor</span>
+                                        <?php if ($modo == 'editar'): ?>
+                                            <select name="id_proveedor" class="form-select">
+                                                <?php foreach ($listaproovedores as $f): ?>
+                                                    <option value="<?php echo $f['id_proveedor']; ?>" <?php echo ($f['id_proveedor'] == $data['proveedor']['id_proveedor']) ? 'selected' : ''; ?>>
+                                                        <?php echo $f['nombre_completo']; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        <?php else: ?>
+                                            <div class="form-control bg-white text-dark fw-bold">
+                                                <?php echo $data['proveedor']['nombre_completo'] ?? 'Sin asignar'; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="text-end">
+                    <?php if ($modo == 'ver'): ?>
+                        <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>&modo=editar" class="btn px-5 shadow-sm" style="background-color: #05ad98; color: white;">Editar</a> 
+                        <?php else: ?>
+                            <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>" class="btn btn-secondary px-4 me-2 shadow-sm">Cancelar</a>                
+                            <button type="submit" class="btn px-5 shadow-sm" style="background-color: #05ad98; color: white;">Guardar Cambios</button>
+                            <?php endif; ?>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-        </div> <div class="text-end">
-            <?php if ($modo == 'ver'): ?>
-                <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>&modo=editar" class="btn px-5 shadow-sm" style="background-color: #05ad98; color: white;">Editar</a> 
-                <?php else: ?>
-                    <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>" class="btn btn-secondary px-4 me-2 shadow-sm">Cancelar</a>                
-                    <button type="submit" class="btn px-5 shadow-sm" style="background-color: #05ad98; color: white;">Guardar Cambios</button>
-            <?php endif; ?>
         </div>
-    </form>
-</div>
+        </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
 </body>

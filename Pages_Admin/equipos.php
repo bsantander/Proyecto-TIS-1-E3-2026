@@ -56,7 +56,7 @@ require('../conexion.php');
                     <p class="m-0 fs-6">Departamentos</p>
                 </a>
             </div>
-            <div class="Departamentos">
+            <div class="Proovedores">
                 <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined">person_4</span>                    
                         <p class="m-0 fs-6">Proveedores</p>
@@ -99,8 +99,6 @@ require('../conexion.php');
         <div id="vista-tabla">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Inventario de Equipos</h2>
-
-                <div class="d-flex justify-content-between align-items-center gap-4">
                     <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
                         <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
                         <a href="equipos_agregar.php" class="m-0 text-decoration-none text-white">Agregar equipo</a>
@@ -184,6 +182,35 @@ require('../conexion.php');
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <div class="modal fade" id="modalProveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar Nuevo Proveedor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <form action="procesar_proveedor.php" method="POST"> <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Nombre del Proveedor</label>
+                <input type="text" name="nombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Rut / Identificación</label>
+                <input type="text" name="rut" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contacto</label>
+                <input type="email" name="email" class="form-control" placeholder="ejemplo@correo.com">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" style="background-color: #05ad98; border: none;">Guardar Proveedor</button>
+        </div>
+      </form>
+      
     </div>
   </div>
 </div>

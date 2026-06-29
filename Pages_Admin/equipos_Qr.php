@@ -8,7 +8,7 @@ $tipo = $_GET['tipo'];
 $data = obtenerDatosCompletos($conexion, $id, $tipo);
 $equipo = $data['equipo'];
 $funcionario = $data['funcionario'];
-$proveedor = $data['proveedor']; // 1. Extraemos los datos del proveedor
+$proveedor = $data['proveedor']; 
 ?>
 
 <!doctype html>
@@ -16,9 +16,15 @@ $proveedor = $data['proveedor']; // 1. Extraemos los datos del proveedor
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ficha Técnica - <?php echo $tipo; ?></title>
+    <title>Ficha Tecnica - NodoActivo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/style.css">
+    <script src="../assets/script.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body class="bg-light p-3 p-md-5">
 
@@ -52,11 +58,11 @@ $proveedor = $data['proveedor']; // 1. Extraemos los datos del proveedor
             <ul class="list-group list-group-flush">
                 <?php foreach ($funcionario as $col => $val): ?>
                     <li class='list-group-item d-flex justify-content-between px-0 py-3'>
-                        <span class='text-muted fw-semibold'><?php echo $col; ?></span>
+                        <span class='text-muted fw-semibold'><?php echo str_replace('_',' ',$col); ?></span>
                         <span class='text-dark fw-bold'><?php echo $val; ?></span>
                     </li>
                 <?php endforeach; ?>
-            </ul>
+            </ul>   
         </div>
     </div>
 
@@ -75,12 +81,6 @@ $proveedor = $data['proveedor']; // 1. Extraemos los datos del proveedor
                     <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
-        </div>
-    </div>
-
-    <div class="card shadow-sm border-0 rounded-3 mb-4 text-center">
-        <div class="card-body p-4">
-            <div id="qrcode" class="d-flex justify-content-center"></div>
         </div>
     </div>
 </div>

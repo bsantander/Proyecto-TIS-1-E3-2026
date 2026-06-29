@@ -4,6 +4,7 @@ require_once '../models/Mod_Equipos.php';
 $listaFuncionarios = obtenerTodosFuncionarios($conexion);
 $listaProveedores = obtenerTodosProveedores($conexion); 
 $fecha_hoy = date('Y-m-d');    
+$fecha_maxima = date('Y-m-d', strtotime('+ 5 Years '));
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (insertarEquipo($conexion, $_POST['tipo'], $_POST)) {
@@ -36,66 +37,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <a href="equipos.php" class="btn btn-secondary mb-4">Volver</a>
 
     <form method="POST">
-    <div class="card border-0 rounded-3 mb-4" style="border-top: 3px solid #05ad98;">
-        <div class="card-header bg-white p-4 pb-2 border-0">
-            <h3 class="fs-5 fw-bold m-0 text-dark">Información General</h3>
+        <div class="alert alert-danger d-flex gap-2">
+            <i class="bi bi-exclamation-circle"></i>
+            <p>Todos los campos son obligatorios</p>
         </div>
-        <div class="card-body p-4 pt-2">
-            <div class="row g-3">
-                
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold mb-1">Tipo de Equipo <span class="text-danger">*</span></label>
-                    <select name="tipo" id="tipoSelect" class="form-select" onchange="mostrarCampos()" required>
-                        <option value="">Seleccione...</option>
-                        <option value="Computador">Computador</option>
-                        <option value="Notebook">Notebook</option>
-                        <option value="Proyector">Proyector</option>
-                        <option value="Impresora">Impresora</option>
-                        <option value="Servidor">Servidor</option>
-                        <option value="Otro Dispositivo">Otro Dispositivo</option>
-                    </select>
-                </div>
-                
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold mb-1">Funcionario Responsable <span class="text-danger">*</span></label>
-                    <select name="id_funcionario" class="form-select" required>
-                        <option value="">Seleccione...</option>
-                        <?php foreach ($listaFuncionarios as $f): ?>
-                            <option value="<?php echo $f['id_funcionario']; ?>"><?php echo $f['nombre_completo']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold mb-1">Proveedor del Equipo <span class="text-danger">*</span></label>
-                    <select name="id_proveedor" class="form-select" required>
-                        <option value="">Seleccione...</option>
-                        <?php foreach ($listaProveedores as $p): ?>
-                            <option value="<?php echo $p['id_proveedor']; ?>"><?php echo $p['nombre_completo']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold mb-1">Marca <span class="text-danger">*</span></label>
-                    <input type="text" name="marca" class="form-control" required>
-                </div>
-                
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold mb-1">N° Serie <span class="text-danger">*</span></label>
-                    <input type="text" name="numero_serie" class="form-control" required>
-                </div>
-
-                <input type="hidden" name="fecha_compra" value="<?php echo date('Y-m-d'); ?>">
-
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold mb-1">Fecha Garantía <span class="text-danger">*</span></label>
-                    <input type="date" name="fecha_garantia" class="form-control" required>
-                </div>
-                
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold mb-1">Valor Equipo <span class="text-danger">*</span></label>
-                    <input type="number" step="any" name="valor_equipo" class="form-control" required>
+        <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #05ad98;">
+            <div class="card-header bg-white p-4">
+                <h3 class="fs-5 fw-bold m-0 text-dark">Información General</h3>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-semibold">Tipo de Equipo</label>
+                        <select name="tipo" id="tipoSelect" class="form-select" onchange="mostrarCampos()" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Computador">Computador</option>
+                            <option value="Notebook">Notebook</option>
+                            <option value="Proyector">Proyector</option>
+                            <option value="Impresora">Impresora</option>
+                            <option value="Servidor">Servidor</option>
+                            <option value="Otro Dispositivo">Otro Dispositivo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-semibold">Funcionario Responsable</label>
+                        <select name="id_funcionario" class="form-select" required>
+                            <?php foreach ($listaFuncionarios as $f): ?>
+                                <option value="">Seleccione un funcionario</option>
+                                <option value="<?php echo $f['id_funcionario']; ?>"><?php echo $f['nombre_completo']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="fw-semibold">Proveedor del Equipo</label>
+                        <select name="id_proveedor" class="form-select" required >
+                            <?php foreach ($listaProveedores as $p): ?>
+                                <option value="">Seleccione un proovedor</option>
+                                <option value="<?php echo $p['id_proveedor']; ?>"><?php echo $p['nombre_completo']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3"><label>Marca</label><input type="text" name="marca" class="form-control" required></div>
+                    <div class="col-md-4 mb-3"><label>N° Serie</label><input type="number" name="numero_serie" class="form-control" required></div>
+                    <input type="hidden" name="fecha_compra" class="form-control" min="<?php echo $fecha_hoy; ?>">
+                    <div class="col-md-6 mb-3"><label>Fecha Garantía</label><input type="date" name="fecha_garantia" class="form-control" required
+                    min="<?php echo $fecha_hoy; ?>" max="<?php echo $fecha_maxima; ?>"></div>
+                    <div class="col-md-12 mb-3"><label>Valor Equipo</label><input type="number" step="any" name="valor_equipo" class="form-control" required></div>
                 </div>
             </div>
         </div>
@@ -104,35 +92,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="card-body p-4">
                 <div id="camposComputador" class="tipo-campos" style="display:none;">
                     <div class="row">
-                        <div class="col-md-6 mb-3"><label>Procesador</label><select name="procesador" class="form-select"><option>Intel</option><option>Ryzen</option></select></div>
-                        <div class="col-md-6 mb-3"><label>Modelo Procesador</label><input type="text" name="modelo_procesador" class="form-control"></div>
-                        <div class="col-md-6 mb-3"><label>Tipo RAM</label><select name="memoria_ram" class="form-select"><option>DDR4</option><option>DDR5</option></select></div>
-                        <div class="col-md-6 mb-3"><label>Cantidad RAM (GB)</label><input type="number" name="cantidad_ram" class="form-control"></div>
-                        <div class="col-md-6 mb-3"><label>Almacenamiento</label><select name="almacenamiento" class="form-select"><option>SSD SATA</option><option>SSD M.2</option><option>HDD</option></select></div>
-                        <div class="col-md-6 mb-3"><label>Cantidad Almacenamiento</label><input type="number" name="cantidad_almacenamiento" class="form-control"></div>
+                        <div class="col-md-6 mb-3"><label>Procesador</label><select name="procesador" class="form-select" required>
+                            <option value="">Seleccione un procesador</option>
+                            <option>Intel</option>
+                            <option>Ryzen</option>
+                        </select>
+                    </div>
+                        <div class="col-md-6 mb-3"><label>Modelo Procesador</label><input type="text" name="modelo_procesador" class="form-control" required></div>
+                        <div class="col-md-6 mb-3"><label>Tipo RAM</label><select name="memoria_ram" class="form-select" required>
+                            <option value="">Seleccione tipo de ram</option>
+                            <option>DDR4</option>
+                            <option>DDR5</option>
+                            </select></div>
+                        <div class="col-md-6 mb-3"><label>Cantidad RAM (GB)</label><input type="number" name="cantidad_ram" class="form-control" required></div>
+                        <div class="col-md-6 mb-3"><label>Almacenamiento</label><select name="almacenamiento" class="form-select" required>
+                                <option value="">Seleccione tipo de almacenamiento</option>
+                            <option>SSD SATA</option>
+                            <option>SSD M.2</option>
+                            <option>HDD</option>
+                         </select>
+                        </div>
+                        <div class="col-md-6 mb-3"><label>Cantidad Almacenamiento</label><input type="number" name="cantidad_almacenamiento" class="form-control" required></div>
                     </div>
                 </div>
                 <div id="camposNotebook" class="tipo-campos" style="display:none;">
-                    <div class="row"><div class="col-md-12 mb-3"><label>Modelo Notebook</label><input type="text" name="modelo" class="form-control"></div></div>
+                    <div class="row"><div class="col-md-12 mb-3"><label>Modelo Notebook</label><input type="text" name="modelo" class="form-control" required></div></div>
                 </div>
                 <div id="camposProyector" class="tipo-campos" style="display:none;">
                     <div class="row">
-                        <div class="col-md-6 mb-3"><label>Modelo</label><input type="text" name="modelo" class="form-control"></div>
-                        <div class="col-md-6 mb-3"><label>Calidad Imagen</label><input type="number" name="calidad_imagen" class="form-control"></div>
+                        <div class="col-md-6 mb-3"><label>Modelo</label><input type="text" name="modelo" class="form-control" required></div>
+                        <div class="col-md-6 mb-3"><label>Calidad Imagen</label><input type="number" name="calidad_imagen" class="form-control" required></div>
                     </div>
                 </div>
                 <div id="camposImpresora" class="tipo-campos" style="display:none;">
                     <div class="row">
-                        <div class="col-md-4 mb-3"><label>Modelo</label><input type="text" name="modelo" class="form-control"></div>
-                        <div class="col-md-4 mb-3"><label>Volumen Impresión</label><input type="number" name="volumen_impresion" class="form-control"></div>
-                        <div class="col-md-4 mb-3"><label>Tipo</label><select name="tipo_imp" name="tipo" class="form-select"><option>Inyección</option><option>Laser</option></select></div>
+                        <div class="col-md-4 mb-3"><label>Modelo</label><input type="text" name="modelo" class="form-control" required></div>
+                        <div class="col-md-4 mb-3"><label>Volumen Impresión</label><input type="number" name="volumen_impresion" class="form-control" required></div>
+                        <div class="col-md-4 mb-3"><label>Tipo</label>
+                        <select name="tipo_imp" name="tipo" class="form-select" required>
+                        <option value="">Seleccione tipo de impresora</option>
+                        <option>Inyección</option>
+                            <option>Laser</option>
+                        </select>
+                    </div>
                     </div>
                 </div>
                 <div id="camposServidor" class="tipo-campos" style="display:none;">
-                    <div class="row"><div class="col-md-12 mb-3"><label>Función</label><input type="text" name="funcion" class="form-control"></div></div>
+                    <div class="row"><div class="col-md-12 mb-3"><label>Función</label><input type="text" name="funcion" class="form-control" required></div></div>
                 </div>
                 <div id="camposOtro Dispositivo" class="tipo-campos" style="display:none;">
-                    <div class="row"><div class="col-md-12 mb-3"><label>Modelo</label><input type="text" name="modelo" class="form-control"></div></div>
+                    <div class="row"><div class="col-md-12 mb-3"><label>Modelo</label><input type="text" name="modelo" class="form-control" required></div></div>
                 </div>
             </div>
         </div>
