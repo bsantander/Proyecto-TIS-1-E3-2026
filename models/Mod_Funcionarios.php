@@ -66,6 +66,15 @@ class Mod_Funcionarios {
     return "Funcionario eliminado correctamente";
     }
 }
+
+
+function contarFuncionarios($conexion){
+    $sql = "SELECT COUNT(*) as total FROM funcionario";
+    $resultado = mysqli_query($conexion, $sql);
+    $fila = mysqli_fetch_assoc($resultado);
+    return $fila['total'];
+}
+
 ?>
 
 

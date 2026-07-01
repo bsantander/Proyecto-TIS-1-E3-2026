@@ -119,4 +119,11 @@ function insertarEquipo($conexion, $tipo, $datos) {
     return mysqli_query($conexion, $sql);
 }
 
+function contarEquipos($conexion){
+    $sql = "SELECT COUNT(*) as total FROM equipo_general";
+    $resultado = mysqli_query($conexion, $sql);
+    $fila = mysqli_fetch_assoc($resultado);
+    return $fila['total'];
+}
+
 ?>

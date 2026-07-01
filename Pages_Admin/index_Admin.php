@@ -1,3 +1,13 @@
+<?php
+require ("../conexion.php");
+session_start();
+require_once '../models/Mod_Equipos.php';
+require_once '../models/Mod_Funcionarios.php';
+$total_equipos = contarEquipos($conexion);
+$total_funcionarios = contarFuncionarios($conexion);
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,6 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../assets/style.css">
     <script src="../assets/script.js" defer></script>
+    <script src="../assets/dashboard.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -90,56 +101,91 @@
         </div>
     </div>
     
-    <div class="contenido-fluid flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
-        <div class="d-flex flex-column gap-4">
-            <div>
-                <h1 class="fs-3 fw-bold mb-2">Bienvenido (Nombre del Usuario)</h1>
-                <p class="text-secondary mb-0">Selecciona una opción en el menú para ver los detalles aquí.</p>
+    <div class="flex-grow-1 bg-light">
+        <div class="container-fluid p-4">
+
+            <div class="p-4 mb-4 rounded-4 text-white" 
+            style="background: linear-gradient(135deg, #05ad98, #047a6c);">
+            <h3 class="fw-bold mb-1">Resumen General</h3>
+            <h6 class="opacity-75">Panel de control del inventario</h6>
+        </div>
+
+        <div class="row g-3 mb-4">
+        
+            <div class="col-xl-3 col-md-6">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body">
+                        <h6 class="text-muted">Total Equipos</h6>
+                        <h2 class="fw-bold">30</h2>
+                    </div>
+                </div>
             </div>
-            <div class="row g-3">
-                <div class="col-12 col-md-6 col-xl-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h2 class="fs-5 fw-semibold">Estado actual</h2>
-                            <p class="text-muted mb-0">Resumen rápido de equipos y solicitudes recientes.</p>
+        
+            <div class="col-xl-3 col-md-6">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body">
+                        <h6 class="text-muted">Funcionarios</h6>
+                        <h2 class="fw-bold">4</h2>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-xl-3 col-md-6">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body">
+                        <h6 class="text-muted">Mant. Preventivas</h6>
+                        <h2 class="fw-bold">58</h2>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-xl-3 col-md-6">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body">
+                        <h6 class="text-muted">Mant. Correctivas</h6>
+                        <h2 class="fw-bold">20</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-header text-white d-flex align-items-center justify-content-between"
+                        style="background: linear-gradient(135deg, #05ad98, #047a6c); border-radius: 16px 16px 0 0;">
+                        <p class="m-0 fw-semibold">Estadísticas Mensuales</p>
+                        <span class="material-symbols-outlined">show_chart</span>
+                    </div>
+     
+                    <div class="card-body d-flex justify-content-center align-items-center">
+                        <div class="w-100" style="max-width: 750px; height: 360px;">
+                            <canvas id="Izquierda"></canvas>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-xl-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h2 class="fs-5 fw-semibold">Tareas pendientes</h2>
-                            <p class="text-muted mb-0">Revisa los mantenimientos y acciones por completar.</p>
-                        </div>
-                    </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-header text-white d-flex align-items-center justify-content-between"
+                    style="background: linear-gradient(135deg, #05ad98, #047a6c); border-radius: 16px 16px 0 0;">
+                    <p class="m-0 fw-semibold">Equipos por Estado</p>
+                    <span class="material-symbols-outlined">pie_chart</span>
                 </div>
-                <div class="col-12 col-md-6 col-xl-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h2 class="fs-5 fw-semibold">Actividad reciente</h2>
-                            <p class="text-muted mb-0">Últimos registros de historial y uso del sistema.</p>
-                        </div>
+                
+                <div class="card-body d-flex justify-content-center align-items-center m-0 p-0">
+                    <div style="width: 320px; height: 320px;">
+                        <canvas id="Derecha"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
-
-<dialog class="miniventana" id="ventanaConfiguracion">
-    <p>Configuracion<p>
-    <div class="d-flex justify-content-end gap-2 mt-2">
-        <button id="Cancelar" class="btn btn-light border fw-medium px-4">Cancelar</button>
-        <button id="Guardar" class="btn button fw-medium px-4">Guardar</button>
-    </div>
-</dialog>
-
-
-</body>
-</html>
-</script>
-
+    
+            
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
