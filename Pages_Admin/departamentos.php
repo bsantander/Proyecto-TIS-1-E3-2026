@@ -167,6 +167,10 @@
                             placeholder="Buscar departamento..."
                             value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
                         >
+
+                        <button class="btn btn-success" type="submit">
+                            Buscar
+                        </button>
                     </div>
                 </form>
 
@@ -188,13 +192,15 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item" href="departamentos.php?orden=id_asc">
+                            <a class="dropdown-item"
+                            href="departamentos.php?orden=id_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
                                 ID Ascendente
                             </a>
                         </li>
 
                         <li>
-                            <a class="dropdown-item" href="departamentos.php?orden=id_desc">
+                            <a class="dropdown-item"
+                            href="departamentos.php?orden=id_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
                                 ID Descendente
                             </a>
                         </li>
@@ -202,13 +208,15 @@
                         <li><hr class="dropdown-divider"></li>
 
                         <li>
-                            <a class="dropdown-item" href="departamentos.php?orden=nombre_asc">
+                            <a class="dropdown-item"
+                            href="departamentos.php?orden=nombre_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
                                 Nombre A-Z
                             </a>
                         </li>
 
                         <li>
-                            <a class="dropdown-item" href="departamentos.php?orden=nombre_desc">
+                            <a class="dropdown-item"
+                            href="departamentos.php?orden=nombre_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
                                 Nombre Z-A
                             </a>
                         </li>
@@ -220,42 +228,61 @@
                 <div class="card-body p-0">
                     <?php
 
-                    $orden = "ORDER BY id_departamento ASC";
+                            $orden = "ORDER BY id_departamento ASC";
 
-                    if(isset($_GET['orden'])){
+                            if(isset($_GET['orden'])){
 
-                        switch($_GET['orden']){
+                                switch($_GET['orden']){
 
-                            case "id_desc":
-                                $orden = "ORDER BY id_departamento DESC";
-                                break;
+                                    case "id_desc":
+                                        $orden = "ORDER BY id_departamento DESC";
+                                        break;
 
-                            case "nombre_asc":
-                                $orden = "ORDER BY nombre_departamento ASC";
-                                break;
+                                    case "nombre_asc":
+                                        $orden = "ORDER BY nombre_departamento ASC";
+                                        break;
 
-                            case "nombre_desc":
-                                $orden = "ORDER BY nombre_departamento DESC";
-                                break;
+                                    case "nombre_desc":
+                                        $orden = "ORDER BY nombre_departamento DESC";
+                                        break;
 
-                            case "id_asc":
-                            default:
-                                $orden = "ORDER BY id_departamento ASC";
-                                break;
-                        }
-                    }
-                    $consulta = "
-                            SELECT id_departamento, nombre_departamento
-                            FROM departamento
-                            $orden
+                                    case "id_asc":
+                                    default:
+                                        $orden = "ORDER BY id_departamento ASC";
+                                        break;
+                                }
+                            }
+
+                            /* ===========================
+                            CONSULTA CON BUSCADOR
+                            =========================== */
+
+                            $consulta = "
+                                SELECT id_departamento, nombre_departamento
+                                FROM departamento
                             ";
+
+                            if(isset($_GET['buscar']) && trim($_GET['buscar']) != ""){
+
+                                $buscar = mysqli_real_escape_string(
+                                    $conexion,
+                                    trim($_GET['buscar'])
+                                );
+
+                                $consulta .= "
+                                    WHERE nombre_departamento LIKE '%$buscar%'
+                                ";
+                            }
+
+                            $consulta .= " $orden";
 
                             $resultado = mysqli_query($conexion, $consulta);
 
-                            if (!$resultado) {
-                                die('Error en la consulta: ' . mysqli_error($conexion));
+                            if(!$resultado){
+                                die("Error en la consulta: " . mysqli_error($conexion));
                             }
-                    ?>
+
+                     ?>
                     
                     <table class="table table-hover m-0 align-middle">
                         <thead class="table-light">
