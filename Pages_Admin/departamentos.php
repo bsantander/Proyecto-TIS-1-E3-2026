@@ -161,21 +161,92 @@
                     <input type="text" class="Buscador form-control border-start-0 rounded-end-3 py-2" placeholder="Buscar departamento o encargado...">
                 </div>
 
-                <button class=" Filtros btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 fw-medium">
-                    <span class="material-symbols-outlined fs-5">filter_list</span>
-                    Filtros
-                </button>
+                                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+
+                        <span class="material-symbols-outlined fs-5">sort</span>
+                        Ordenar
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="departamentos.php">
+                                Todos
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="departamentos.php?orden=id_asc">
+                                ID Ascendente
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="departamentos.php?orden=id_desc">
+                                ID Descendente
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>
+                            <a class="dropdown-item" href="departamentos.php?orden=nombre_asc">
+                                Nombre A-Z
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="departamentos.php?orden=nombre_desc">
+                                Nombre Z-A
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
                 <div class="card-body p-0">
                     <?php
-                    $consulta = "SELECT id_departamento, nombre_departamento FROM departamento";
-                    $resultado = mysqli_query($conexion, $consulta);
-                    if (!$resultado) {
-                        die('Error en la consulta: ' . mysqli_error($conexion));
+
+                    $orden = "ORDER BY id_departamento ASC";
+
+                    if(isset($_GET['orden'])){
+
+                        switch($_GET['orden']){
+
+                            case "id_desc":
+                                $orden = "ORDER BY id_departamento DESC";
+                                break;
+
+                            case "nombre_asc":
+                                $orden = "ORDER BY nombre_departamento ASC";
+                                break;
+
+                            case "nombre_desc":
+                                $orden = "ORDER BY nombre_departamento DESC";
+                                break;
+
+                            case "id_asc":
+                            default:
+                                $orden = "ORDER BY id_departamento ASC";
+                                break;
                         }
-                        ?>
+                    }
+                    $consulta = "
+                            SELECT id_departamento, nombre_departamento
+                            FROM departamento
+                            $orden
+                            ";
+
+                            $resultado = mysqli_query($conexion, $consulta);
+
+                            if (!$resultado) {
+                                die('Error en la consulta: ' . mysqli_error($conexion));
+                            }
+                    ?>
                     
                     <table class="table table-hover m-0 align-middle">
                         <thead class="table-light">
@@ -239,7 +310,7 @@
 
         <div class="modal-header">
             <h5 class="modal-title">Agregar Departamento</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>   
         </div>
 
         <form method="POST">
