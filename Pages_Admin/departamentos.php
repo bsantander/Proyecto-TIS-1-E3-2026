@@ -174,7 +174,7 @@
                     </div>
                 </form>
 
-                                <div class="dropdown">
+                <div class="dropdown">
                     <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
                         type="button"
                         data-bs-toggle="dropdown"
