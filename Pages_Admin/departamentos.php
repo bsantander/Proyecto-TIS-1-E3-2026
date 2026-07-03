@@ -160,28 +160,135 @@
             <?php } ?>
 
             <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
-                <div class="input-group" style="max-width: 450px;">
-                    <span class="input-group-text bg-white border-end-0 rounded-start-3" style="border-color: #dbe4e2;">
-                        <span class="material-symbols-outlined text-secondary fs-5">search</span>
-                    </span>
-                    <input type="text" class="Buscador form-control border-start-0 rounded-end-3 py-2" placeholder="Buscar departamento o encargado...">
-                </div>
+                <form method="GET" class="w-100" style="max-width: 450px;">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 rounded-start-3" style="border-color: #dbe4e2;">
+                            <span class="material-symbols-outlined text-secondary fs-5">search</span>
+                        </span>
 
-                <button class=" Filtros btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 fw-medium">
-                    <span class="material-symbols-outlined fs-5">filter_list</span>
-                    Filtros
-                </button>
+                        <input
+                            type="text"
+                            name="buscar"
+                            class="Buscador form-control border-start-0 rounded-end-3 py-2"
+                            placeholder="Buscar departamento..."
+                            value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
+                        >
+
+                        <button class="btn btn-success" type="submit">
+                            Buscar
+                        </button>
+                    </div>
+                </form>
+
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+
+                        <span class="material-symbols-outlined fs-5">sort</span>
+                        Ordenar
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="departamentos.php">
+                                Todos
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item"
+                            href="departamentos.php?orden=id_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                                ID Ascendente
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item"
+                            href="departamentos.php?orden=id_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                                ID Descendente
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>
+                            <a class="dropdown-item"
+                            href="departamentos.php?orden=nombre_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                                Nombre A-Z
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item"
+                            href="departamentos.php?orden=nombre_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                                Nombre Z-A
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
                 <div class="card-body p-0">
                     <?php
-                    $consulta = "SELECT id_departamento, nombre_departamento FROM departamento";
-                    $resultado = mysqli_query($conexion, $consulta);
-                    if (!$resultado) {
-                        die('Error en la consulta: ' . mysqli_error($conexion));
-                        }
-                        ?>
+
+                            $orden = "ORDER BY id_departamento ASC";
+
+                            if(isset($_GET['orden'])){
+
+                                switch($_GET['orden']){
+
+                                    case "id_desc":
+                                        $orden = "ORDER BY id_departamento DESC";
+                                        break;
+
+                                    case "nombre_asc":
+                                        $orden = "ORDER BY nombre_departamento ASC";
+                                        break;
+
+                                    case "nombre_desc":
+                                        $orden = "ORDER BY nombre_departamento DESC";
+                                        break;
+
+                                    case "id_asc":
+                                    default:
+                                        $orden = "ORDER BY id_departamento ASC";
+                                        break;
+                                }
+                            }
+
+                            /* ===========================
+                            CONSULTA CON BUSCADOR
+                            =========================== */
+
+                            $consulta = "
+                                SELECT id_departamento, nombre_departamento
+                                FROM departamento
+                            ";
+
+                            if(isset($_GET['buscar']) && trim($_GET['buscar']) != ""){
+
+                                $buscar = mysqli_real_escape_string(
+                                    $conexion,
+                                    trim($_GET['buscar'])
+                                );
+
+                                $consulta .= "
+                                    WHERE nombre_departamento LIKE '%$buscar%'
+                                ";
+                            }
+
+                            $consulta .= " $orden";
+
+                            $resultado = mysqli_query($conexion, $consulta);
+
+                            if(!$resultado){
+                                die("Error en la consulta: " . mysqli_error($conexion));
+                            }
+
+                     ?>
                     
                     <table class="table table-hover m-0 align-middle">
                         <thead class="table-light">
@@ -216,10 +323,6 @@
                                     onclick="return confirm('¿Está seguro de eliminar este departamento?')">
                                         Eliminar
                                 </a>
-                                <a href="qr_departamento.php?id=<?php echo $id_departamento; ?>"
-                                    class="btn btn-outline-success btn-sm">
-                                        QR
-                                </a>
                                 <a href="ver_departamento.php?id=<?php echo $id_departamento; ?>"
                                     class="btn btn-ouline-info btn-sm">
 
@@ -249,7 +352,7 @@
 
         <div class="modal-header">
             <h5 class="modal-title">Agregar Departamento</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>   
         </div>
 
         <form method="POST">
