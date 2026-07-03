@@ -98,8 +98,14 @@ session_start();
     <div class="flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
         
         <div id="vista-tabla">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Inventario de Equipos</h2>
+            <div class="titulo-seccion d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="titulo-seccion-linea"></div>
+                    <div>
+                        <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Inventario de Equipos</h2>
+                        <p class="titulo-seccion-texto m-0">Registro y gestion de activos tecnologicos</p>
+                    </div>
+                </div>
                     <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
                         <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
                         <a href="equipos_agregar.php" class="m-0 text-decoration-none text-white">Agregar equipo</a>

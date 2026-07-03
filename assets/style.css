@@ -1,125 +1,171 @@
-/*Letra Roboto*/
-*{
-  font-family: "Roboto", sans-serif;
-  font-optical-sizing: auto;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+/* Base */
+* {
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
 }
 
-/*Barra_Lateral */
+/* Barra lateral */
 .Barra_Izquierda_Index_active {
     background: linear-gradient(10deg, #05ad98, #047a6c);
     transition: background-color 0.2s ease;
     width: 150px;
-
 }
 
-
-/* Secion */
+/* Inicio de sesion */
 .inicio_secion {
-        border-radius: 18px;
-        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(0, 0, 0, 0.08);
-}
-.campos_inicio_secion {
-        border-radius: 12px;
-        background: #f8fbfa;
-        border: 1px solid #dbe4e2;
-        height: 55px;
-}
-.button {
-        background-color: #05ad98;
-        border-color: #05ad98;
-        color: white;
-}
-.button:hover {
-        background-color: #049a86;
-        border-color: #049a86;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 18px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.08);
 }
 
-.campos_inicio_secion:focus {
-        border-color: #05ad98;
-        box-shadow: 0 0 0 0.25rem rgba(5, 173, 152, 0.25);
-}
-.button.button {
-        background-color: #05ad98;
-        border-color: #05ad98;
-}
-.button.button:hover {
-        background-color: #049a86;
-        border-color: #049a86;
+.campos_inicio_secion {
+    background: #f8fbfa;
+    border: 1px solid #dbe4e2;
+    border-radius: 12px;
+    height: 55px;
 }
 
 .campos_inicio_secion:focus {
     border-color: #05ad98;
     box-shadow: 0 0 0 0.25rem rgba(5, 173, 152, 0.25);
 }
-.button.button {
+
+/* Boton principal reutilizable */
+.button {
     background-color: #05ad98;
     border-color: #05ad98;
+    color: white;
 }
-.button.button:hover {
+
+.button:hover,
+.button:focus {
     background-color: #049a86;
     border-color: #049a86;
+    color: white;
 }
 
-
-/*Mini ventana configuracion*/
-
-.miniventana {
-    border: none;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    max-width: 450px;
-    width: 100%;
-}
-.miniventana::backdrop {
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(3px);
-}
-.miniventana:focus-visible {
-    outline: none;
+/* Titulo de seccion */
+.titulo-seccion {
+    background: #ffffff;
+    border: 1px solid #dbe4e2;
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
 }
 
-
-/*Equipos*/
-
-.Buttons_equipo:hover{
-        border-color: #05ad98;
-        color: #05ad98;
-
+.titulo-seccion-linea {
+    width: 5px;
+    height: 48px;
+    border-radius: 999px;
+    background-color: #05ad98;
+    flex-shrink: 0;
 }
 
-.Buttons_equipo{
-        margin: 0 5px;
-        padding:10px;
-        font-weight: bold;
-        border-color: black;
-        
+.titulo-seccion-texto {
+    color: #6c757d;
+    font-size: 0.9rem;
 }
 
-/*Buscador*/
+/* Equipos */
+.Buttons_equipo {
+    border-color: black;
+    font-weight: bold;
+    margin: 0 5px;
+    padding: 10px;
+}
 
+.Buttons_equipo:hover {
+    border-color: #05ad98;
+    color: #05ad98;
+}
+
+/* Formularios de busqueda y filtros */
 .Buscador::placeholder {
     color: black;
 }
 
-.Buscador:focus {
-    border-color: #05ad98;
-    box-shadow: 0 0 0 0.2rem rgba(5, 173, 152, 0.25);
-}
-
-/*Filtro*/
-
-.Filtro::placeholder {  
-    color: black;
-}
-
+.Buscador:focus,
 .Filtro:focus {
     border-color: #05ad98;
     box-shadow: 0 0 0 0.2rem rgba(5, 173, 152, 0.25);
 }
 
+.Filtro::placeholder {  
+    color: black;
+}
+
+/* Detalle de equipos */
+.detalle-page {
+    background: #f4f6f8;
+}
+
+.detalle-contenedor {
+    max-width: 1080px;
+}
+
+.detalle-card {
+    background: #ffffff;
+    border: 1px solid #dbe4e2;
+    border-radius: 14px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.detalle-card-header {
+    border-bottom: 1px solid #edf2f1;
+    padding: 20px 24px 12px;
+}
+
+.detalle-card-body {
+    padding: 22px 24px 24px;
+}
+
+.detalle-campo {
+    background: #ffffff;
+    border: 1px solid #dbe4e2;
+    border-radius: 12px;
+    min-height: 74px;
+    padding: 12px 14px;
+}
+
+.detalle-label {
+    color: #6c757d;
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    text-transform: capitalize;
+}
+
+.detalle-valor {
+    color: #263238;
+    font-size: 0.98rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.detalle-valor-principal {
+    color: #05ad98;
+}
+
+.detalle-form-control {
+    border-color: #dbe4e2;
+    border-radius: 10px;
+    min-height: 42px;
+}
+
+.detalle-form-control:focus {
+    border-color: #05ad98;
+    box-shadow: 0 0 0 0.2rem rgba(5, 173, 152, 0.18);
+}
+
+.detalle-acciones {
+    background: #ffffff;
+    border: 1px solid #dbe4e2;
+    border-radius: 14px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
+    padding: 16px 20px;
+}
 
