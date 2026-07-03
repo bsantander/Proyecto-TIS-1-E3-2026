@@ -154,12 +154,21 @@
             <?php } ?>
 
             <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
-                <div class="input-group" style="max-width: 450px;">
-                    <span class="input-group-text bg-white border-end-0 rounded-start-3" style="border-color: #dbe4e2;">
-                        <span class="material-symbols-outlined text-secondary fs-5">search</span>
-                    </span>
-                    <input type="text" class="Buscador form-control border-start-0 rounded-end-3 py-2" placeholder="Buscar departamento o encargado...">
-                </div>
+                <form method="GET" class="w-100" style="max-width: 450px;">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 rounded-start-3" style="border-color: #dbe4e2;">
+                            <span class="material-symbols-outlined text-secondary fs-5">search</span>
+                        </span>
+
+                        <input
+                            type="text"
+                            name="buscar"
+                            class="Buscador form-control border-start-0 rounded-end-3 py-2"
+                            placeholder="Buscar departamento..."
+                            value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
+                        >
+                    </div>
+                </form>
 
                                 <div class="dropdown">
                     <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
