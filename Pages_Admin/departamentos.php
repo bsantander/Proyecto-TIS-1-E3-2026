@@ -68,7 +68,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
         <link rel="stylesheet" href="../assets/style.css">
-        <script src="../assets/script.js" defer></script>
+        <script src="../assets/script.js" defer></script>   
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -111,6 +111,12 @@
                     <a href="departamentos.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                         <span class="material-symbols-outlined fs-5">apartment</span>
                         <p class="m-0 fs-6">Departamentos</p>
+                    </a>
+                </div>
+                <div class="Proovedores">
+                    <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                        <span class="material-symbols-outlined">person_4</span>                    
+                        <p class="m-0 fs-6">Proveedores</p>
                     </a>
                 </div>
                 <div class="Mantenciones">
