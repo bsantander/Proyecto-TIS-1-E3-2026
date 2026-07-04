@@ -191,7 +191,7 @@
                             value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
                         >
 
-                        <button class="btn button" type="submit">
+                        <button class="btn btn-outline-primary" type="submit">
                             Buscar
                         </button>
                     </div>
