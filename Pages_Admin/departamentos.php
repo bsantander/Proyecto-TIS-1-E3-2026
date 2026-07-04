@@ -5,8 +5,16 @@
         $modelo = new Mod_Departamentos($conexion);
 
 
-        if(isset($_POST['agregar'])){
-            $nombre = $_POST['nombre_departamento'];
+       if(isset($_POST['agregar'])){
+            $nombre = trim($_POST['nombre_departamento']);
+
+            // Validación
+            if(strlen($nombre) < 3){
+                $_SESSION['mensaje'] = "El nombre del departamento debe tener al menos 3 caracteres.";
+                header("Location: departamentos.php");
+                exit;
+            }
+
             $_SESSION['mensaje'] = $modelo->agregarDepartamento($nombre);
             header("Location: departamentos.php");
             exit;
@@ -27,13 +35,21 @@
             $editar = mysqli_fetch_assoc($res);
         }
         if(isset($_POST['guardar'])){
+
             $id = (int) $_POST['id_departamento'];
             $nombre = trim($_POST['nombre_departamento']);
+
+            // Validación
+            if(strlen($nombre) < 3){
+                $_SESSION['mensaje'] = "El nombre del departamento debe tener al menos 3 caracteres.";
+                header("Location: departamentos.php");
+                exit;
+            }
 
             $_SESSION['mensaje'] = $modelo->editarDepartamento($id, $nombre);
             header("Location: departamentos.php");
             exit;
-        }   
+        }
 
     ?>
 
