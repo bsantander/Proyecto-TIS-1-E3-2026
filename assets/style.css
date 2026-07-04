@@ -68,19 +68,6 @@
         border-color: #049a86;
 }
 
-.campos_inicio_secion:focus {
-    border-color: #05ad98;
-    box-shadow: 0 0 0 0.25rem rgba(5, 173, 152, 0.25);
-}
-.button.button {
-    background-color: #05ad98;
-    border-color: #05ad98;
-}
-.button.button:hover {
-    background-color: #049a86;
-    border-color: #049a86;
-}
-
 /*Buscador*/
 
 .Buscador{
