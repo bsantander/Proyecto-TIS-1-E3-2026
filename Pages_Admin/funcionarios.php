@@ -64,7 +64,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../assets/style.css">
-    <script src="../assets/script.js" defer></script>
+    <script src="../assets/script.js?v=2" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -181,14 +181,13 @@
         </div>
         <?php endif; ?>
 
-        <div class="my-3 d-flex flex-row justify-content-between">
-            <div class="input-group flex-nowrap" style="max-width: 450px">
-                <span class="input-group-text material-symbols-outlined">search</span>
-                <input type="text" class="Buscador form-control" placeholder="Buscar por nombre, RUT, rol..." >
+            <div class=" my-3 d-flex flex-row justify-content-between ">
+                <div class="input-group flex-nowrap" style="max-width: 450px">
+                    <span class=" input-group-text material-symbols-outlined">search</span>
+                    <input type="text" id="inputBusquedaFuncionario" onkeyup="filtrarFuncionarios()" class="Buscador form-control" placeholder="Buscar por Nombre, Rut, etc..." >
+                </div>
             </div>
-        </div>
-        
-        
+
         <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
             <div class="card-body p-0">
                 <?php
@@ -210,7 +209,7 @@
                             <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tablaFuncionarios">
                         <?php
                         while($row = mysqli_fetch_assoc($resultado)){
                             $id_funcionario  = $row["id_funcionario"];

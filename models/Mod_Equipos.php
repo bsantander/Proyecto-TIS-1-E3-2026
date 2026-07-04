@@ -74,6 +74,11 @@ function actualizarEquipo($conexion, $id, $tipo, $datos) {
     
     $set_parts = [];
     foreach ($datos as $columna => $valor) {
+        if (in_array($columna, ['id_funcionario', 'id_proveedor'], true) && $valor === '') {
+            $set_parts[] = "$columna = NULL";
+            continue;
+        }
+
         $set_parts[] = "$columna = '" . mysqli_real_escape_string($conexion, $valor) . "'";
     }
     
@@ -104,6 +109,10 @@ function insertarEquipo($conexion, $tipo, $datos) {
         'servidor'   => ['id_equipo', 'marca','fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'funcion', 'id_funcionario', 'id_proveedor'],
         'otro_dispositivo' => ['id_equipo', 'marca', 'fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'modelo', 'id_funcionario', 'id_proveedor']
     ];
+
+    if (!isset($tablas[$tipo])) {
+        return false;
+    }
 
     $tabla = $tablas[$tipo];
     $permitidas = $columnas_permitidas[$tabla];

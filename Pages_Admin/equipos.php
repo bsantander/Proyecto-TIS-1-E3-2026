@@ -1,6 +1,31 @@
 <?php
 require('../conexion.php');
 session_start();
+
+$equipos_por_pagina = 15;
+$pagina_actual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
+
+if ($pagina_actual < 1) {
+    $pagina_actual = 1;
+}
+
+$consulta_total = "SELECT COUNT(*) AS total FROM vista_equipos";
+$resultado_total = mysqli_query($conexion, $consulta_total);
+
+if (!$resultado_total) {
+    die('Error en la consulta: ' . mysqli_error($conexion));
+}
+
+$total_equipos = (int) mysqli_fetch_assoc($resultado_total)['total'];
+$total_paginas = max(1, (int) ceil($total_equipos / $equipos_por_pagina));
+
+if ($pagina_actual > $total_paginas) {
+    $pagina_actual = $total_paginas;
+}
+
+$offset = ($pagina_actual - 1) * $equipos_por_pagina;
+$desde_equipo = $total_equipos > 0 ? $offset + 1 : 0;
+$hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
 ?>
 
 <!DOCTYPE html>
@@ -12,12 +37,12 @@ session_start();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/style.css?v=4">
     <script src="../assets/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    
+
 </head>
 <body>
 <div class="Container d-flex flex-row vh-100 overflow-hidden">
@@ -59,7 +84,7 @@ session_start();
             </div>
             <div class="Proovedores">
                 <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
-                    <span class="material-symbols-outlined">person_4</span>                    
+                    <span class="material-symbols-outlined">person_4</span>
                         <p class="m-0 fs-6">Proveedores</p>
                 </a>
             </div>
@@ -76,11 +101,11 @@ session_start();
                 </a>
             </div>
         </div>
-        
+
         <div class="Inferior">
             <div class="Configuracion" >
                 <a href="configuracion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
-                    <span class="material-symbols-outlined">build</span>                   
+                    <span class="material-symbols-outlined">build</span>
                     <p class="m-0 fs-6">Configuracion</p>
                 </a>
             </div>
@@ -90,7 +115,7 @@ session_start();
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>
-            </div>        
+            </div>
         </div>
     </div>
     
@@ -110,9 +135,8 @@ session_start();
                         <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
                         <a href="equipos_agregar.php" class="m-0 text-decoration-none text-white">Agregar equipo</a>
                 </button>
-                </div>
             </div>
-            
+
             <div class=" my-3 d-flex flex-row justify-content-between ">
                 <div class="input-group flex-nowrap" style="max-width: 450px">
                     <span class=" input-group-text material-symbols-outlined">search</span>
@@ -130,13 +154,13 @@ session_start();
                 </select>
             </div>
 
-            
+
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
                 <div class="card-body p-0">
                     <?php
-                    $consulta = "SELECT id_equipo, tipo, marca, modelo FROM vista_equipos";
+                    $consulta = "SELECT id_equipo, tipo, marca, modelo FROM vista_equipos ORDER BY id_equipo, tipo LIMIT $equipos_por_pagina OFFSET $offset";
                     $resultado = mysqli_query($conexion, $consulta);
-                    
+
                     if (!$resultado) {
                         die('Error en la consulta: ' . mysqli_error($conexion));
                     }
@@ -151,6 +175,7 @@ session_start();
                                 <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Modelo</th>
                                 <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Gestionar Equipo</th>
                                 <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Codigo QR</th>
+                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Historial </th>
                             </tr>
                         </thead>
                         <tbody id="tablaEquiposBody" >
@@ -166,7 +191,7 @@ session_start();
                               <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $tipo; ?></td>
                               <td class="p-3 fw-medium text-dark"><?php echo $marca; ?></td>
                               <td class="p-3 text-secondary"><?php echo $modelo; ?></td>
-                              
+
                               <td class="p-3 text-center">
                                 <a href="equipos_detalle.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
                                     <span class="material-symbols-outlined align-middle">visibility</span>
@@ -176,51 +201,47 @@ session_start();
                                 <a href="equipos_QR.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
                                     <span class="material-symbols-outlined align-middle">qr_code</span>
                                 </a>
+                              </td>
                             </tr>
                             <?php
                             }
-                            ?>  
+                            ?>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div> 
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3">
+                <p class="text-secondary m-0">
+                    Mostrando <?php echo $desde_equipo; ?> a <?php echo $hasta_equipo; ?> de <?php echo $total_equipos; ?> equipos
+                </p>
+
+                <?php if ($total_paginas > 1): ?>
+                    <nav aria-label="Paginacion de equipos">
+                        <ul class="pagination equipos-paginacion mb-0">
+                            <li class="page-item <?php echo $pagina_actual <= 1 ? 'disabled' : ''; ?>">
+                                <a class="page-link" href="?pagina=<?php echo $pagina_actual - 1; ?>">Anterior</a>
+                            </li>
+
+                            <?php for ($pagina = 1; $pagina <= $total_paginas; $pagina++): ?>
+                                <li class="page-item <?php echo $pagina === $pagina_actual ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?pagina=<?php echo $pagina; ?>"><?php echo $pagina; ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <li class="page-item <?php echo $pagina_actual >= $total_paginas ? 'disabled' : ''; ?>">
+                                <a class="page-link" href="?pagina=<?php echo $pagina_actual + 1; ?>">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <div class="modal fade" id="modalProveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Agregar Nuevo Proveedor</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
       
-      <form action="procesar_proveedor.php" method="POST"> <div class="modal-body">
-            <div class="mb-3">
-                <label class="form-label">Nombre del Proveedor</label>
-                <input type="text" name="nombre" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Rut / Identificación</label>
-                <input type="text" name="rut" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Contacto</label>
-                <input type="email" name="email" class="form-control" placeholder="ejemplo@correo.com">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary" style="background-color: #05ad98; border: none;">Guardar Proveedor</button>
-        </div>
-      </form>
-      
-    </div>
-  </div>
-</div>
 
 </body>
 </html>

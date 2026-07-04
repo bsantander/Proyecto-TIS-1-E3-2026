@@ -7,7 +7,15 @@ $fecha_hoy = date('Y-m-d');
 $fecha_maxima = date('Y-m-d', strtotime('+ 5 Years '));
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (insertarEquipo($conexion, $_POST['tipo'], $_POST)) {
+    $tipoEquipo = $_POST['tipo'] ?? '';
+    $datosEquipo = $_POST;
+
+    if (isset($datosEquipo['tipo_impresora'])) {
+        $datosEquipo['tipo'] = $datosEquipo['tipo_impresora'];
+        unset($datosEquipo['tipo_impresora']);
+    }
+
+    if (insertarEquipo($conexion, $tipoEquipo, $datosEquipo)) {
         header("Location: equipos.php");
         exit;
     }
@@ -80,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
                     <div class="col-md-4 mb-3"><label>Marca</label><input type="text" name="marca" class="form-control" required></div>
                     <div class="col-md-4 mb-3"><label>N° Serie</label><input type="number" name="numero_serie" class="form-control" required></div>
-                    <input type="hidden" name="fecha_compra" class="form-control" min="<?php echo $fecha_hoy; ?>">
+                    <input type="hidden" name="fecha_compra" class="form-control" value="<?php echo $fecha_hoy; ?>" min="<?php echo $fecha_hoy; ?>">
                     <div class="col-md-6 mb-3"><label>Fecha Garantía</label><input type="date" name="fecha_garantia" class="form-control" required
                     min="<?php echo $fecha_hoy; ?>" max="<?php echo $fecha_maxima; ?>"></div>
                     <div class="col-md-12 mb-3"><label>Valor Equipo</label><input type="number" step="any" name="valor_equipo" class="form-control" required></div>
@@ -129,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="col-md-4 mb-3"><label>Modelo</label><input type="text" name="modelo" class="form-control" required></div>
                         <div class="col-md-4 mb-3"><label>Volumen Impresión</label><input type="number" name="volumen_impresion" class="form-control" required></div>
                         <div class="col-md-4 mb-3"><label>Tipo</label>
-                        <select name="tipo_imp" name="tipo" class="form-select" required>
+                        <select name="tipo_impresora" class="form-select" required>
                         <option value="">Seleccione tipo de impresora</option>
                         <option>Inyección</option>
                             <option>Laser</option>
@@ -154,21 +162,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 function mostrarCampos() {
     const tipo = document.getElementById('tipoSelect').value;
     const contenedor = document.getElementById('contenedorCampos');
-    document.querySelectorAll('.tipo-campos').forEach(div => div.style.display = 'none');
+    document.querySelectorAll('.tipo-campos').forEach(div => {
+        div.style.display = 'none';
+        div.querySelectorAll('input, select, textarea').forEach(campo => {
+            campo.disabled = true;
+        });
+    });
+
+    const activarCampos = (contenedorCampos) => {
+        contenedorCampos.style.display = 'block';
+        contenedorCampos.querySelectorAll('input, select, textarea').forEach(campo => {
+            campo.disabled = false;
+        });
+    };
     
     if(tipo) {
         contenedor.style.display = 'block';
         if(tipo === 'Notebook') {
-            document.getElementById('camposComputador').style.display = 'block';
-            document.getElementById('camposNotebook').style.display = 'block';
+            activarCampos(document.getElementById('camposComputador'));
+            activarCampos(document.getElementById('camposNotebook'));
         } else {
             const divMostrar = document.getElementById('campos' + tipo);
-            if(divMostrar) divMostrar.style.display = 'block';
+            if(divMostrar) activarCampos(divMostrar);
         }
     } else {
         contenedor.style.display = 'none';
     }
 }
+
+document.addEventListener('DOMContentLoaded', mostrarCampos);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

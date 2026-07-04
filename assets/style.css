@@ -71,14 +71,39 @@
 /* Equipos */
 .Buttons_equipo {
     border-color: black;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-weight: bold;
+    height: 42px;
     margin: 0 5px;
-    padding: 10px;
+    padding: 0;
+    vertical-align: middle;
+    width: 42px;
+}
+
+.Buttons_equipo .material-symbols-outlined {
+    font-size: 1.25rem;
+    line-height: 1;
 }
 
 .Buttons_equipo:hover {
     border-color: #05ad98;
     color: #05ad98;
+}
+
+.equipos-paginacion .page-link {
+    color: #05ad98;
+}
+
+.equipos-paginacion .page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(5, 173, 152, 0.18);
+}
+
+.equipos-paginacion .active .page-link {
+    background-color: #05ad98;
+    border-color: #05ad98;
+    color: #ffffff;
 }
 
 /* Formularios de busqueda y filtros */

@@ -71,6 +71,7 @@ $listaproovedores = obtenerTodosProveedores($conexion);
                     </div>
 
                     <?php foreach ($data['equipo'] as $col => $val): ?>
+                        <?php if (in_array($col, ['id_funcionario', 'id_proveedor'], true)) { continue; } ?>
                         <div class="col-md-6">
                             <div class="detalle-campo">
                                 <span class="detalle-label"><?php echo str_replace('_', ' ', $col); ?></span>
@@ -100,6 +101,7 @@ $listaproovedores = obtenerTodosProveedores($conexion);
 
                             <?php if ($modo == 'editar'): ?>
                                 <select name="id_funcionario" class="detalle-form-control form-select">
+                                    <option value="" <?php echo empty($data['funcionario']['id_funcionario']) ? 'selected' : ''; ?>>Sin asignar</option>
                                     <?php foreach ($listaFuncionarios as $f): ?>
                                         <option value="<?php echo $f['id_funcionario']; ?>" <?php echo ($f['id_funcionario'] == ($data['funcionario']['id_funcionario'] ?? '')) ? 'selected' : ''; ?>>
                                             <?php echo $f['nombre_completo']; ?>
@@ -133,8 +135,9 @@ $listaproovedores = obtenerTodosProveedores($conexion);
 
                             <?php if ($modo == 'editar'): ?>
                                 <select name="id_proveedor" class="detalle-form-control form-select">
+                                    <option value="" <?php echo empty($data['proveedor']['id_proveedor']) ? 'selected' : ''; ?>>Sin asignar</option>
                                     <?php foreach ($listaproovedores as $f): ?>
-                                        <option value="<?php echo $f['id_proveedor']; ?>" <?php echo ($f['id_proveedor'] == $data['proveedor']['id_proveedor']) ? 'selected' : ''; ?>>
+                                        <option value="<?php echo $f['id_proveedor']; ?>" <?php echo ($f['id_proveedor'] == ($data['proveedor']['id_proveedor'] ?? '')) ? 'selected' : ''; ?>>
                                             <?php echo $f['nombre_completo']; ?>
                                         </option>
                                     <?php endforeach; ?>

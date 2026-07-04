@@ -163,13 +163,12 @@
                 </div>
             <?php } ?>
 
-            <div class="my-3 d-flex flex-row justify-content-between">
+            <div class=" my-3 d-flex flex-row justify-content-between ">
                 <div class="input-group flex-nowrap" style="max-width: 450px">
-                    <span class="input-group-text material-symbols-outlined">search</span>
-                    <input type="text" class="Buscador form-control" placeholder="Buscar departamento..." >
+                    <span class=" input-group-text material-symbols-outlined">search</span>
+                    <input type="text" id="inputBusquedaDepartamento" onkeyup="filtrarDepartamentos()" class="Buscador form-control" placeholder="Buscar departamento..." >
                 </div>
             </div>
-            
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
                 <div class="card-body p-0">
                     <?php
@@ -185,10 +184,10 @@
                             <tr>
                                 <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 10%;">ID</th>
                                 <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 40%;">Nombre del Departamento</th>
-                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Acciones</th>
+                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600; width: 280px;">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tablaDepartamentos">
                             <?php
                             while($row = mysqli_fetch_assoc($resultado)){
                                 $id_departamento = $row["id_departamento"];
@@ -200,31 +199,25 @@
                             <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $nombre_departamento; ?></td>
 
                             <td class="p-3 text-center">
-                                <button class="btn btn-outline-primary btn-sm"
-                                onclick='abrirEditar(
-                                    <?php echo $id_departamento; ?>,
-                                    <?php echo json_encode($nombre_departamento); ?>
-                                )'>
+                                <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
+                                    <button class="btn btn-outline-primary btn-sm"
+                                    onclick='abrirEditar(
+                                        <?php echo $id_departamento; ?>,
+                                        <?php echo json_encode($nombre_departamento); ?>
+                                    )'>
                                         Editar
-                                
-                                </button>
+                                    </button>
                                 <a href="departamentos.php?eliminar=<?php echo $id_departamento; ?>"
                                     class="btn btn-outline-danger btn-sm"
                                     onclick="return confirm('¿Está seguro de eliminar este departamento?')">
                                         Eliminar
                                 </a>
-                                <a href="qr_departamento.php?id=<?php echo $id_departamento; ?>"
-                                    class="btn btn-outline-success btn-sm">
-                                        QR
-                                </a>
                                 <a href="ver_departamento.php?id=<?php echo $id_departamento; ?>"
-                                    class="btn btn-outline-info btn-sm">
-
-                                        <span class="material-symbols-outlined">
-                                            visibility
-                                        </span>
-
+                                    class="btn btn-outline-info btn-sm d-inline-flex align-items-center justify-content-center"
+                                    style="width: 32px; height: 31px;">
+                                        <span class="material-symbols-outlined fs-6">visibility</span>
                                 </a>
+                                </div>
                             </td>
                             </tr>
                             <?php

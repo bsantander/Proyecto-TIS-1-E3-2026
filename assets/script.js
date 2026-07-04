@@ -20,3 +20,22 @@ function filtrarProveedores() {
         fila.style.display = textoFila.includes(input) ? "" : "none";
     });
 }
+
+function filtrarFuncionarios() {
+    const input = document.getElementById('inputBusquedaFuncionario').value.toLowerCase();
+    const filas = document.querySelectorAll('#tablaFuncionarios tr');
+    filas.forEach(fila => {
+        const textoFila = fila.textContent.toLowerCase();
+        fila.style.display = textoFila.includes(input) ? "" : "none";
+    });
+}
+
+function filtrarDepartamentos() {
+    const input = document.getElementById('inputBusquedaDepartamento').value.toLowerCase();
+    const filas = document.querySelectorAll('#tablaDepartamentos tr');
+    filas.forEach(fila => {
+        const textoFila = fila.textContent.toLowerCase();
+        fila.style.display = textoFila.includes(input) ? "" : "none";
+    });
+}
+
