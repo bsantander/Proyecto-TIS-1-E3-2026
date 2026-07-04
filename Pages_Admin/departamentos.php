@@ -11,11 +11,13 @@
             // Validación
             if(strlen($nombre) < 3){
                 $_SESSION['mensaje'] = "El nombre del departamento debe tener al menos 3 caracteres.";
+                $_SESSION['tipo'] = "danger";
                 header("Location: departamentos.php");
                 exit;
             }
 
             $_SESSION['mensaje'] = $modelo->agregarDepartamento($nombre);
+            $_SESSION['tipo'] = "success";
             header("Location: departamentos.php");
             exit;
         }
@@ -42,11 +44,13 @@
             // Validación
             if(strlen($nombre) < 3){
                 $_SESSION['mensaje'] = "El nombre del departamento debe tener al menos 3 caracteres.";
+                $_SESSION['tipo'] = "danger";
                 header("Location: departamentos.php");
                 exit;
             }
 
             $_SESSION['mensaje'] = $modelo->editarDepartamento($id, $nombre);
+            $_SESSION['tipo'] = "success";
             header("Location: departamentos.php");
             exit;
         }
@@ -155,12 +159,15 @@
 
             <?php if(isset($_SESSION['mensaje'])){ ?>
                 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-                    <div id="toastMensaje" class="toast align-items-center text-white bg-success border-0" role="alert">
+                    <div id="toastMensaje"
+                        class="toast align-items-center text-white bg-<?php echo $_SESSION['tipo'] ?? 'success'; ?> border-0"
+                        role="alert">
                         <div class="d-flex">
                             <div class="toast-body">
                                 <?php 
                                     echo $_SESSION['mensaje']; 
                                     unset($_SESSION['mensaje']);
+                                    unset($_SESSION['tipo']);
                                 ?>
                             </div>
                             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
