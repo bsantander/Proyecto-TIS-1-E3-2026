@@ -77,7 +77,7 @@
 
     <div class="Container d-flex flex-row vh-100 overflow-hidden">
 
-        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3">
+        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3" style="background-color: #BBBFBF;">
             <div class="Superior d-flex flex-column justify-content-start align-items-start gap-2">
 
                 <div class="Inicio p-2 d-flex flex-row justify-content-start gap-0 ">
