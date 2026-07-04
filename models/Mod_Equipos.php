@@ -10,15 +10,18 @@ function _obtenerTabla($tipo) {
     ];
     return $mapa[$tipo] ?? null;
 }
-
 function obtenerDatosCompletos($conexion, $id, $tipo) {
     $tabla = _obtenerTabla($tipo);
+    
     $sql = "SELECT $tabla.*, 
-                   funcionario.nombre_completo AS nombre_funcionario, 
+                   funcionario.nombre_completo AS nombre_funcionario,
+                   funcionario.id_funcionario,
+                   departamento.nombre_departamento AS nombre_departamento,
                    proveedor.nombre_completo AS nombre_proveedor, 
                    proveedor.contacto AS contacto_proveedor
             FROM $tabla
-            LEFT JOIN funcionario ON $tabla.id_funcionario = funcionario.id_funcionario 
+            LEFT JOIN funcionario ON $tabla.id_funcionario = funcionario.id_funcionario
+            LEFT JOIN departamento ON funcionario.id_departamento = departamento.id_departamento
             LEFT JOIN proveedor ON $tabla.id_proveedor = proveedor.id_proveedor
             WHERE $tabla.id_equipo = $id";
             
@@ -26,25 +29,28 @@ function obtenerDatosCompletos($conexion, $id, $tipo) {
     $row = mysqli_fetch_assoc($resultado);
     
     $funcionario = [
-        'Nombre Completo' => $row['nombre_funcionario'] ?? 'Sin asignar'
+        'id_funcionario'      => $row['id_funcionario'],
+        'nombre'              => $row['nombre_funcionario'],
+        'nombre_departamento' => $row['nombre_departamento']
     ];
     
     $proveedor = [
-        'id_proveedor'    => $row['id_proveedor'] ?? 0,
-        'nombre_completo' => $row['nombre_proveedor'] ?? 'Sin asignar',
-        'contacto'        => $row['contacto_proveedor'] ?? 'Sin contacto'
+        'id_proveedor'    => $row['id_proveedor'],
+        'nombre_completo' => $row['nombre_proveedor'],
+        'contacto'        => $row['contacto_proveedor']
     ];
     
-    unset($row['nombre_funcionario'], $row['nombre_proveedor'], $row['contacto_proveedor']);
+    unset($row['nombre_funcionario'], $row['nombre_proveedor'], $row['contacto_proveedor'], $row['nombre_departamento']);
     
     return [
-        'equipo' => $row,
+        'equipo'      => $row,
         'funcionario' => $funcionario,
-        'proveedor' => $proveedor
+        'proveedor'   => $proveedor
     ];
 }
 function obtenerTodosFuncionarios($conexion) {
-    $sql = "SELECT id_funcionario, nombre_completo FROM funcionario";
+    $sql = "SELECT funcionario.id_funcionario, funcionario.nombre_completo, departamento.nombre_departamento FROM funcionario 
+            LEFT JOIN departamento on funcionario.id_departamento = departamento.id_departamento";
     $resultado = mysqli_query($conexion, $sql);
     $funcionarios = [];
     while ($row = mysqli_fetch_assoc($resultado)) {
@@ -68,6 +74,11 @@ function actualizarEquipo($conexion, $id, $tipo, $datos) {
     
     $set_parts = [];
     foreach ($datos as $columna => $valor) {
+        if (in_array($columna, ['id_funcionario', 'id_proveedor'], true) && $valor === '') {
+            $set_parts[] = "$columna = NULL";
+            continue;
+        }
+
         $set_parts[] = "$columna = '" . mysqli_real_escape_string($conexion, $valor) . "'";
     }
     
@@ -99,6 +110,10 @@ function insertarEquipo($conexion, $tipo, $datos) {
         'otro_dispositivo' => ['id_equipo', 'marca', 'fecha_garantia', 'valor_equipo', 'fecha_compra', 'numero_serie', 'modelo', 'id_funcionario', 'id_proveedor']
     ];
 
+    if (!isset($tablas[$tipo])) {
+        return false;
+    }
+
     $tabla = $tablas[$tipo];
     $permitidas = $columnas_permitidas[$tabla];
     
@@ -111,6 +126,13 @@ function insertarEquipo($conexion, $tipo, $datos) {
     
     $sql = "INSERT INTO $tabla ($columnas) VALUES (" . implode(', ', $valores) . ")";
     return mysqli_query($conexion, $sql);
+}
+
+function contarEquipos($conexion){
+    $sql = "SELECT COUNT(*) as total FROM equipo_general";
+    $resultado = mysqli_query($conexion, $sql);
+    $fila = mysqli_fetch_assoc($resultado);
+    return $fila['total'];
 }
 
 ?>

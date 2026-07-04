@@ -64,7 +64,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../assets/style.css">
-    <script src="../assets/script.js" defer></script>
+    <script src="../assets/script.js?v=2" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -148,8 +148,14 @@
 
     <div class="flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
         
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Nómina de Funcionarios</h2>
+        <div class="titulo-seccion d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="titulo-seccion-linea"></div>
+                <div>
+                    <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Nómina de Funcionarios</h2>
+                    <p class="titulo-seccion-texto m-0">Registro y datos de funcionarios del sistema</p>
+                </div>
+            </div>
             
             <button
                 class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold"
@@ -175,21 +181,13 @@
         </div>
         <?php endif; ?>
 
-                <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
-            <div class="input-group" style="max-width: 450px;">
-                <span class="input-group-text bg-white border-end-0 rounded-start-3" style="border-color: #dbe4e2;">
-                    <span class="material-symbols-outlined text-secondary fs-5">search</span>
-                </span>
-                <input type="text" class="Buscador form-control border-start-0 rounded-end-3 py-2" placeholder="Buscar por ID, marca o tipo...">
+            <div class=" my-3 d-flex flex-row justify-content-between ">
+                <div class="input-group flex-nowrap" style="max-width: 450px">
+                    <span class=" input-group-text material-symbols-outlined">search</span>
+                    <input type="text" id="inputBusquedaFuncionario" onkeyup="filtrarFuncionarios()" class="Buscador form-control" placeholder="Buscar por Nombre, Rut, etc..." >
+                </div>
             </div>
 
-            <button class="Filtros btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 fw-medium">
-                <span class="material-symbols-outlined fs-5">filter_list</span>
-                <p class="m-0">Filtros</p>
-            </button>
-        </div>
-        
-        
         <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
             <div class="card-body p-0">
                 <?php
@@ -208,10 +206,10 @@
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">RUT</th>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Nombre Completo</th>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Rol</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Acciones</th>
+                            <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tablaFuncionarios">
                         <?php
                         while($row = mysqli_fetch_assoc($resultado)){
                             $id_funcionario  = $row["id_funcionario"];
@@ -222,12 +220,12 @@
                             $rut             = $row["rut"];
                         ?>
                         <tr>
-                            <th><?php echo $id_funcionario; ?></th>
-                            <td><?php echo $rut; ?></td>
-                            <td><?php echo $nombre_completo; ?></td>
-                            <td><?php echo $rol; ?></td>
-                            <td>
-                            <button class="btn btn-outline-dark btn-sm"
+                            <th scope="row" class="p-3 text-muted"><?php echo $id_funcionario; ?></th>
+                            <td class="p-3 fw-medium text-dark"><?php echo $rut; ?></td>
+                            <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $nombre_completo; ?></td>
+                            <td class="p-3 fw-medium text-dark"><?php echo $rol; ?></td>
+                            <td class="p-3 text-center">
+                            <button class="btn btn-outline-primary btn-sm"
                             onclick='abrirEditar(
                                 <?php echo (int) $id_funcionario; ?>,
                                 <?php echo json_encode($rut); ?>,

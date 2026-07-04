@@ -1,5 +1,5 @@
 <?php
-require_once '../conexion.php'; 
+require_once '../conexion.php';
 require_once '../models/Mod_Equipos.php';
 
 $id = $_GET['id'] ?? $_POST['id'] ?? 0;
@@ -7,7 +7,7 @@ $tipo = $_GET['tipo'] ?? $_POST['tipo'] ?? '';
 $modo = $_GET['modo'] ?? 'ver';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    unset($_POST['id'], $_POST['tipo'], $_POST['modo']); 
+    unset($_POST['id'], $_POST['tipo'], $_POST['modo']);
     if (actualizarEquipo($conexion, $id, $tipo, $_POST)) {
         header("Location: equipos_detalle.php?id=$id&tipo=" . urlencode($tipo) . "&modo=ver");
         exit;
@@ -17,12 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $data = obtenerDatosCompletos($conexion, $id, $tipo);
 $listaFuncionarios = obtenerTodosFuncionarios($conexion);
 $listaproovedores = obtenerTodosProveedores($conexion);
-
 ?>
 
 <!doctype html>
 <html lang="es">
-<head>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,109 +28,140 @@ $listaproovedores = obtenerTodosProveedores($conexion);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/style.css?v=5">
     <script src="../assets/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
 </head>
-</head>
-<body class="bg-light">
+<body class="detalle-page">
 
-<div class="container my-5" style="max-width: 800px;">
-    <a href="equipos.php" class="btn btn-secondary mb-4" style="background-color: #05ad98; border-color: #05ad98;" >Volver</a>
-
+<div class="detalle-contenedor container my-5">
     <form method="POST">
         <input type="hidden" name="id" value="<?php echo $id; ?>">
         <input type="hidden" name="tipo" value="<?php echo $tipo; ?>">
 
-        <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #05ad98;">
-            <div class="card-header bg-white p-4">
-                <h3 class="fs-5 fw-bold m-0 text-dark">Información del Equipo</h3>
+        <div class="titulo-seccion d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="titulo-seccion-linea"></div>
+                <div>
+                    <h1 class="fs-4 fw-bold m-0" style="color: #333333;">Detalle del Equipo</h1>
+                    <p class="titulo-seccion-texto m-0">Equipo <?php echo $id; ?> - <?php echo $tipo; ?></p>
+                </div>
             </div>
-            <div class="card-body p-4">
-                <ul class="list-group list-group-flush">
-                    <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-3'>
-                        <span class='text-muted fw-semibold'>Tipo de Equipo</span>
-                        <span class='text-primary fw-bold'><?php echo $tipo; ?></span>
-                    </li>
+
+            <a href="equipos.php" class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold">
+                <span class="material-symbols-outlined fs-5">arrow_back</span>
+                Volver
+            </a>
+        </div>
+
+        <div class="detalle-card mb-4">
+            <div class="detalle-card-header">
+                <h2 class="fs-5 fw-bold m-0 text-dark">Informacion del Equipo</h2>
+            </div>
+
+            <div class="detalle-card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="detalle-campo">
+                            <span class="detalle-label">Tipo de Equipo</span>
+                            <div class="detalle-valor detalle-valor-principal"><?php echo $tipo; ?></div>
+                        </div>
+                    </div>
+
                     <?php foreach ($data['equipo'] as $col => $val): ?>
-                        <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-3'>
-                            <span class='text-muted fw-semibold text-capitalize'><?php echo str_replace('_', ' ', $col); ?></span>
-                            <?php if ($modo == 'editar'): ?>
-                                <input type="text" name="<?php echo $col; ?>" value="<?php echo $val; ?>" class="form-control w-50">
-                            <?php else: ?>
-                                <span class='text-dark fw-bold'><?php echo $val; ?></span>
-                            <?php endif; ?>
-                        </li>
+                        <?php if (in_array($col, ['id_funcionario', 'id_proveedor'], true)) { continue; } ?>
+                        <div class="col-md-6">
+                            <div class="detalle-campo">
+                                <span class="detalle-label"><?php echo str_replace('_', ' ', $col); ?></span>
+
+                                <?php if ($modo == 'editar'): ?>
+                                    <input type="text" name="<?php echo $col; ?>" value="<?php echo $val; ?>" class="detalle-form-control form-control">
+                                <?php else: ?>
+                                    <div class="detalle-valor"><?php echo $val; ?></div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     <?php endforeach; ?>
-                </ul>
+                </div>
             </div>
         </div>
 
-        <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #6c757d;">
-            <div class="card-header bg-white p-4">
-                <h3 class="fs-5 fw-bold m-0 text-dark">Datos del Funcionario a Cargo</h3>
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="detalle-card h-100">
+                    <div class="detalle-card-header">
+                        <h2 class="fs-5 fw-bold m-0 text-dark">Funcionario a Cargo</h2>
+                    </div>
+
+                    <div class="detalle-card-body">
+                        <div class="detalle-campo mb-3">
+                            <span class="detalle-label">Responsable</span>
+
+                            <?php if ($modo == 'editar'): ?>
+                                <select name="id_funcionario" class="detalle-form-control form-select">
+                                    <option value="" <?php echo empty($data['funcionario']['id_funcionario']) ? 'selected' : ''; ?>>Sin asignar</option>
+                                    <?php foreach ($listaFuncionarios as $f): ?>
+                                        <option value="<?php echo $f['id_funcionario']; ?>" <?php echo ($f['id_funcionario'] == ($data['funcionario']['id_funcionario'] ?? '')) ? 'selected' : ''; ?>>
+                                            <?php echo $f['nombre_completo']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php else: ?>
+                                <div class="detalle-valor"><?php echo $data['funcionario']['nombre'] ?? 'Sin asignar'; ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="detalle-campo">
+                            <span class="detalle-label">Departamento</span>
+                            <div class="detalle-valor text-muted">
+                                <?php echo $data['funcionario']['nombre_departamento'] ?? 'Sin asignar'; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-4">
-                <ul class="list-group list-group-flush">
-                    <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-3'>
-                        <span class='text-muted fw-semibold'>Funcionario Responsable</span>
-                        <?php if ($modo == 'editar'): ?>
-                            <select name="id_funcionario" class="form-select w-50">
-                                <?php foreach ($listaFuncionarios as $f): ?>
-                                    <option value="<?php echo $f['id_funcionario']; ?>" <?php echo ($f['nombre_completo'] == $data['funcionario']['Nombre Completo']) ? 'selected' : ''; ?>>
-                                        <?php echo $f['nombre_completo']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        <?php else: ?>
-                            <span class='text-dark fw-bold'><?php echo $data['funcionario']['Nombre Completo']; ?></span>
-                        <?php endif; ?>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="card shadow-sm border-0 rounded-3 mb-4" style="border-top: 3px solid #6c757d;">
-            <div class="card-header bg-white p-4">
-                <h3 class="fs-5 fw-bold m-0 text-dark">Datos del Proveedor</h3>
-            </div>
-            <div class="card-body p-4">
-                <ul class="list-group list-group-flush">
-                    <li class='list-group-item d-flex justify-content-between align-items-center px-0 py-3'>
-                        <span class='text-muted fw-semibold'>Proveedor del equipo</span>
-                        
-                        <?php if ($modo == 'editar'): ?>
-                            <select name="id_proveedor" class="form-select w-50">
-                                <?php foreach ($listaproovedores as $f): ?>
-                                    <option value="<?php echo $f['id_proveedor']; ?>" 
-                                            <?php echo ($f['id_proveedor'] == $data['proveedor']['id_proveedor']) ? 'selected' : ''; ?>>
-                                        <?php echo $f['nombre_completo']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        <?php else: ?>
-                            <span class='text-dark fw-bold'>
-                                <?php echo $data['proveedor']['nombre_completo'] ?? 'Sin asignar'; ?>
-                            </span>
-                        <?php endif; ?>
-                    </li>
-                </ul>
+
+            <div class="col-md-6">
+                <div class="detalle-card h-100">
+                    <div class="detalle-card-header">
+                        <h2 class="fs-5 fw-bold m-0 text-dark">Datos del Proveedor</h2>
+                    </div>
+
+                    <div class="detalle-card-body">
+                        <div class="detalle-campo">
+                            <span class="detalle-label">Proveedor</span>
+
+                            <?php if ($modo == 'editar'): ?>
+                                <select name="id_proveedor" class="detalle-form-control form-select">
+                                    <option value="" <?php echo empty($data['proveedor']['id_proveedor']) ? 'selected' : ''; ?>>Sin asignar</option>
+                                    <?php foreach ($listaproovedores as $f): ?>
+                                        <option value="<?php echo $f['id_proveedor']; ?>" <?php echo ($f['id_proveedor'] == ($data['proveedor']['id_proveedor'] ?? '')) ? 'selected' : ''; ?>>
+                                            <?php echo $f['nombre_completo']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php else: ?>
+                                <div class="detalle-valor"><?php echo $data['proveedor']['nombre_completo'] ?? 'Sin asignar'; ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="text-end">
+        <div class="detalle-acciones d-flex justify-content-end gap-2">
             <?php if ($modo == 'ver'): ?>
-                <a href="?id=<?php echo $id; ?>&tipo=<?php echo urlencode($tipo); ?>&modo=editar" class="btn" style="background-color: #05ad98; color: white;">Editar</a>
+                <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>&modo=editar" class="btn button px-5 shadow-sm">Editar</a>
             <?php else: ?>
-                <a href="?id=<?php echo $id; ?>&tipo=<?php echo urlencode($tipo); ?>" class="btn btn-secondary">Cancelar</a>
-                <button type="submit" class="btn" style="background-color: #05ad98; color: white;">Guardar Cambios</button>
+                <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>" class="btn btn-secondary px-4 shadow-sm">Cancelar</a>
+                <button type="submit" class="btn button px-5 shadow-sm">Guardar Cambios</button>
             <?php endif; ?>
         </div>
     </form>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

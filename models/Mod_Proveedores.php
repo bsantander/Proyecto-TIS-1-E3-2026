@@ -7,23 +7,30 @@ class Mod_Proveedores {
     }
 
     public function agregarProveedor() {
-        $Rut_recibido      = $_POST['rut_proveedor'];
-        $Nombre_recibido   = $_POST['nombre_completo'];
-        $Contacto_recibido = $_POST['contacto'];
+        $Rut_recibido      = trim($_POST['rut_proveedor']);
+        $Nombre_recibido   = trim($_POST['nombre_completo']);
+        $Contacto_recibido = trim($_POST['contacto']);
+
+        if (!$this->rutValido($Rut_recibido)) {
+            return "El RUT del proveedor debe tener entre 8 y 9 digitos.";
+        }
 
         $consulta = "INSERT INTO proveedor (rut_proveedor, nombre_completo, contacto) 
                      VALUES ('$Rut_recibido', '$Nombre_recibido', '$Contacto_recibido')";
         
         mysqli_query($this->conexion, $consulta);
         header("Location: proveedores.php");
-        exit;
     }
 
     public function editarProveedor() {
         $id                = $_POST['id_proveedor'];
-        $Rut_recibido      = $_POST['rut_proveedor'];
-        $Nombre_recibido   = $_POST['nombre_completo'];
-        $Contacto_recibido = $_POST['contacto'];
+        $Rut_recibido      = trim($_POST['rut_proveedor']);
+        $Nombre_recibido   = trim($_POST['nombre_completo']);
+        $Contacto_recibido = trim($_POST['contacto']);
+
+        if (!$this->rutValido($Rut_recibido)) {
+            return "El RUT del proveedor debe tener entre 8 y 9 digitos.";
+        }
 
         $consulta = "UPDATE proveedor SET rut_proveedor='$Rut_recibido', nombre_completo='$Nombre_recibido', contacto='$Contacto_recibido' 
                      WHERE id_proveedor='$id'";
@@ -38,6 +45,10 @@ class Mod_Proveedores {
         mysqli_query($this->conexion, $consulta);   
         header("Location: proveedores.php");
         exit;
+    }
+
+    private function rutValido($rut) {
+        return preg_match('/^[0-9]{8,9}$/', $rut);
     }
 }
 ?>

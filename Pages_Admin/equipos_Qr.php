@@ -58,11 +58,11 @@ $proveedor = $data['proveedor'];
             <ul class="list-group list-group-flush">
                 <?php foreach ($funcionario as $col => $val): ?>
                     <li class='list-group-item d-flex justify-content-between px-0 py-3'>
-                        <span class='text-muted fw-semibold'><?php echo $col; ?></span>
+                        <span class='text-muted fw-semibold'><?php echo str_replace('_',' ',$col); ?></span>
                         <span class='text-dark fw-bold'><?php echo $val; ?></span>
                     </li>
                 <?php endforeach; ?>
-            </ul>
+            </ul>   
         </div>
     </div>
 

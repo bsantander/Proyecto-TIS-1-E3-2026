@@ -113,8 +113,14 @@
     <div class="flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
         
         <div id="vista-tabla">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Nomina de Proveedores</h2>
+            <div class="titulo-seccion d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="titulo-seccion-linea"></div>
+                    <div>
+                        <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Nomina de Proveedores</h2>
+                        <p class="titulo-seccion-texto m-0">Registro y datos de contacto de proveedores</p>
+                    </div>
+                </div>
 
                     <button type="button" class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;"
                     data-bs-toggle="modal" data-bs-target="#modalProveedoragregar">
@@ -122,6 +128,13 @@
                         <p class="m-0 text-decoration-none text-white">Agregar Proveedor</p>
                 </button>
             </div>
+
+            <?php if (isset($_SESSION['mensaje'])): ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <?php echo $_SESSION['mensaje']; unset($_SESSION['mensaje']); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
             
             <div class=" my-3 d-flex flex-row justify-content-between ">
                 <div class="input-group flex-nowrap" style="max-width: 450px">
@@ -169,7 +182,7 @@
                               
                               <td class="p-3 text-center">
 
-                              <button class="btn btn-sm btn-outline-dark" 
+                              <button class="btn btn-sm btn-outline-primary" 
                             onclick="abrirEditar(<?php echo $row['id_proveedor']; ?>, '<?php echo $row['nombre_completo']; ?>', '<?php echo $row['rut_proveedor']; ?>', '<?php echo $row['contacto']; ?>')">
                         Editar
                     </button>
@@ -202,7 +215,7 @@
         <div class="modal-body">
             <div class="mb-3">
                 <label class="form-label">Rut del Proveedor</label>
-                <input type="number" name="rut_proveedor" class="form-control" required>
+                <input type="text" name="rut_proveedor" class="form-control" inputmode="numeric" pattern="[0-9]{8,9}" minlength="8" maxlength="9" title="Ingrese su Rut completo, sin ningun signo" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Nombre del Proveedor</label>
@@ -236,7 +249,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Rut del Proveedor</label>
-                <input type="number" name="rut_proveedor" id="edit_rut" class="form-control" required>
+                <input type="text" name="rut_proveedor" id="edit_rut" class="form-control" inputmode="numeric" pattern="[0-9]{8,9}" minlength="8" maxlength="9" title="Ingrese su Rut completo, sin ningun signo" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Nombre del Proveedor</label>
@@ -244,7 +257,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Contacto</label>
-                <input type="email" name="contacto" id="edit_contacto" class="form-control">
+                <input type="email" name="contacto" id="edit_contacto" class="form-control" required>
             </div>
         </div>
         <div class="modal-footer">
