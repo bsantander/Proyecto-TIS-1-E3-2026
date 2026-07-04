@@ -68,7 +68,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
         <link rel="stylesheet" href="../assets/style.css">
-        <script src="../assets/script.js" defer></script>
+        <script src="../assets/script.js" defer></script>   
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -77,7 +77,7 @@
 
     <div class="Container d-flex flex-row vh-100 overflow-hidden">
 
-        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3">
+        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3"  style="background-color: #BBBFBF;">
             <div class="Superior d-flex flex-column justify-content-start align-items-start gap-2">
 
                 <div class="Inicio p-2 d-flex flex-row justify-content-start gap-0 ">
@@ -131,14 +131,14 @@
                 <div class="Configuracion" >
                     <a href="#" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
                         <span class="material-symbols-outlined">build</span>                   
-                        <p class="m-0 fs-6">Configuración</p>
+                        <p class="m-0 fs-6">Configuracion</p>
                     </a>
                 </div>
 
                 <div class="Cerrar_Sesion">
                     <a href="../secion.php?logout=1" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                         <span class="material-symbols-outlined">logout</span>
-                        <p class="m-0 fs-6">Cerrar Sesión</p>
+                        <p class="m-0 fs-6">Cerrar Sesion</p>
                     </a>
                 </div>        
             </div>

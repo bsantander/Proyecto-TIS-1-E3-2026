@@ -8,15 +8,13 @@
 }
 
 /*Barra_Lateral */
-.Barra_Izquierda_Index_active {
-    background-color: #05ad98;
-    color: white !important;
-    border-radius: 8px;
-
-}
-
 .Barra_Lateral {
-        background-color: #BBBFBF;
+    background-color: #BBBFBF;
+    width: 270px;
+    min-width: 270px;
+    max-width: 270px;
+    height: 100vh;
+    flex-shrink: 0;
 }
 
 
