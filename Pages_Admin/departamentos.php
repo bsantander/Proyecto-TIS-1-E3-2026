@@ -5,9 +5,19 @@
         $modelo = new Mod_Departamentos($conexion);
 
 
-        if(isset($_POST['agregar'])){
-            $nombre = $_POST['nombre_departamento'];
+       if(isset($_POST['agregar'])){
+            $nombre = trim($_POST['nombre_departamento']);
+
+            // Validación
+            if(strlen($nombre) < 3){
+                $_SESSION['mensaje'] = "El nombre del departamento debe tener al menos 3 caracteres.";
+                $_SESSION['tipo'] = "danger";
+                header("Location: departamentos.php");
+                exit;
+            }
+
             $_SESSION['mensaje'] = $modelo->agregarDepartamento($nombre);
+            $_SESSION['tipo'] = "success";
             header("Location: departamentos.php");
             exit;
         }
@@ -27,13 +37,23 @@
             $editar = mysqli_fetch_assoc($res);
         }
         if(isset($_POST['guardar'])){
+
             $id = (int) $_POST['id_departamento'];
             $nombre = trim($_POST['nombre_departamento']);
 
+            // Validación
+            if(strlen($nombre) < 3){
+                $_SESSION['mensaje'] = "El nombre del departamento debe tener al menos 3 caracteres.";
+                $_SESSION['tipo'] = "danger";
+                header("Location: departamentos.php");
+                exit;
+            }
+
             $_SESSION['mensaje'] = $modelo->editarDepartamento($id, $nombre);
+            $_SESSION['tipo'] = "success";
             header("Location: departamentos.php");
             exit;
-        }   
+        }
 
     ?>
 
@@ -57,7 +77,7 @@
 
     <div class="Container d-flex flex-row vh-100 overflow-hidden">
 
-        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3" style="background-color: #BBBFBF;">
+        <div class="Barra_Lateral d-flex flex-column justify-content-between p-3">
             <div class="Superior d-flex flex-column justify-content-start align-items-start gap-2">
 
                 <div class="Inicio p-2 d-flex flex-row justify-content-start gap-0 ">
@@ -93,12 +113,6 @@
                         <p class="m-0 fs-6">Departamentos</p>
                     </a>
                 </div>
-                <div class="Proovedores">
-                    <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
-                        <span class="material-symbols-outlined">person_4</span>                    
-                        <p class="m-0 fs-6">Proveedores</p>
-                    </a>
-                </div>
                 <div class="Mantenciones">
                     <a href="mantenciones.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                         <span class="material-symbols-outlined fs-5">handyman</span>
@@ -132,13 +146,9 @@
 
         <div class="flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
             
-            <div class="titulo-seccion d-flex justify-content-between align-items-center mb-4">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="titulo-seccion-linea"></div>
-                    <div>
-                        <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Departamentos</h2>
-                        <p class="titulo-seccion-texto m-0">Registro de áreas y unidades internas</p>
-                    </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Departamentos</h2>
                 </div>
                 
                 <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;" data-bs-toggle="modal" data-bs-target="#modalAgregarDepartamento">
@@ -149,12 +159,15 @@
 
             <?php if(isset($_SESSION['mensaje'])){ ?>
                 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-                    <div id="toastMensaje" class="toast align-items-center text-white bg-success border-0" role="alert">
+                    <div id="toastMensaje"
+                        class="toast align-items-center text-white bg-<?php echo $_SESSION['tipo'] ?? 'success'; ?> border-0"
+                        role="alert">
                         <div class="d-flex">
                             <div class="toast-body">
                                 <?php 
                                     echo $_SESSION['mensaje']; 
                                     unset($_SESSION['mensaje']);
+                                    unset($_SESSION['tipo']);
                                 ?>
                             </div>
                             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -163,7 +176,6 @@
                 </div>
             <?php } ?>
 
-<<<<<<< HEAD
             <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
                 <form method="GET" class="w-100" style="max-width: 450px;">
                     <div class="input-group">
@@ -179,14 +191,14 @@
                             value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
                         >
 
-                        <button class="btn btn-success" type="submit">
+                        <button class="btn btn-outline-primary" type="submit">
                             Buscar
                         </button>
                     </div>
                 </form>
 
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
+                    <button class="btn btn-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -232,14 +244,9 @@
                             </a>
                         </li>
                     </ul>
-=======
-            <div class=" my-3 d-flex flex-row justify-content-between ">
-                <div class="input-group flex-nowrap" style="max-width: 450px">
-                    <span class=" input-group-text material-symbols-outlined">search</span>
-                    <input type="text" id="inputBusquedaDepartamento" onkeyup="filtrarDepartamentos()" class="Buscador form-control" placeholder="Buscar departamento..." >
->>>>>>> 7e18bedf47affeae21098876bd89afc5730f176a
                 </div>
             </div>
+            
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
                 <div class="card-body p-0">
                     <?php
@@ -305,10 +312,10 @@
                             <tr>
                                 <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 10%;">ID</th>
                                 <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 40%;">Nombre del Departamento</th>
-                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600; width: 280px;">Acciones</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaDepartamentos">
+                        <tbody>
                             <?php
                             while($row = mysqli_fetch_assoc($resultado)){
                                 $id_departamento = $row["id_departamento"];
@@ -316,29 +323,31 @@
 
                             ?>
                             <tr>
-                            <th scope="row" class="p-3 text-muted"><?php echo $id_departamento; ?></th>
-                            <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $nombre_departamento; ?></td>
+                            <th scope="row"><?php echo $id_departamento; ?></th>
+                            <td><?php echo $nombre_departamento; ?></td>
 
-                            <td class="p-3 text-center">
-                                <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
-                                    <button class="btn btn-outline-primary btn-sm"
-                                    onclick='abrirEditar(
-                                        <?php echo $id_departamento; ?>,
-                                        <?php echo json_encode($nombre_departamento); ?>
-                                    )'>
+                            <td>
+                                <button class="btn btn-outline-dark btn-sm"
+                                onclick='abrirEditar(
+                                    <?php echo $id_departamento; ?>,
+                                    <?php echo json_encode($nombre_departamento); ?>
+                                )'>
                                         Editar
-                                    </button>
+                                
+                                </button>
                                 <a href="departamentos.php?eliminar=<?php echo $id_departamento; ?>"
                                     class="btn btn-outline-danger btn-sm"
                                     onclick="return confirm('¿Está seguro de eliminar este departamento?')">
                                         Eliminar
                                 </a>
                                 <a href="ver_departamento.php?id=<?php echo $id_departamento; ?>"
-                                    class="btn btn-outline-info btn-sm d-inline-flex align-items-center justify-content-center"
-                                    style="width: 32px; height: 31px;">
-                                        <span class="material-symbols-outlined fs-6">visibility</span>
+                                    class="btn btn-ouline-info btn-sm">
+
+                                        <span class="material-symbols-outlined">
+                                            visibility
+                                        </span>
+
                                 </a>
-                                </div>
                             </td>
                             </tr>
                             <?php
