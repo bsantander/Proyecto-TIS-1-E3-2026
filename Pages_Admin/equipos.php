@@ -1,3 +1,33 @@
+<?php
+require('../conexion.php');
+session_start();
+
+$equipos_por_pagina = 15;
+$pagina_actual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
+
+if ($pagina_actual < 1) {
+    $pagina_actual = 1;
+}
+
+$consulta_total = "SELECT COUNT(*) AS total FROM vista_equipos";
+$resultado_total = mysqli_query($conexion, $consulta_total);
+
+if (!$resultado_total) {
+    die('Error en la consulta: ' . mysqli_error($conexion));
+}
+
+$total_equipos = (int) mysqli_fetch_assoc($resultado_total)['total'];
+$total_paginas = max(1, (int) ceil($total_equipos / $equipos_por_pagina));
+
+if ($pagina_actual > $total_paginas) {
+    $pagina_actual = $total_paginas;
+}
+
+$offset = ($pagina_actual - 1) * $equipos_por_pagina;
+$desde_equipo = $total_equipos > 0 ? $offset + 1 : 0;
+$hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,11 +37,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/style.css?v=4">
     <script src="../assets/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 </head>
 <body>
 <div class="Container d-flex flex-row vh-100 overflow-hidden">
@@ -51,6 +82,12 @@
                     <p class="m-0 fs-6">Departamentos</p>
                 </a>
             </div>
+            <div class="Proovedores">
+                <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                    <span class="material-symbols-outlined">person_4</span>
+                        <p class="m-0 fs-6">Proveedores</p>
+                </a>
+            </div>
             <div class="Mantenciones">
                 <a href="mantenciones.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">handyman</span>
@@ -64,11 +101,11 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="Inferior">
             <div class="Configuracion" >
                 <a href="configuracion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
-                    <span class="material-symbols-outlined">build</span>                   
+                    <span class="material-symbols-outlined">build</span>
                     <p class="m-0 fs-6">Configuracion</p>
                 </a>
             </div>
@@ -78,53 +115,133 @@
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>
-            </div>        
+            </div>
         </div>
     </div>
     
     
     <div class="flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
         
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Inventario de Equipos</h2>
-            
-            <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
-                <span class="material-symbols-outlined fs-5">add_to_queue</span>
-                <p class="m-0">Agregar equipo</p>
-            </button>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
-            <div class="input-group" style="max-width: 450px;">
-                <span class="input-group-text bg-white border-end-0 rounded-start-3" style="border-color: #dbe4e2;">
-                    <span class="material-symbols-outlined text-secondary fs-5">search</span>
-                </span>
-                <input type="text" class="Buscador form-control border-start-0 rounded-end-3 py-2" placeholder="Buscar por ID, marca o tipo...">
+        <div id="vista-tabla">
+            <div class="titulo-seccion d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="titulo-seccion-linea"></div>
+                    <div>
+                        <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Inventario de Equipos</h2>
+                        <p class="titulo-seccion-texto m-0">Registro y gestion de activos tecnologicos</p>
+                    </div>
+                </div>
+                    <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
+                        <span class="material-symbols-outlined fs-5 text-decoration-none text-white">add_to_queue</span>
+                        <a href="equipos_agregar.php" class="m-0 text-decoration-none text-white">Agregar equipo</a>
+                </button>
             </div>
 
-            <button class="Filtros btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 fw-medium">
-                <span class="material-symbols-outlined fs-5">filter_list</span>
-                <p class="m-0">Filtros</p>
-            </button>
-        </div>
-        
-        <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
-            <div class="card-body p-0">
-                <table class="table table-hover m-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Equipo</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Tipo</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Marca / Modelo</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Estado</th>
-                        </tr>
-                    </thead>
-                </table>
+            <div class=" my-3 d-flex flex-row justify-content-between ">
+                <div class="input-group flex-nowrap" style="max-width: 450px">
+                    <span class=" input-group-text material-symbols-outlined">search</span>
+                    <input type="text" id="inputBusquedaEquipo" onkeyup="filtrarEquipos()" class="Buscador form-control" placeholder="Buscar por ID, Modelo, Tipo, etc" >
+                </div>
+
+
+                <select id="filtroTipo" onchange="filtrarEquipos()" class="Filtro form-select" style="max-width: 200px;">
+                    <option value="">Todos los tipos</option>
+                    <option value="Computador">Computador</option>
+                    <option value="Notebook">Notebook</option>
+                    <option value="Impresora">Impresora</option>
+                    <option value="Proyector">Proyector</option>
+                    <option value="Servidor">Servidor</option>
+                </select>
+            </div>
+
+
+            <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
+                <div class="card-body p-0">
+                    <?php
+                    $consulta = "SELECT id_equipo, tipo, marca, modelo FROM vista_equipos ORDER BY id_equipo, tipo LIMIT $equipos_por_pagina OFFSET $offset";
+                    $resultado = mysqli_query($conexion, $consulta);
+
+                    if (!$resultado) {
+                        die('Error en la consulta: ' . mysqli_error($conexion));
+                    }
+                    ?>
+
+                    <table class="table table-hover m-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Equipo</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Tipo</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Marca</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Modelo</th>
+                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Gestionar Equipo</th>
+                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Codigo QR</th>
+                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Historial </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaEquiposBody" >
+                            <?php
+                            while($row = mysqli_fetch_assoc($resultado)){
+                                $id_equipo = $row["id_equipo"];
+                                $tipo      = $row["tipo"];
+                                $marca     = $row["marca"];
+                                $modelo    = $row["modelo"];
+                            ?>
+                            <tr>
+                              <th scope="row" class="p-3 text-muted"><?php echo $id_equipo; ?></th>
+                              <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $tipo; ?></td>
+                              <td class="p-3 fw-medium text-dark"><?php echo $marca; ?></td>
+                              <td class="p-3 text-secondary"><?php echo $modelo; ?></td>
+
+                              <td class="p-3 text-center">
+                                <a href="equipos_detalle.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
+                                    <span class="material-symbols-outlined align-middle">visibility</span>
+                                </a>
+                              </td>
+                              <td class="p-3 text-center">
+                                <a href="equipos_QR.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
+                                    <span class="material-symbols-outlined align-middle">qr_code</span>
+                                </a>
+                              </td>
+                            </tr>
+                            <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3">
+                <p class="text-secondary m-0">
+                    Mostrando <?php echo $desde_equipo; ?> a <?php echo $hasta_equipo; ?> de <?php echo $total_equipos; ?> equipos
+                </p>
+
+                <?php if ($total_paginas > 1): ?>
+                    <nav aria-label="Paginacion de equipos">
+                        <ul class="pagination equipos-paginacion mb-0">
+                            <li class="page-item <?php echo $pagina_actual <= 1 ? 'disabled' : ''; ?>">
+                                <a class="page-link" href="?pagina=<?php echo $pagina_actual - 1; ?>">Anterior</a>
+                            </li>
+
+                            <?php for ($pagina = 1; $pagina <= $total_paginas; $pagina++): ?>
+                                <li class="page-item <?php echo $pagina === $pagina_actual ? 'active' : ''; ?>">
+                                    <a class="page-link" href="?pagina=<?php echo $pagina; ?>"><?php echo $pagina; ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <li class="page-item <?php echo $pagina_actual >= $total_paginas ? 'disabled' : ''; ?>">
+                                <a class="page-link" href="?pagina=<?php echo $pagina_actual + 1; ?>">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
+                <?php endif; ?>
             </div>
         </div>
     </div>
-
 </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      
+
 </body>
 </html>

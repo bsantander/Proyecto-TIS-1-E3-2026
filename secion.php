@@ -48,14 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
-<body class="d-flex align-items-center justify-content-center py-5">
+<body class="d-flex align-items-center justify-content-center py-5 "style="background-color:#d3d3d3">
     <div class="container">
         <div class="row gx-4 gy-4 justify-content-center mt-5">
             <div class="col-12 col-lg-5">
                 <div class="h-100 p-5">
                     <div class="d-flex flex-row align-items-center gap-0 mb-3">
                         <p class="fs-2 m-0 fw-bold" style="color: #05ad98;">Nodo</p>
-                        <p class="fs-2 m-0 text-black fw-bold">Active</p>
+                        <p class="fs-2 m-0 text-black fw-bold">Activo</p>
                     </div>
                     <h1 class="h3 mt-4">Conéctate con tu cuenta</h1>
                     <p class="text-secondary">Accede a tu panel de control para revisar equipos, funcionarios y mantenciones de forma rápida.</p>

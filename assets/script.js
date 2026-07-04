@@ -1,26 +1,41 @@
 
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('ventanaConfiguracion');
-    const Abrir = document.getElementById('configuracion');
-    const Cancelar = document.getElementById('Cancelar');
-    const Guardar = document.getElementById('Guardar');
+function filtrarEquipos() {
+    const inputBusqueda = document.getElementById('inputBusquedaEquipo').value.toLowerCase();
+    const filtroTipo = document.getElementById('filtroTipo').value.toLowerCase();
+    const filas = document.querySelectorAll('#tablaEquiposBody tr');
 
-    if (Abrir) {
-        Abrir.addEventListener('click', (evento) => {
-            evento.preventDefault(); 
-            modal.showModal();
-        });
-    }
+    filas.forEach(fila => {
+        const textoFila = fila.textContent.toLowerCase();
+        const coincideBusqueda = textoFila.includes(inputBusqueda);
+        const coincideTipo = (filtroTipo === "" || textoFila.includes(filtroTipo));
+        fila.style.display = (coincideBusqueda && coincideTipo) ? "" : "none";
+    });
+}
 
-    if (Cancelar) {
-        Cancelar.addEventListener('click', () => {
-            modal.close();
-        });
-    }
+function filtrarProveedores() {
+    const input = document.getElementById('inputBusquedaproveedor').value.toLowerCase();
+    const filas = document.querySelectorAll('#tablaProveedores tr');
+    filas.forEach(fila => {
+        const textoFila = fila.textContent.toLowerCase();
+        fila.style.display = textoFila.includes(input) ? "" : "none";
+    });
+}
 
-    if (Guardar) {
-        Guardar.addEventListener('click', () => {
-            modal.close();
-        });
-    }
-});
+function filtrarFuncionarios() {
+    const input = document.getElementById('inputBusquedaFuncionario').value.toLowerCase();
+    const filas = document.querySelectorAll('#tablaFuncionarios tr');
+    filas.forEach(fila => {
+        const textoFila = fila.textContent.toLowerCase();
+        fila.style.display = textoFila.includes(input) ? "" : "none";
+    });
+}
+
+function filtrarDepartamentos() {
+    const input = document.getElementById('inputBusquedaDepartamento').value.toLowerCase();
+    const filas = document.querySelectorAll('#tablaDepartamentos tr');
+    filas.forEach(fila => {
+        const textoFila = fila.textContent.toLowerCase();
+        fila.style.display = textoFila.includes(input) ? "" : "none";
+    });
+}
+

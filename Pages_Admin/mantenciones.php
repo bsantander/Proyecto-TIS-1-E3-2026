@@ -1,3 +1,6 @@
+<?php
+require_once("../conexion.php");
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -51,6 +54,12 @@
                     <p class="m-0 fs-6">Departamentos</p>
                 </a>
             </div>
+                <div class="Proovedores">
+                    <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                        <span class="material-symbols-outlined">person_4</span>                    
+                        <p class="m-0 fs-6">Proveedores</p>
+                    </a>
+                </div>
             <div class="Mantenciones">
                 <a href="mantenciones.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">handyman</span>
@@ -87,14 +96,50 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fs-3 fw-bold m-0" style="color: #333333;">Módulo de Mantenciones</h2>
+                
+                
                 <p class="text-secondary mb-0">Control de intervenciones y reparaciones.</p>
             </div>
+            
             
             <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
                 <span class="material-symbols-outlined fs-5">add_circle</span>
                 Programar Mantención
             </button>
         </div>
+
+        <?php
+            $sql = "
+            SELECT
+                SUM(costo) AS total,
+                AVG(costo) AS promedio,
+                COUNT(*) AS cantidad
+            FROM correctiva
+            ";
+
+            $res = mysqli_query($conexion, $sql);
+            $datos = mysqli_fetch_assoc($res);
+
+            ?>
+
+            <div class="card p-3 mb-4">
+                <h5>Reporte de Costos de Mantención</h5>
+
+                <p>
+                    Total Mantenciones:
+                    <strong><?php echo $datos['cantidad']; ?></strong>
+                </p>
+
+                <p>
+                    Costo Total:
+                    <strong>$<?php echo number_format($datos['total'], 0, ',', '.'); ?></strong>
+                </p>
+
+                <p>
+                    Costo Promedio:
+                    <strong>$<?php echo number_format($datos['promedio'], 0, ',', '.'); ?></strong>
+                </p>
+            </div>
 
         <div class="row mb-4 g-3">
             <div class="col-12 col-md-4">
