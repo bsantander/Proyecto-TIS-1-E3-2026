@@ -30,7 +30,6 @@
 .Barra_Izquierda_Index_active {
     background: linear-gradient(10deg, #05ad98, #047a6c);
     transition: background-color 0.2s ease;
-    width: 150px;
 }
 
 /* Inicio de sesion */
