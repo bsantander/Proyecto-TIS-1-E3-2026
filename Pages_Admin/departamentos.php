@@ -191,14 +191,14 @@
                             value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
                         >
 
-                        <button class="btn btn-success" type="submit">
+                        <button class="btn button" type="submit">
                             Buscar
                         </button>
                     </div>
                 </form>
 
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
+                    <button class="btn btn-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
                         type="button"
                         data-bs-toggle="dropdown"
                         aria-expanded="false">
