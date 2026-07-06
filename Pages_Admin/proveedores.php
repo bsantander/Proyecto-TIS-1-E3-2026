@@ -198,11 +198,81 @@
             <?php endif; ?>
             
             <div class=" my-3 d-flex flex-row justify-content-between ">
-                <div class="input-group flex-nowrap" style="max-width: 450px">
-                    <span class=" input-group-text material-symbols-outlined">search</span>
-                    <input type="text" id="inputBusquedaproveedor" onkeyup="filtrarProveedores()" class="Buscador form-control" placeholder="Buscar por Nombre, Rut, etc..." >
-                </div>
+                <form method="GET" class="w-100" style="max-width: 450px;">
+
+                    <div class="input-group">
+
+                        <span class="input-group-text bg-white border-end-0 rounded-start-3">
+                            <span class="material-symbols-outlined text-secondary fs-5">search</span>
+                        </span>
+
+                        <input
+                            type="text"
+                            name="buscar"
+                            class="Buscador form-control border-start-0 rounded-end-3 py-2"
+                            placeholder="Buscar funcionario..."
+                            value="<?php echo $_GET['buscar'] ?? ''; ?>">
+
+                        <button class="btn btn-outline-primary" type="submit">
+                            Buscar
+                        </button>
+
+                    </div>
+
+                </form>
+                <div class="dropdown">
+
+                <button class="btn btn-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
+                        type="button"
+                        data-bs-toggle="dropdown">
+
+                    <span class="material-symbols-outlined fs-5">sort</span>
+                    Ordenar
+
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+
+                    <li>
+                        <a class="dropdown-item" href="proveedores.php">
+                            Todos
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
+                        href="proveedores.php?orden=id_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                            ID Ascendente
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
+                        href="proveedores.php?orden=id_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                            ID Descendente
+                        </a>
+                    </li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li>
+                        <a class="dropdown-item"
+                        href="proveedores.php?orden=nombre_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                            Nombre A-Z
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
+                        href="proveedores.php?orden=nombre_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                            Nombre Z-A
+                        </a>
+                    </li>
+
+                </ul>
+
             </div>
+        </div>
 
             
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
