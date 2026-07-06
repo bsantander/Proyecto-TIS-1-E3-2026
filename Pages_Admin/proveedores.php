@@ -210,7 +210,7 @@
                             type="text"
                             name="buscar"
                             class="Buscador form-control border-start-0 rounded-end-3 py-2"
-                            placeholder="Buscar funcionario..."
+                            placeholder="Buscar funcionario por Id, nombre o rut..."
                             value="<?php echo $_GET['buscar'] ?? ''; ?>">
 
                         <button class="btn btn-outline-primary" type="submit">
