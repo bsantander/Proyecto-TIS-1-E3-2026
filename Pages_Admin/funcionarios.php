@@ -12,6 +12,12 @@
         $rol = $_POST['rol'];
         $contrasena = $_POST['contrasena'];
         $_SESSION['mensaje'] = $modelo->agregarFuncionario($rut, $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena);
+        if($_SESSION['mensaje'] == "Funcionario registrado correctamente"){
+            $_SESSION['tipo'] = "success";
+        }else{
+            $_SESSION['tipo'] = "danger";
+        }
+
             header("Location: funcionarios.php");
             exit;
     }
@@ -19,6 +25,7 @@
     if(isset($_GET['eliminar'])){
         $id_funcionario = (int) $_GET['eliminar'];
         $_SESSION['mensaje'] = $modelo->eliminarFuncionario($id_funcionario);
+        $_SESSION['tipo'] = "success";
         header("Location: funcionarios.php");
         exit;
    }
@@ -33,14 +40,13 @@
 
     if(isset($_POST['guardar'])){
         $id_funcionario = (int) $_POST['id_funcionario'];
-        $rut = (int) $_POST['rut'];
+        $rut = trim($_POST['rut']);
         $nombre_completo = trim($_POST['nombre_completo']);
         $id_equipo = isset($_POST['id_equipo']) ? (int) $_POST['id_equipo'] : null;
         $id_departamento = (int) $_POST['id_departamento'];
         $rol = trim($_POST['rol']);
-        $contrasena = trim($_POST['contrasena']);
 
-        $_SESSION['mensaje'] = $modelo->editarFuncionario($id_funcionario, $rut, $nombre_completo, $id_equipo,$id_departamento,$rol,$contrasena);
+        $_SESSION['mensaje'] = $modelo->editarFuncionario($id_funcionario, $rut, $nombre_completo, $id_equipo,$id_departamento,$rol);
         header("Location: funcionarios.php");
         exit;
     }
@@ -225,7 +231,7 @@
                             <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $nombre_completo; ?></td>
                             <td class="p-3 fw-medium text-dark"><?php echo $rol; ?></td>
                             <td class="p-3 text-center">
-                            <button class="btn btn-outline-primary btn-sm"
+                            <button class="btn btn-outline-dark btn-sm"
                             onclick='abrirEditar(
                                 <?php echo (int) $id_funcionario; ?>,
                                 <?php echo json_encode($rut); ?>,
@@ -267,7 +273,7 @@
 
                     <div>
                         <label class="form-label">RUT</label>
-                        <input type="text" name="rut" class="form-control" placeholder="12.345.678-9" required>
+                        <input type="text" name="rut" class="form-control" placeholder="12345678-9" required>
                     </div>
                     <div>
                         <label class="form-label">Nombre Completo</label>
@@ -343,7 +349,7 @@
                             <option value="<?php echo $dep['id_departamento']; ?>">
                                 <?php echo $dep['nombre_departamento']; ?>
                             </option>
-                            <?php endwhile; ?>
+                            <?php endwhile; ?> 
                         </select>
                     </div>
                     <div>
