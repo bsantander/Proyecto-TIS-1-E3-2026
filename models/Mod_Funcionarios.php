@@ -12,7 +12,7 @@ class Mod_Funcionarios {
         return $resultado ? $resultado->fetch_assoc() : null; 
     }
 
-    public function agregarFuncionario($rut, $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena){
+    public function agregarFuncionario($rut, $nombre_completo, $id_equipo, $id_departamento, $rol){
 
         $sql = "SELECT * FROM funcionario 
                 WHERE rut = ?"; 
@@ -26,11 +26,11 @@ class Mod_Funcionarios {
             return "Ya existe un funcionario con ese RUT";
         }
 
-        $sql = "INSERT INTO funcionario(rut, nombre_completo, id_equipo, id_departamento, rol, contrasena)
-                VALUES(?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO funcionario(rut, nombre_completo, id_equipo, id_departamento, rol
+                VALUES(?, ?, ?, ?, ?)";
         $this->conexion->execute_query(
             $sql,
-            [$rut, $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena]
+            [$rut, $nombre_completo, $id_equipo, $id_departamento, $rol]
         );
 
         return "Funcionario registrado correctamente"; 

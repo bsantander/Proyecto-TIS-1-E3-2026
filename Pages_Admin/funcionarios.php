@@ -10,8 +10,7 @@
         $id_equipo = $_POST['id_equipo'];
         $id_departamento = $_POST['id_departamento'];
         $rol = $_POST['rol'];
-        $contrasena = $_POST['contrasena'];
-        $_SESSION['mensaje'] = $modelo->agregarFuncionario($rut, $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena);
+        $_SESSION['mensaje'] = $modelo->agregarFuncionario($rut, $nombre_completo, $id_equipo, $id_departamento, $rol);
         if($_SESSION['mensaje'] == "Funcionario registrado correctamente"){
             $_SESSION['tipo'] = "success";
         }else{
@@ -47,6 +46,11 @@
         $rol = trim($_POST['rol']);
 
         $_SESSION['mensaje'] = $modelo->editarFuncionario($id_funcionario, $rut, $nombre_completo, $id_equipo,$id_departamento,$rol);
+        if($_SESSION['mensaje'] == "Funcionario actualizado correctamente"){
+            $_SESSION['tipo'] = "success";
+        }else{
+            $_SESSION['tipo'] = "danger";
+        }
         header("Location: funcionarios.php");
         exit;
     }
@@ -176,10 +180,12 @@
 
         <?php if (isset($_SESSION['mensaje'])): ?>
         <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-            <div id="toastMensaje" class="toast align-items-center text-white bg-success border-0" role="alert">
+            <div id="toastMensaje" class="toast align-items-center text-white bg-<?php echo $_SESSION['tipo'] ?? 'success'; ?> border-0" role="alert">
                 <div class="d-flex">
                     <div class="toast-body">
-                        <?php echo $_SESSION['mensaje']; unset($_SESSION['mensaje']); ?>
+                        <?php echo $_SESSION['mensaje']; 
+                              unset($_SESSION['mensaje']); 
+                              unset($_SESSION['tipo']);?>
                     </div>
                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
@@ -187,23 +193,154 @@
         </div>
         <?php endif; ?>
 
-            <div class=" my-3 d-flex flex-row justify-content-between ">
-                <div class="input-group flex-nowrap" style="max-width: 450px">
-                    <span class=" input-group-text material-symbols-outlined">search</span>
-                    <input type="text" id="inputBusquedaFuncionario" onkeyup="filtrarFuncionarios()" class="Buscador form-control" placeholder="Buscar por Nombre, Rut, etc..." >
-                </div>
+            <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
+
+                <form method="GET" class="w-100" style="max-width: 450px;">
+
+                    <div class="input-group">
+
+                        <span class="input-group-text bg-white border-end-0 rounded-start-3">
+                            <span class="material-symbols-outlined text-secondary fs-5">search</span>
+                        </span>
+
+                        <input
+                            type="text"
+                            name="buscar"
+                            class="Buscador form-control border-start-0 rounded-end-3 py-2"
+                            placeholder="Buscar funcionario..."
+                            value="<?php echo $_GET['buscar'] ?? ''; ?>">
+
+                        <button class="btn btn-outline-primary" type="submit">
+                            Buscar
+                        </button>
+
+                    </div>
+
+                </form>
+            <div class="dropdown">
+
+                <button class="btn btn-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
+                        type="button"
+                        data-bs-toggle="dropdown">
+
+                    <span class="material-symbols-outlined fs-5">sort</span>
+                    Ordenar
+
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+
+                    <li>
+                        <a class="dropdown-item" href="funcionarios.php">
+                            Todos
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
+                        href="funcionarios.php?orden=id_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                            ID Ascendente
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
+                        href="funcionarios.php?orden=id_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                            ID Descendente
+                        </a>
+                    </li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li>
+                        <a class="dropdown-item"
+                        href="funcionarios.php?orden=nombre_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                            Nombre A-Z
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
+                        href="funcionarios.php?orden=nombre_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
+                            Nombre Z-A
+                        </a>
+                    </li>
+
+                </ul>
+
             </div>
+
+        </div>
+
 
         <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
             <div class="card-body p-0">
                 <?php
-                $consulta = "SELECT id_funcionario, rut, nombre_completo, rol, id_equipo, id_departamento
-                FROM funcionario";
-                $resultado = mysqli_query($conexion, $consulta);
-                if (!$resultado) {
-                    die('Error en la consulta: ' . mysqli_error($conexion));
+                    $orden = "ORDER BY id_funcionario ASC";
+
+                    if(isset($_GET['orden'])){
+
+                        switch($_GET['orden']){
+
+                            case "id_desc":
+                                $orden = "ORDER BY id_funcionario DESC";
+                                break;
+
+                            case "nombre_asc":
+                                $orden = "ORDER BY nombre_completo ASC";
+                                break;
+
+                            case "nombre_desc":
+                                $orden = "ORDER BY nombre_completo DESC";
+                                break;
+
+                            case "id_asc":
+                            default:
+                                $orden = "ORDER BY id_funcionario ASC";
+                                break;
+                        }
                     }
+
+                    /* ===========================
+                    CONSULTA CON BUSCADOR
+                    =========================== */
+
+                    $consulta = "
+                        SELECT
+                            id_funcionario,
+                            rut,
+                            nombre_completo,
+                            rol,
+                            id_equipo,
+                            id_departamento
+                        FROM funcionario
+                    ";
+
+                    if(isset($_GET['buscar']) && trim($_GET['buscar']) != ""){
+
+                        $buscar = mysqli_real_escape_string(
+                            $conexion,
+                            trim($_GET['buscar'])
+                        );
+
+                        $consulta .= "
+                            WHERE
+                                nombre_completo LIKE '%$buscar%'
+                                OR rut LIKE '%$buscar%'
+                                OR rol LIKE '%$buscar%'
+                        ";
+                    }
+
+                    $consulta .= " $orden";
+
+                    $resultado = mysqli_query($conexion, $consulta);
+
+                    if(!$resultado){
+                        die("Error en la consulta: " . mysqli_error($conexion));
+                    }
+
                     ?>
+                    
 
                 <table class="table table-hover m-0 align-middle">
                     <thead class="table-light">
@@ -302,11 +439,6 @@
                         <label class="form-label">Rol</label>
                         <input type="text" name="rol" class="form-control" required>
                     </div>
-                    <div>
-                        <label class="form-label">Contraseña</label>
-                        <input type="password" name="contrasena" class="form-control" required>
-                    </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
