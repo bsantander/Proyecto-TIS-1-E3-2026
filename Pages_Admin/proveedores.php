@@ -4,17 +4,61 @@
     require('../models/Mod_Proveedores.php');
     $modelo = new Mod_Proveedores($conexion);
 
-    if(isset($_POST['agregar'])) { 
-        $_SESSION['mensaje'] = $modelo->agregarProveedor(); 
+    if(isset($_POST['agregar'])){
+
+        $rut_proveedor   = trim($_POST['rut_proveedor']);
+        $nombre_completo = trim($_POST['nombre_completo']);
+        $contacto        = trim($_POST['contacto']);
+
+        $_SESSION['mensaje'] = $modelo->agregarProveedor(
+            $rut_proveedor,
+            $nombre_completo,
+            $contacto
+        );
+
+        if($_SESSION['mensaje'] == "Proveedor registrado correctamente"){
+            $_SESSION['tipo'] = "success";
+        }else{
+            $_SESSION['tipo'] = "danger";
+        }
+
+        header("Location: proveedores.php");
+        exit;
     }
 
-    if(isset($_POST['guardar'])) { 
-        $_SESSION['mensaje'] = $modelo->editarProveedor(); 
+    if(isset($_POST['guardar'])){
+
+        $id_proveedor    = (int) $_POST['id_proveedor'];
+        $rut_proveedor   = trim($_POST['rut_proveedor']);
+        $nombre_completo = trim($_POST['nombre_completo']);
+        $contacto        = trim($_POST['contacto']);
+
+        $_SESSION['mensaje'] = $modelo->editarProveedor(
+            $id_proveedor,
+            $rut_proveedor,
+            $nombre_completo,
+            $contacto
+        );
+
+        if($_SESSION['mensaje'] == "Proveedor actualizado correctamente"){
+            $_SESSION['tipo'] = "success";
+        }else{
+            $_SESSION['tipo'] = "danger";
+        }
+
+        header("Location: proveedores.php");
+        exit;
     }
 
     if(isset($_GET['eliminar'])){
-        $id_proveedor = (int) $_GET['eliminar']; 
+
+        $id_proveedor = (int) $_GET['eliminar'];
+
         $_SESSION['mensaje'] = $modelo->eliminarProveedor($id_proveedor);
+        $_SESSION['tipo'] = "success";
+
+        header("Location: proveedores.php");
+        exit;
     }
 ?>
 
@@ -23,7 +67,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipos - NodoActivo</title>
+    <title>Proveedores - NodoActivo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -117,7 +161,7 @@
                 <div class="d-flex align-items-center gap-3">
                     <div class="titulo-seccion-linea"></div>
                     <div>
-                        <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Nomina de Proveedores</h2>
+                        <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Nómina de Proveedores</h2>
                         <p class="titulo-seccion-texto m-0">Registro y datos de contacto de proveedores</p>
                     </div>
                 </div>
@@ -128,12 +172,29 @@
                         <p class="m-0 text-decoration-none text-white">Agregar Proveedor</p>
                 </button>
             </div>
-
             <?php if (isset($_SESSION['mensaje'])): ?>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <?php echo $_SESSION['mensaje']; unset($_SESSION['mensaje']); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+                <div id="toastMensaje"
+                    class="toast align-items-center text-white bg-<?php echo $_SESSION['tipo'] ?? 'success'; ?> border-0"
+                    role="alert">
+
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <?php
+                            echo $_SESSION['mensaje'];
+                            unset($_SESSION['mensaje']);
+                            unset($_SESSION['tipo']);
+                            ?>
+                        </div>
+
+                        <button type="button"
+                                class="btn-close btn-close-white me-2 m-auto"
+                                data-bs-dismiss="toast">
+                        </button>
+                    </div>
+
                 </div>
+            </div>
             <?php endif; ?>
             
             <div class=" my-3 d-flex flex-row justify-content-between ">
@@ -158,7 +219,7 @@
                     <table class="table table-hover m-0 align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Proveeor</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Proveedor</th>
                                 <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Nombre </th>
                                 <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Rut</th>
                                 <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Contacto</th>
@@ -183,9 +244,12 @@
                               <td class="p-3 text-center">
 
                               <button class="btn btn-sm btn-outline-primary" 
-                            onclick="abrirEditar(<?php echo $row['id_proveedor']; ?>, '<?php echo $row['nombre_completo']; ?>', '<?php echo $row['rut_proveedor']; ?>', '<?php echo $row['contacto']; ?>')">
-                        Editar
-                    </button>
+                            onclick='abrirEditar(<?php echo $row["id_proveedor"]; ?>, 
+                            <?php echo json_encode($row["nombre_completo"]); ?>, 
+                            <?php echo json_encode($row["rut_proveedor"]); ?>, 
+                            <?php echo json_encode($row["contacto"]); ?> )'>
+                            Editar
+                            </button>
 
                               </td>
                             </tr>
@@ -287,7 +351,17 @@ function abrirEditar(id, nombre, rut, contacto) {
     modal.show();
 }
 </script>
-
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toastEl = document.getElementById("toastMensaje");
+    if (toastEl) {
+        const toast = new bootstrap.Toast(toastEl, {
+            delay: 3000
+        });
+        toast.show();
+    }
+});
+</script>
 
 </body>
 </html>
