@@ -1,6 +1,17 @@
 <?php
-require_once("../conexion.php");
+    session_start();
+    require ('../conexion.php');
+    require('../models/Mod_Mantenciones.php');
+    $modelo = new Mod_Mantenciones($conexion);
+
+    // accion de botones
+    if(isset($_POST['programar'])) {
+        $_SESSION['mensaje'] = $modelo->crear_mant_correctiva();
+    }
+
 ?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -175,6 +186,15 @@ require_once("../conexion.php");
                 
                 <div class="card shadow-sm border-0 rounded-3" style="overflow: hidden;">
                     <div class="card-body p-0">
+                        <?php
+                        $consulta = "SELECT id_mantencion, costo, fecha_prox_mantencion, frecuencia_mantencion, id_funcionario FROM preventiva";
+                        $resultado = mysqli_query($conexion, $consulta);
+
+                        if (!$resultado) {
+                            die('Error de la consulta: ' . mysqli_error($conexion));
+                        }
+                        ?>
+
                         <table class="table table-hover m-0 align-middle">
                             <thead class="table-light">
                                 <tr>
@@ -186,16 +206,118 @@ require_once("../conexion.php");
                                     <th class="p-3 text-secondary border-bottom" style="font-size: 0.85rem; font-weight: 600;">Costo Estimado</th>
                                 </tr>
                             </thead>
+                            <tbody id = "tablaMantencionesProgramadas">
+                                <?php
+                                while($row = mysqli_fetch_assoc($resultado)){
+                                    $activo = $row["activo"];
+                                    $frecuencia =row["frecuencia_mantencion"];
+                                    $proxima_fecha = row["fecha_prox_mantencion"];
+                                    $responsable = row["id_funcionario"];
+                                    $estado = row["estado"];
+                                    $costo_estimado = row["costo"];
+                                ?>
+                                <tr>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $activo;
+                                    ?>
+                                    </th>
+                                    <td class="p-3 fw-medium text-dark"><?php echo $frecuencia; ?></td>
+                                    <td class="p-3 fw-medium text-dark"><?php echo $proxima_fecha; ?></td>
+                                    <td class="p-3 fw-medium text-dark"><?php echo $responsable; ?></td>
+                                    <td class="p-3 fw-medium text-dark"><?php echo $estado; ?></td>
+                                    <td class="p-3 fw-medium text-dark"><?php echo $costo_estimado; ?></td>
+
+
+                                </tr>
+                                
+                                
+                                
+                                <?php
+                                    }
+                                ?>
+
+
+
+
                         </table>
                     </div>
                 </div>
             </div>
             
+
+
             <div class="tab-pane fade" id="correctiva" role="tabpanel">
-                <div class="p-5 text-center text-muted">
-                    <p class="m-0">Tabla mantenciones correctivas</p>
+                <h5 class="fw-bold mb-3" style="color: #05ad98;">Revisiones Programadas</h5>
+                
+                <div class="card shadow-sm border-0 rounded-3" style="overflow: hidden;">
+                    <div class="card-body p-0">
+                        <?php
+                        $consulta = "SELECT id_mantencion, tipo_de_fallo, estado, costo, descripcion, id_funcionario FROM correctiva WHERE id_funcionario = (SELECT id_funcionario from funcionario where rut = '" . $_SESSION['username'] . "')";
+                        $resultado = mysqli_query($conexion, $consulta);
+
+                        if (!$resultado) {
+                            die('Error de la consulta: ' . mysqli_error($conexion));
+                        }
+                        ?>
+
+                        <table class="table table-hover m-0 align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="p-3 text-secondary border-bottom" style="font-size: 0.85rem; font-weight: 600;">ID Mantención</th>
+                                    <th class="p-3 text-secondary border-bottom" style="font-size: 0.85rem; font-weight: 600;">Tipo de Fallo</th>
+                                    <th class="p-3 text-secondary border-bottom" style="font-size: 0.85rem; font-weight: 600;">Estado</th>
+                                    <th class="p-3 text-secondary border-bottom" style="font-size: 0.85rem; font-weight: 600;">Costo Estimado</th>
+                                    <th class="p-3 text-secondary border-bottom" style="font-size: 0.85rem; font-weight: 600;">Descripcion</th>
+                                    <th class="p-3 text-secondary border-bottom" style="font-size: 0.85rem; font-weight: 600;">Responsable</th>
+                                </tr>
+                            </thead>
+                            <tbody id = "tablaMantencionesProgramadas">
+                                <?php
+                                while($row = mysqli_fetch_assoc($resultado)){
+                                    $id_mantencion = $row["id_mantencion"];
+                                    $tipo_fallo = $row["tipo_de_fallo"];
+                                    $estado = $row["estado"];
+                                    $costo = $row["costo"];
+                                    $descripcion = $row["descripcion"];
+                                    $id_funcionario = $row["id_funcionario"];
+                                    $descripcion = row["descripcion"];
+                                    $id_funcionario = row["id_funcionario"];
+                                ?>
+                                <tr>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $id_mantencion;
+                                    ?>
+                                    </th>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $tipo_fallo;
+                                    ?>
+                                    </th>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $estado;
+                                    ?>
+                                    </th>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $costo;
+                                    ?>
+                                    </th>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $descripcion;
+                                    ?>
+                                    </th>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $id_funcionario;
+                                    ?>
+                                    </th>
+                                </tr>
+                                <?php
+                                    }
+                                ?>
+
+
+
+
+                        </table>
+                    </div>
                 </div>
             </div>
+
+
+
+
+
         </div>
     </div>
 </div>
