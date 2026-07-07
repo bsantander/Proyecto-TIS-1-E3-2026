@@ -197,21 +197,26 @@
             </div>
             <?php endif; ?>
             
-            <div class=" my-3 d-flex flex-row justify-content-between ">
-                <form method="GET" class="w-100" style="max-width: 450px;">
+            <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
 
+                <!-- BUSCADOR -->
+                <form method="GET" class="w-100" style="max-width: 450px;">
                     <div class="input-group">
 
-                        <span class="input-group-text bg-white border-end-0 rounded-start-3">
-                            <span class="material-symbols-outlined text-secondary fs-5">search</span>
+                        <span class="input-group-text bg-white border-end-0 rounded-start-3"
+                            style="border-color: #dbe4e2;">
+                            <span class="material-symbols-outlined text-secondary fs-5">
+                                search
+                            </span>
                         </span>
 
                         <input
                             type="text"
                             name="buscar"
                             class="Buscador form-control border-start-0 rounded-end-3 py-2"
-                            placeholder="Buscar funcionario por Id, nombre o rut..."
-                            value="<?php echo $_GET['buscar'] ?? ''; ?>">
+                            placeholder="Buscar proveedor..."
+                            value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
+                            >
 
                         <button class="btn btn-outline-primary" type="submit">
                             Buscar
@@ -220,72 +225,106 @@
                     </div>
 
                 </form>
+
+                <!-- BOTÓN ORDENAR -->
                 <div class="dropdown">
 
-                <button class="btn btn-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
-                        type="button"
-                        data-bs-toggle="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle d-flex align-items-center gap-2 px-3 py-2 fw-medium"
+                            type="button"
+                            data-bs-toggle="dropdown">
 
-                    <span class="material-symbols-outlined fs-5">sort</span>
-                    Ordenar
-
-                </button>
-
-                <ul class="dropdown-menu dropdown-menu-end">
-
-                    <li>
-                        <a class="dropdown-item" href="proveedores.php">
-                            Todos
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item"
-                        href="proveedores.php?orden=id_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
-                            ID Ascendente
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item"
-                        href="proveedores.php?orden=id_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
-                            ID Descendente
-                        </a>
-                    </li>
-
-                    <li><hr class="dropdown-divider"></li>
-
-                    <li>
-                        <a class="dropdown-item"
-                        href="proveedores.php?orden=nombre_asc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
-                            Nombre A-Z
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item"
-                        href="proveedores.php?orden=nombre_desc&buscar=<?php echo urlencode($_GET['buscar'] ?? ''); ?>">
-                            Nombre Z-A
-                        </a>
-                    </li>
-
-                </ul>
-
-            </div>
-        </div>
-
-            
+                        <span class="material-symbols-outlined fs-5">sort</span>
+                        Ordenar
+                    </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item"
+                                href="proveedores.php">
+                                    Todos
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                href="proveedores.php?orden=id_asc&buscar=<?php  echo urlencode($_GET['buscar'] ?? ''); ?>">
+                                    ID Ascendente
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                href="proveedores.php?orden=id_desc&buscar=<?php  echo urlencode($_GET['buscar'] ?? ''); ?>">
+                                    ID Descendente
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item"
+                                href="proveedores.php?orden=nombre_asc&buscar=<?php  echo urlencode($_GET['buscar'] ?? ''); ?>">
+                                    Nombre A-Z
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                href="proveedores.php?orden=nombre_desc&buscar=<?php  echo urlencode($_GET['buscar'] ?? ''); ?>">
+                                    Nombre Z-A
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
                 <div class="card-body p-0">
                     <?php
-                    $consulta = "SELECT id_proveedor, rut_proveedor, nombre_completo, contacto FROM proveedor";
-                    $resultado = mysqli_query($conexion, $consulta);
-                    
-                    if (!$resultado) {
-                        die('Error en la consulta: ' . mysqli_error($conexion));
-                    }
-                    ?>
 
+                            $orden = "ORDER BY id_proveedor ASC";
+                            
+                            if(isset($_GET['orden'])){
+                                switch($_GET ['orden']) {
+                                    case 'id_desc':
+                                        $orden = " ORDER BY id_proveedor DESC";
+                                        break;
+
+                                    case 'nombre_asc':
+                                        $orden = " ORDER BY nombre_completo ASC";
+                                        break;
+
+                                    case 'nombre_desc':
+                                        $orden = " ORDER BY nombre_completo DESC";
+                                        break;
+                                    case 'id_asc':
+                                    default:
+                                        $orden  = " ORDER BY id_proveedor ASC";
+                                        break;
+                                    }
+                                }
+
+                            /* ===========================
+                            CONSULTA CON BUSCADOR
+                            =========================== */
+
+                            $consulta = "
+                                SELECT id_proveedor, rut_proveedor, nombre_completo, contacto
+                                FROM proveedor
+                            ";
+
+                            if(isset($_GET['buscar']) && trim($_GET['buscar']) != ""){
+
+                                $buscar = mysqli_real_escape_string(
+                                    $conexion,
+                                    trim($_GET['buscar'])
+                                );
+
+                                $consulta .= "
+                                    WHERE nombre_completo LIKE '%$buscar%'
+                                ";
+                            }
+                            $consulta .= " $orden";                
+                             
+                            $resultado = mysqli_query($conexion, $consulta);
+
+                            if (!$resultado) {
+                                die("Error en la consulta: " . mysqli_error($conexion));
+                            }
+                        ?>
                     <table class="table table-hover m-0 align-middle">
                         <thead class="table-light">
                             <tr>
