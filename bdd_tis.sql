@@ -710,6 +710,12 @@ ALTER TABLE `servidor`
   ADD CONSTRAINT `fk_serv_func` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionario` (`id_funcionario`);
 COMMIT;
 
+--
+-- indicador para obligarlo a cambiar la contraseña
+--
+ALTER TABLE funcionario
+ADD cambiar_contrasena TINYINT(1) NOT NULL DEFAULT 0;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
