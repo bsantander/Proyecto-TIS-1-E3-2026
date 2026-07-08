@@ -12,9 +12,6 @@ if ($pagina_actual < 1) {
 $consulta_total = "SELECT COUNT(*) AS total FROM vista_equipos";
 $resultado_total = mysqli_query($conexion, $consulta_total);
 
-if (!$resultado_total) {
-    die('Error en la consulta: ' . mysqli_error($conexion));
-}
 
 $total_equipos = (int) mysqli_fetch_assoc($resultado_total)['total'];
 $total_paginas = max(1, (int) ceil($total_equipos / $equipos_por_pagina));
@@ -103,12 +100,6 @@ $hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
         </div>
 
         <div class="Inferior">
-            <div class="Configuracion" >
-                <a href="configuracion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
-                    <span class="material-symbols-outlined">build</span>
-                    <p class="m-0 fs-6">Configuracion</p>
-                </a>
-            </div>
 
             <div class="Cerrar_Sesion">
                 <a href="../secion.php?logout=1" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
@@ -160,10 +151,6 @@ $hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
                     <?php
                     $consulta = "SELECT id_equipo, tipo, marca, modelo FROM vista_equipos ORDER BY id_equipo, tipo LIMIT $equipos_por_pagina OFFSET $offset";
                     $resultado = mysqli_query($conexion, $consulta);
-
-                    if (!$resultado) {
-                        die('Error en la consulta: ' . mysqli_error($conexion));
-                    }
                     ?>
 
                     <table class="table table-hover m-0 align-middle">
@@ -175,7 +162,6 @@ $hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
                                 <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Modelo</th>
                                 <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Gestionar Equipo</th>
                                 <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Codigo QR</th>
-                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Historial </th>
                             </tr>
                         </thead>
                         <tbody id="tablaEquiposBody" >

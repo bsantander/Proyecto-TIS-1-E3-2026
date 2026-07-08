@@ -1,6 +1,9 @@
 <?php
 require_once("../conexion.php");
 require_once("../models/Mod_Historial.php");
+session_start();
+
+
 
 $equipos_por_pagina = 15;
 $pagina_actual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
@@ -105,12 +108,6 @@ $errorHistorial = $historial['error'] ?? null;
         </div>
 
         <div class="Inferior">
-            <div class="Configuracion">
-                <a href="configuracion.php" class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
-                    <span class="material-symbols-outlined">build</span>
-                    <p class="m-0 fs-6">Configuracion</p>
-                </a>
-            </div>
 
             <div class="Cerrar_Sesion">
                 <a href="../secion.php?logout=1" class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
@@ -127,7 +124,7 @@ $errorHistorial = $historial['error'] ?? null;
                 <div class="titulo-seccion-linea"></div>
                 <div>
                     <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Historial de Equipos</h2>
-                    <p class="titulo-seccion-texto m-0">Registro de mantenciones y eventos asociados</p>
+                    <p class="titulo-seccion-texto m-0">Selecciona un equipo para revisar sus eventos asociados</p>
                 </div>
             </div>
         </div>
@@ -138,6 +135,13 @@ $errorHistorial = $historial['error'] ?? null;
             </div>
         <?php endif; ?>
 
+        <div class="my-3 d-flex flex-row justify-content-between">
+            <div class="input-group flex-nowrap" style="max-width: 450px">
+                <span class="input-group-text material-symbols-outlined">search</span>
+                <input type="text" class="Buscador form-control" placeholder="Buscar por ID, Modelo, Tipo, etc">
+            </div>
+        </div>
+
         <div class="card shadow-sm border-0 rounded-3" style="border-top: 3px solid #05ad98; overflow: hidden;">
             <div class="card-body p-0">
                 <table class="table table-hover m-0 align-middle">
@@ -145,13 +149,10 @@ $errorHistorial = $historial['error'] ?? null;
                         <tr>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">ID Equipo</th>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Tipo</th>
+                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Marca</th>
+                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Modelo</th>
                             <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Funcionario</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Fecha</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Evento</th>
-
-                            Mantentencion , re y asignacion , dar de baja, ingreso de equipo.
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Estado</th>
-                            <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Costo</th>
+                            <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Eventos</th>
                             <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600;">Historial</th>
                         </tr>
                     </thead>
@@ -159,15 +160,14 @@ $errorHistorial = $historial['error'] ?? null;
                         <?php if (!$errorHistorial && count($filasHistorial) > 0): ?>
                             <?php foreach ($filasHistorial as $fila): ?>
                                 <tr>
-                                    <td class="p-3 text-muted"><?php echo ($fila['id_equipo'] ?: 'Sin equipo'); ?></td>
-                                    <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo ($fila['tipo'] ?: 'Sin tipo'); ?></td>
-                                    <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo ($fila['funcionario'] ?: 'Sin funcionario'); ?></td>
-                                    <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo ($fila['funcionario'] ?: 'Sin Estado'); ?></td>
-                                    <td class="p-3 text-secondary"><?php echo ($fila['id_mantencion'] ?: 'Sin historial'); ?></td>
-                                    <td class="p-3 fw-medium text-dark"><?php echo ($fila['estado'] ?: 'Sin estado'); ?></td>
-                                    <td class="p-3 fw-medium text-dark">$<?php echo number_format((float) $fila['costo'], 0, ',', '.'); ?></td>
+                                    <td class="p-3 text-muted"><?php echo htmlspecialchars($fila['id_equipo'] ?: 'Sin equipo'); ?></td>
+                                    <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo htmlspecialchars($fila['tipo'] ?: 'Sin tipo'); ?></td>
+                                    <td class="p-3 fw-medium text-dark"><?php echo htmlspecialchars($fila['marca'] ?: 'Sin marca'); ?></td>
+                                    <td class="p-3 text-secondary"><?php echo htmlspecialchars($fila['modelo'] ?: 'Sin modelo'); ?></td>
+                                    <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo htmlspecialchars($fila['funcionario'] ?: 'Sin funcionario'); ?></td>
+                                    <td class="p-3 fw-medium text-dark text-center"><?php echo (int) $fila['total_eventos']; ?></td>
                                     <td class="p-3 text-center">
-                                        <a href="equipos_detalle.php?id=<?php echo $fila['id_equipo']; ?>&tipo=<?php echo urlencode($fila['tipo']); ?>" class="Buttons_equipo btn btn-sm border">
+                                        <a href="equipos_historial.php?id=<?php echo urlencode($fila['id_equipo']); ?>&tipo=<?php echo urlencode($fila['tipo']); ?>" class="Buttons_equipo btn btn-sm border">
                                             <span class="material-symbols-outlined align-middle">visibility</span>
                                         </a>
                                     </td>
@@ -175,7 +175,7 @@ $errorHistorial = $historial['error'] ?? null;
                             <?php endforeach; ?>
                         <?php elseif (!$errorHistorial): ?>
                             <tr>
-                                <td colspan="8" class="p-4 text-center text-muted">No hay equipos ingresados.</td>
+                                <td colspan="7" class="p-4 text-center text-muted">No hay equipos ingresados.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

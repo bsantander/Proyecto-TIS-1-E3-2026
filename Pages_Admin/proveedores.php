@@ -93,13 +93,6 @@
         </div>
         
         <div class="Inferior">
-            <div class="Configuracion" >
-                <a href="configuracion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
-                    <span class="material-symbols-outlined">build</span>                   
-                    <p class="m-0 fs-6">Configuracion</p>
-                </a>
-            </div>
-
             <div class="Cerrar_Sesion">
                 <a href="../secion.php?logout=1" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                     <span class="material-symbols-outlined">logout</span>
@@ -149,10 +142,7 @@
                     <?php
                     $consulta = "SELECT id_proveedor, rut_proveedor, nombre_completo, contacto FROM proveedor";
                     $resultado = mysqli_query($conexion, $consulta);
-                    
-                    if (!$resultado) {
-                        die('Error en la consulta: ' . mysqli_error($conexion));
-                    }
+                
                     ?>
 
                     <table class="table table-hover m-0 align-middle">
@@ -182,11 +172,9 @@
                               
                               <td class="p-3 text-center">
 
-                              <button class="btn btn-sm btn-outline-primary" 
-                            onclick="abrirEditar(<?php echo $row['id_proveedor']; ?>, '<?php echo $row['nombre_completo']; ?>', '<?php echo $row['rut_proveedor']; ?>', '<?php echo $row['contacto']; ?>')">
-                        Editar
-                    </button>
-
+                              <button class="btn btn-sm btn-outline-primary" onclick="abrirEditar(<?php echo $row['id_proveedor'];
+                              ?>, '<?php echo $row['nombre_completo']; ?>', '<?php echo $row['rut_proveedor']; ?>', 
+                              '<?php echo $row['contacto']; ?>')">Editar</button>
                               </td>
                             </tr>
                             <?php

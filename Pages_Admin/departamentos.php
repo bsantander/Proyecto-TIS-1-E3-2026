@@ -105,22 +105,15 @@
                         <p class="m-0 fs-6">Mantenciones</p>
                     </a>
                 </div>
-                <div class="Historial">
-                    <a href="#" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
-                        <span class="material-symbols-outlined fs-5">history</span>
-                        <p class="m-0 fs-6">Historial</p>
-                    </a>
-                </div>
+            <div class="Historial">
+                <a href="historial.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                    <span class="material-symbols-outlined fs-5">history</span>
+                    <p class="m-0 fs-6">Historial</p>
+                </a>
+            </div>
             </div>
             
             <div class="Inferior">
-                <div class="Configuracion" >
-                    <a href="#" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
-                        <span class="material-symbols-outlined">build</span>                   
-                        <p class="m-0 fs-6">Configuración</p>
-                    </a>
-                </div>
-
                 <div class="Cerrar_Sesion">
                     <a href="../secion.php?logout=1" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                         <span class="material-symbols-outlined">logout</span>

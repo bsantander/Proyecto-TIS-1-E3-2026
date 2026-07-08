@@ -10,6 +10,8 @@
     $resultado = mysqli_query($conexion, $sql);
 
     $departamento = mysqli_fetch_assoc($resultado);
+    session_start();
+
 ?>
 
 <!DOCTYPE html>

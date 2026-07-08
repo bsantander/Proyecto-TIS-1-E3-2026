@@ -1,5 +1,7 @@
 <?php
 require_once("../conexion.php");
+session_start();
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -75,12 +77,6 @@ require_once("../conexion.php");
         </div>
         
         <div class="Inferior">
-            <div class="Configuracion" >
-                <a href="configuracion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
-                    <span class="material-symbols-outlined">build</span>                   
-                    <p class="m-0 fs-6">Configuracion</p>
-                </a>
-            </div>
 
             <div class="Cerrar_Sesion">
                 <a href="secion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
