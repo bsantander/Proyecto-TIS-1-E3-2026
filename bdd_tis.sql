@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-06-2026 a las 04:09:58
+-- Tiempo de generación: 08-07-2026 a las 01:40:57
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -50,7 +50,11 @@ CREATE TABLE `computador` (
 --
 
 INSERT INTO `computador` (`id_equipo`, `marca`, `codigo_qr`, `fecha_garantia`, `valor_equipo`, `fecha_compra`, `numero_serie`, `procesador`, `memoria_ram`, `almacenamiento`, `id_funcionario`, `modelo_procesador`, `cantidad_ram`, `cantidad_almacenamiento`, `id_proveedor`) VALUES
-(1, 'Dell', 'QR-COMP-01', '2028-05-21', 850000, '2026-05-21', 12345678, 'Ryzen', 'DDR4', 'SSD M.2', 2, 'Core i5-12400', 16, 512, 1);
+(8, 'HP', '', '0000-00-00', 0, '0000-00-00', 0, '', '', '', 5, 'Core i7', 16, 512, 1),
+(14, 'Dell', '', '0000-00-00', 0, '0000-00-00', 0, '', '', '', NULL, 'Core i5', 8, 256, NULL),
+(20, 'Lenovo', '', '0000-00-00', 0, '0000-00-00', 0, '', '', '', 2, 'Ryzen 5', 16, 1000, NULL),
+(26, 'HP', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Core i3', 8, 256, NULL),
+(32, 'Dell', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Core i7', 32, 1000, NULL);
 
 -- --------------------------------------------------------
 
@@ -64,8 +68,18 @@ CREATE TABLE `correctiva` (
   `estado` enum('operativo','en mantención','fuera de servicio') DEFAULT NULL,
   `tipo_de_fallo` text DEFAULT NULL,
   `descripcion` text DEFAULT NULL,
-  `id_funcionario` int(11) DEFAULT NULL
+  `id_funcionario` int(11) DEFAULT NULL,
+  `id_equipo` int(11) DEFAULT NULL,
+  `fecha_entrega` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `correctiva`
+--
+
+INSERT INTO `correctiva` (`id_mantencion`, `costo`, `estado`, `tipo_de_fallo`, `descripcion`, `id_funcionario`, `id_equipo`, `fecha_entrega`) VALUES
+(1, 15000, 'operativo', 'Falla eléctrica', 'Reemplazo de cables principales', 1, 10, '2026-07-10'),
+(2, 45000, 'en mantención', 'Desgaste mecánico', 'Lubricación y ajuste de piezas móviles', 2, 5, '2026-07-15');
 
 -- --------------------------------------------------------
 
@@ -103,13 +117,37 @@ CREATE TABLE `equipo_general` (
 --
 
 INSERT INTO `equipo_general` (`id_equipo`, `tipo_equipo`) VALUES
-(1, 'Computador'),
-(2, 'Proyector'),
-(3, 'Notebook'),
-(4, 'Proyector'),
-(5, 'Proyector'),
-(6, 'Otro Dispositivo'),
-(7, 'Otro Dispositivo');
+(8, 'Computador'),
+(9, 'Notebook'),
+(10, 'Proyector'),
+(11, 'Impresora'),
+(12, 'Servidor'),
+(13, 'Otro Dispositivo'),
+(14, 'Computador'),
+(15, 'Notebook'),
+(16, 'Proyector'),
+(17, 'Impresora'),
+(18, 'Servidor'),
+(19, 'Otro Dispositivo'),
+(20, 'Computador'),
+(21, 'Notebook'),
+(22, 'Proyector'),
+(23, 'Impresora'),
+(24, 'Servidor'),
+(25, 'Otro Dispositivo'),
+(26, 'Computador'),
+(27, 'Notebook'),
+(28, 'Proyector'),
+(29, 'Impresora'),
+(30, 'Servidor'),
+(31, 'Otro Dispositivo'),
+(32, 'Computador'),
+(33, 'Notebook'),
+(34, 'Proyector'),
+(35, 'Impresora'),
+(36, 'Servidor'),
+(37, 'Otro Dispositivo'),
+(38, 'Impresora');
 
 -- --------------------------------------------------------
 
@@ -119,14 +157,25 @@ INSERT INTO `equipo_general` (`id_equipo`, `tipo_equipo`) VALUES
 
 CREATE TABLE `evento` (
   `id_evento` int(11) NOT NULL,
+  `id_equipo` int(11) DEFAULT NULL,
   `estado_equipo` enum('activo','en reparacion','dado de baja') DEFAULT NULL,
   `fecha_evento` datetime DEFAULT NULL,
-  `tipo_evento` varchar(255) DEFAULT NULL,
+  `tipo_evento` enum('Ingreso Equipo','Asignacion a funcionario','Reasignacion a funcionario','Mantencion preventiva','Mantencion correctiva','Dado de baja') NOT NULL,
   `descripcion` varchar(255) DEFAULT NULL,
   `costo_asociado` double DEFAULT NULL,
   `id_funcionario` int(11) DEFAULT NULL,
   `id_mantencion` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `evento`
+--
+
+INSERT INTO `evento` (`id_evento`, `id_equipo`, `estado_equipo`, `fecha_evento`, `tipo_evento`, `descripcion`, `costo_asociado`, `id_funcionario`, `id_mantencion`) VALUES
+(1, 38, 'activo', '2026-07-04 00:20:26', 'Ingreso Equipo', 'Ingreso de equipo Impresora al inventario', 0, 1, NULL),
+(2, 38, 'activo', '2026-07-04 00:26:12', 'Reasignacion a funcionario', 'Equipo reasignado del funcionario 1 al funcionario 2', 0, 2, NULL),
+(3, 38, 'activo', '2026-07-04 00:33:41', 'Reasignacion a funcionario', 'Equipo reasignado del funcionario 2 al funcionario 5', 0, 5, NULL),
+(4, 20, 'activo', '2026-07-04 00:34:21', 'Asignacion a funcionario', 'Equipo asignado al funcionario 2', 0, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -149,7 +198,7 @@ CREATE TABLE `funcionario` (
 --
 
 INSERT INTO `funcionario` (`id_funcionario`, `rut`, `nombre_completo`, `id_equipo`, `id_departamento`, `rol`, `contrasena`) VALUES
-(1, 12345678, 'Prueba Jefatura', NULL, 1, 'Administrador', 'contraseña123'),
+(1, 12345678, 'Prueba Jefatura', 9, 1, 'Administrador', 'contraseña123'),
 (2, 87654321, 'Prueba Tecnica', NULL, 2, 'Tecnico', 'contraseña123'),
 (3, 987654321, 'Prueba Funcionarios', 0, 3, 'Funcionario', 'contraseña123'),
 (5, 44444, 'dasdasd', NULL, 3, 'Funcionario', 'dasdasdas');
@@ -174,6 +223,18 @@ CREATE TABLE `impresora` (
   `id_funcionario` int(11) DEFAULT NULL,
   `id_proveedor` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `impresora`
+--
+
+INSERT INTO `impresora` (`id_equipo`, `marca`, `codigo_qr`, `fecha_garantia`, `valor_equipo`, `fecha_compra`, `numero_serie`, `volumen_impresion`, `modelo`, `tipo`, `id_funcionario`, `id_proveedor`) VALUES
+(11, 'Brother', NULL, NULL, NULL, NULL, NULL, NULL, 'HL-1200', 'Laser', NULL, NULL),
+(17, 'HP', NULL, NULL, NULL, NULL, NULL, NULL, 'Deskjet 2700', 'Inyección', NULL, NULL),
+(23, 'Canon', NULL, NULL, NULL, NULL, NULL, NULL, 'Pixma', 'Inyección', NULL, NULL),
+(29, 'Brother', NULL, NULL, NULL, NULL, NULL, NULL, 'DCP-1610', 'Laser', NULL, NULL),
+(35, 'HP', NULL, NULL, NULL, NULL, NULL, NULL, 'LaserJet', 'Laser', NULL, NULL),
+(38, 'aaaa', '', '2026-07-26', 10, '2026-07-04', 1321, 1010, 'aaaa', 'Inyección', 5, 2);
 
 -- --------------------------------------------------------
 
@@ -205,7 +266,11 @@ CREATE TABLE `notebook` (
 --
 
 INSERT INTO `notebook` (`id_equipo`, `marca`, `codigo_qr`, `fecha_garantia`, `valor_equipo`, `fecha_compra`, `numero_serie`, `procesador`, `memoria_ram`, `modelo`, `almacenamiento`, `id_funcionario`, `cantidad_ram`, `cantidad_almacenamiento`, `modelo_procesador`, `id_proveedor`) VALUES
-(3, 'asus', '', '2004-10-11', 1000000, '2002-10-11', 2423432, 'Ryzen', 'DDR4', 'zephyrus g14', 'SSD M.2', 3, 16, 512, '7 serie 400', NULL);
+(9, 'Asus', '', '0000-00-00', 0, '0000-00-00', 0, '', '', 'VivoBook', '', 1, 16, 512, '', 1),
+(15, 'Acer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Swift', NULL, NULL, 8, 256, NULL, NULL),
+(21, 'HP', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pavilion', NULL, NULL, 16, 512, NULL, NULL),
+(27, 'Lenovo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ThinkPad', NULL, NULL, 16, 512, NULL, NULL),
+(33, 'Dell', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Inspiron', NULL, NULL, 8, 256, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -231,8 +296,11 @@ CREATE TABLE `otro_dispositivo` (
 --
 
 INSERT INTO `otro_dispositivo` (`id_equipo`, `marca`, `codigo_qr`, `fecha_garantia`, `valor_equipo`, `fecha_compra`, `numero_serie`, `modelo`, `id_funcionario`, `id_proveedor`) VALUES
-(6, 'AAA', '', '2026-06-06', 123, '2026-07-02', 11, 'NOSE', 3, 2),
-(7, 'adasds', NULL, '2026-07-04', 111, '2026-06-04', 1312, 'DADA', 3, 2);
+(13, 'Logitech', NULL, NULL, NULL, NULL, NULL, 'Webcam', NULL, NULL),
+(19, 'Cisco', NULL, NULL, NULL, NULL, NULL, 'Switch', NULL, NULL),
+(25, 'APC', NULL, NULL, NULL, NULL, NULL, 'UPS', NULL, NULL),
+(31, 'D-Link', '', '0000-00-00', 0, '0000-00-00', 0, 'Router', 2, 2),
+(37, 'Eaton', NULL, NULL, NULL, NULL, NULL, 'UPS', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -246,8 +314,19 @@ CREATE TABLE `preventiva` (
   `estado` enum('operativo','en mantención','fuera de servicio') DEFAULT NULL,
   `fecha_prox_mantencion` date DEFAULT NULL,
   `frecuencia_mantencion` datetime DEFAULT NULL,
-  `id_funcionario` int(11) DEFAULT NULL
+  `id_funcionario` int(11) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `id_equipo` int(11) DEFAULT NULL,
+  `fecha_entrega` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `preventiva`
+--
+
+INSERT INTO `preventiva` (`id_mantencion`, `costo`, `estado`, `fecha_prox_mantencion`, `frecuencia_mantencion`, `id_funcionario`, `descripcion`, `id_equipo`, `fecha_entrega`) VALUES
+(4, 25000, 'operativo', '2026-08-01', '2026-07-06 10:00:00', 1, '101', 5, '2026-07-06'),
+(12, 32000.5, 'en mantención', '2026-09-15', '2026-07-06 14:30:00', 2, '102', 8, '2026-07-07');
 
 -- --------------------------------------------------------
 
@@ -269,7 +348,7 @@ CREATE TABLE `proveedor` (
 
 INSERT INTO `proveedor` (`id_proveedor`, `rut_proveedor`, `nombre_completo`, `id_equipo`, `Contacto`) VALUES
 (1, 2147483647, 'Prueba Proveedor 10 ', NULL, 'aaaaa@gmail.com'),
-(2, 87654321, 'Prueba Proveedor 2', NULL, 'bbbbb@gmail.com');
+(2, 87654321, 'Prueba Proveedor 1', NULL, 'bbbbb@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -296,9 +375,11 @@ CREATE TABLE `proyector` (
 --
 
 INSERT INTO `proyector` (`id_equipo`, `marca`, `codigo_qr`, `fecha_garantia`, `valor_equipo`, `fecha_compra`, `numero_serie`, `calidad_imagen`, `modelo`, `id_funcionario`, `id_proveedor`) VALUES
-(2, 'Epson', 'QR-PROY-01', '2027-05-21', 450000, '2026-05-21', 87654321, 1080, 'PowerLite W49', NULL, NULL),
-(4, 'dadda', NULL, '2026-06-16', 150000, '0000-00-00', 312312, 1080, '', 3, NULL),
-(5, 'AAAA', NULL, '2026-07-04', 321312, '2026-06-25', 12312, 12312, '', 2, NULL);
+(10, 'Epson', NULL, NULL, NULL, NULL, NULL, 1080, 'X49', NULL, NULL),
+(16, 'BenQ', '', '0000-00-00', 0, '0000-00-00', 0, 720, 'MS550', 1, 2),
+(22, 'ViewSonic', NULL, NULL, NULL, NULL, NULL, 1080, 'PA503', NULL, NULL),
+(28, 'Epson', NULL, NULL, NULL, NULL, NULL, 1080, 'EB-E01', NULL, NULL),
+(34, 'Sony', NULL, NULL, NULL, NULL, NULL, 720, 'VPL-DX221', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -330,6 +411,17 @@ CREATE TABLE `servidor` (
   `id_funcionario` int(11) DEFAULT NULL,
   `id_proveedor` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `servidor`
+--
+
+INSERT INTO `servidor` (`id_equipo`, `marca`, `codigo_qr`, `fecha_garantia`, `valor_equipo`, `fecha_compra`, `numero_serie`, `funcion`, `id_funcionario`, `id_proveedor`) VALUES
+(12, 'Dell', NULL, NULL, NULL, NULL, NULL, 'Archivos', NULL, NULL),
+(18, 'HP', NULL, NULL, NULL, NULL, NULL, 'Web', NULL, NULL),
+(24, 'IBM', NULL, NULL, NULL, NULL, NULL, 'Base de Datos', NULL, NULL),
+(30, 'Dell', NULL, NULL, NULL, NULL, NULL, 'Correo', NULL, NULL),
+(36, 'Supermicro', NULL, NULL, NULL, NULL, NULL, 'Virtualización', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -388,7 +480,8 @@ ALTER TABLE `equipo_general`
 --
 ALTER TABLE `evento`
   ADD PRIMARY KEY (`id_evento`),
-  ADD KEY `fk_evento_func` (`id_funcionario`);
+  ADD KEY `fk_evento_func` (`id_funcionario`),
+  ADD KEY `fk_evento_equipo` (`id_equipo`);
 
 --
 -- Indices de la tabla `funcionario`
@@ -466,7 +559,7 @@ ALTER TABLE `departamento`
 -- AUTO_INCREMENT de la tabla `equipo_general`
 --
 ALTER TABLE `equipo_general`
-  MODIFY `id_equipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_equipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `funcionario`
@@ -478,7 +571,7 @@ ALTER TABLE `funcionario`
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id_proveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- Restricciones para tablas volcadas
@@ -501,6 +594,7 @@ ALTER TABLE `correctiva`
 -- Filtros para la tabla `evento`
 --
 ALTER TABLE `evento`
+  ADD CONSTRAINT `fk_evento_equipo` FOREIGN KEY (`id_equipo`) REFERENCES `equipo_general` (`id_equipo`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_evento_func` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionario` (`id_funcionario`);
 
 --

@@ -1,20 +1,36 @@
 <?php
 require_once '../conexion.php';
 require_once '../models/Mod_Equipos.php';
+session_start();
+
 
 $id = $_GET['id'] ?? $_POST['id'] ?? 0;
 $tipo = $_GET['tipo'] ?? $_POST['tipo'] ?? '';
 $modo = $_GET['modo'] ?? 'ver';
+$estado_actual = obtenerEstadoActualEquipo($conexion, $id);
+
+if ($estado_actual === 'dado de baja') {
+    $modo = 'ver';
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    unset($_POST['id'], $_POST['tipo'], $_POST['modo']);
-    if (actualizarEquipo($conexion, $id, $tipo, $_POST)) {
+    if (isset($_POST['dar_baja'])) {
+        darDeBajaEquipo($conexion, $id, $tipo);
         header("Location: equipos_detalle.php?id=$id&tipo=" . urlencode($tipo) . "&modo=ver");
         exit;
+    }
+
+    if ($estado_actual !== 'dado de baja') {
+        unset($_POST['id'], $_POST['tipo'], $_POST['modo']);
+        if (actualizarEquipo($conexion, $id, $tipo, $_POST)) {
+            header("Location: equipos_detalle.php?id=$id&tipo=" . urlencode($tipo) . "&modo=ver");
+            exit;
+        }
     }
 }
 
 $data = obtenerDatosCompletos($conexion, $id, $tipo);
+$estado_actual = obtenerEstadoActualEquipo($conexion, $id);
 $listaFuncionarios = obtenerTodosFuncionarios($conexion);
 $listaproovedores = obtenerTodosProveedores($conexion);
 ?>
@@ -67,6 +83,13 @@ $listaproovedores = obtenerTodosProveedores($conexion);
                         <div class="detalle-campo">
                             <span class="detalle-label">Tipo de Equipo</span>
                             <div class="detalle-valor detalle-valor-principal"><?php echo $tipo; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="detalle-campo">
+                            <span class="detalle-label">Estado del Equipo</span>
+                            <div class="detalle-valor"><?php echo $estado_actual; ?></div>
                         </div>
                     </div>
 
@@ -153,7 +176,12 @@ $listaproovedores = obtenerTodosProveedores($conexion);
 
         <div class="detalle-acciones d-flex justify-content-end gap-2">
             <?php if ($modo == 'ver'): ?>
-                <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>&modo=editar" class="btn button px-5 shadow-sm">Editar</a>
+                <?php if ($estado_actual !== 'dado de baja'): ?>
+                    <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>&modo=editar" class="btn button px-5 shadow-sm">Editar</a>
+                    <button type="submit" name="dar_baja" value="1" class="btn btn-outline-danger px-4 shadow-sm">Dar de baja</button>
+                <?php else: ?>
+                    <button type="button" class="btn btn-outline-secondary px-4 shadow-sm" disabled>Equipo dado de baja</button>
+                <?php endif; ?>
             <?php else: ?>
                 <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>" class="btn btn-secondary px-4 shadow-sm">Cancelar</a>
                 <button type="submit" class="btn button px-5 shadow-sm">Guardar Cambios</button>

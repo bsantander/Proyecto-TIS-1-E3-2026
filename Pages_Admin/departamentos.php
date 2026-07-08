@@ -125,12 +125,12 @@
                         <p class="m-0 fs-6">Mantenciones</p>
                     </a>
                 </div>
-                <div class="Historial">
-                    <a href="#" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
-                        <span class="material-symbols-outlined fs-5">history</span>
-                        <p class="m-0 fs-6">Historial</p>
-                    </a>
-                </div>
+            <div class="Historial">
+                <a href="historial.php" class="Barra_Izquierda_Index_active d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
+                    <span class="material-symbols-outlined fs-5">history</span>
+                    <p class="m-0 fs-6">Historial</p>
+                </a>
+            </div>
             </div>
             
             <div class="Inferior">

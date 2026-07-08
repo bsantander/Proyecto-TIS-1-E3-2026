@@ -6,6 +6,37 @@ class Mod_Funcionarios {
         $this->conexion = $conexion;
     }
 
+    private function insertarEventoEquipo($id_equipo, $tipo_evento, $descripcion, $id_funcionario) {
+        if (empty($id_equipo)) {
+            return true;
+        }
+
+        $resultado_evento = $this->conexion->query("SELECT COALESCE(MAX(id_evento), 0) + 1 AS nuevo_id FROM evento");
+        if (!$resultado_evento) {
+            return false;
+        }
+
+        $fila_evento = $resultado_evento->fetch_assoc();
+        $nuevo_id_evento = (int) $fila_evento['nuevo_id'];
+
+        $sql = "INSERT INTO evento (
+            id_evento,
+            id_equipo,
+            estado_equipo,
+            fecha_evento,
+            tipo_evento,
+            descripcion,
+            costo_asociado,
+            id_funcionario,
+            id_mantencion
+        ) VALUES (?, ?, 'activo', NOW(), ?, ?, 0, ?, NULL)";
+
+        return (bool) $this->conexion->execute_query(
+            $sql,
+            [$nuevo_id_evento, $id_equipo, $tipo_evento, $descripcion, $id_funcionario]
+        );
+    }
+
     public function autenticar($rut, $contrasena) {
         $sql = "SELECT id_funcionario, nombre_completo, rol FROM funcionario WHERE rut = ? AND contrasena = ?";        
         $resultado = $this->conexion->execute_query($sql, [$rut, $contrasena]);
