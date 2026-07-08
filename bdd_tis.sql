@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-07-2026 a las 01:40:57
+-- Tiempo de generación: 08-07-2026 a las 04:32:32
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -79,7 +79,10 @@ CREATE TABLE `correctiva` (
 
 INSERT INTO `correctiva` (`id_mantencion`, `costo`, `estado`, `tipo_de_fallo`, `descripcion`, `id_funcionario`, `id_equipo`, `fecha_entrega`) VALUES
 (1, 15000, 'operativo', 'Falla eléctrica', 'Reemplazo de cables principales', 1, 10, '2026-07-10'),
-(2, 45000, 'en mantención', 'Desgaste mecánico', 'Lubricación y ajuste de piezas móviles', 2, 5, '2026-07-15');
+(2, 45000, 'operativo', 'Desgaste mecánico', 'Lubricación y ajuste de piezas móviles', 2, 5, '2026-07-15'),
+(3, 5000, 'operativo', 'No prende', 'La pantalla se fue a negro y no prende', 1, 9, '2026-07-18'),
+(4, 200000, 'operativo', 'No prende', 'DASDSAD', 1, 10, '2026-07-25'),
+(5, 150000, 'operativo', 'NO IMPRIME', 'Dejo de imprimir y no hace nada', 3, 11, '2026-07-26');
 
 -- --------------------------------------------------------
 
@@ -175,7 +178,23 @@ INSERT INTO `evento` (`id_evento`, `id_equipo`, `estado_equipo`, `fecha_evento`,
 (1, 38, 'activo', '2026-07-04 00:20:26', 'Ingreso Equipo', 'Ingreso de equipo Impresora al inventario', 0, 1, NULL),
 (2, 38, 'activo', '2026-07-04 00:26:12', 'Reasignacion a funcionario', 'Equipo reasignado del funcionario 1 al funcionario 2', 0, 2, NULL),
 (3, 38, 'activo', '2026-07-04 00:33:41', 'Reasignacion a funcionario', 'Equipo reasignado del funcionario 2 al funcionario 5', 0, 5, NULL),
-(4, 20, 'activo', '2026-07-04 00:34:21', 'Asignacion a funcionario', 'Equipo asignado al funcionario 2', 0, 2, NULL);
+(4, 20, 'activo', '2026-07-04 00:34:21', 'Asignacion a funcionario', 'Equipo asignado al funcionario 2', 0, 2, NULL),
+(5, 23, 'activo', '2026-07-07 19:58:19', 'Mantencion preventiva', 'fallo la ram', 150000, 2, 13),
+(6, 38, '', '2026-07-07 20:25:33', 'Mantencion preventiva', 'Fallo la ram', 1500000, 5, 14),
+(8, 8, 'en reparacion', '2026-07-07 20:29:58', 'Mantencion preventiva', 'fallo la cpu', 150000, 5, 15),
+(9, 8, 'activo', '2026-07-07 20:30:00', 'Mantencion preventiva', 'Entrega de equipo por mantencion preventiva', 0, 5, 15),
+(10, 9, 'en reparacion', '2026-07-07 20:33:08', 'Mantencion correctiva', 'La pantalla se fue a negro y no prende', 5000, 1, 3),
+(11, 9, 'activo', '2026-07-07 20:33:26', 'Mantencion correctiva', 'Entrega de equipo por mantencion correctiva', 0, 1, 3),
+(12, 8, 'dado de baja', '2026-07-07 20:45:05', 'Dado de baja', 'Equipo 8 dado de baja', 0, 5, NULL),
+(13, 9, 'en reparacion', '2026-07-07 20:59:14', 'Mantencion preventiva', 'Falla de ram', 150000, 1, 16),
+(14, 10, 'en reparacion', '2026-07-07 22:16:20', 'Mantencion correctiva', 'DASDSAD', 200000, 1, 4),
+(15, 10, 'activo', '2026-07-07 22:16:56', 'Mantencion correctiva', 'Entrega de equipo por mantencion correctiva', 0, 1, 4),
+(16, 10, 'activo', '2026-07-07 22:17:26', 'Asignacion a funcionario', 'Equipo asignado al funcionario 1', 0, 1, NULL),
+(17, 10, 'dado de baja', '2026-07-07 22:17:49', 'Dado de baja', 'Equipo 10 dado de baja', 0, 1, NULL),
+(18, 11, 'en reparacion', '2026-07-07 22:19:24', 'Mantencion correctiva', 'Dejo de imprimir y no hace nada', 150000, 3, 5),
+(19, 11, 'activo', '2026-07-07 22:20:13', 'Mantencion correctiva', 'Entrega de equipo por mantencion correctiva', 0, 3, 5),
+(20, 11, 'activo', '2026-07-07 22:20:59', 'Asignacion a funcionario', 'Equipo asignado al funcionario 3', 0, 3, NULL),
+(21, 11, 'dado de baja', '2026-07-07 22:21:15', 'Dado de baja', 'Equipo 11 dado de baja', 0, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -229,7 +248,7 @@ CREATE TABLE `impresora` (
 --
 
 INSERT INTO `impresora` (`id_equipo`, `marca`, `codigo_qr`, `fecha_garantia`, `valor_equipo`, `fecha_compra`, `numero_serie`, `volumen_impresion`, `modelo`, `tipo`, `id_funcionario`, `id_proveedor`) VALUES
-(11, 'Brother', NULL, NULL, NULL, NULL, NULL, NULL, 'HL-1200', 'Laser', NULL, NULL),
+(11, 'Brother', '', '0000-00-00', 0, '0000-00-00', 0, 0, 'HL-1200', 'Laser', 3, NULL),
 (17, 'HP', NULL, NULL, NULL, NULL, NULL, NULL, 'Deskjet 2700', 'Inyección', NULL, NULL),
 (23, 'Canon', NULL, NULL, NULL, NULL, NULL, NULL, 'Pixma', 'Inyección', NULL, NULL),
 (29, 'Brother', NULL, NULL, NULL, NULL, NULL, NULL, 'DCP-1610', 'Laser', NULL, NULL),
@@ -326,7 +345,11 @@ CREATE TABLE `preventiva` (
 
 INSERT INTO `preventiva` (`id_mantencion`, `costo`, `estado`, `fecha_prox_mantencion`, `frecuencia_mantencion`, `id_funcionario`, `descripcion`, `id_equipo`, `fecha_entrega`) VALUES
 (4, 25000, 'operativo', '2026-08-01', '2026-07-06 10:00:00', 1, '101', 5, '2026-07-06'),
-(12, 32000.5, 'en mantención', '2026-09-15', '2026-07-06 14:30:00', 2, '102', 8, '2026-07-07');
+(12, 32000.5, 'operativo', '2026-09-15', '2026-07-06 14:30:00', 2, '102', 8, '2026-07-07'),
+(13, 150000, 'operativo', '2026-07-16', '2026-07-15 19:58:00', 2, 'fallo la ram', 23, '2026-07-25'),
+(14, 1500000, 'operativo', '2026-07-10', '2026-07-16 20:25:00', 5, 'Fallo la ram', 38, '2026-07-15'),
+(15, 150000, 'operativo', '2026-07-15', '2026-07-15 20:29:00', 5, 'fallo la cpu', 8, '2026-07-15'),
+(16, 150000, 'en mantención', '2026-07-17', '2026-07-07 20:59:00', 1, 'Falla de ram', 9, '2026-07-29');
 
 -- --------------------------------------------------------
 
@@ -375,7 +398,7 @@ CREATE TABLE `proyector` (
 --
 
 INSERT INTO `proyector` (`id_equipo`, `marca`, `codigo_qr`, `fecha_garantia`, `valor_equipo`, `fecha_compra`, `numero_serie`, `calidad_imagen`, `modelo`, `id_funcionario`, `id_proveedor`) VALUES
-(10, 'Epson', NULL, NULL, NULL, NULL, NULL, 1080, 'X49', NULL, NULL),
+(10, 'Epson', '', '0000-00-00', 0, '0000-00-00', 0, 1080, 'X49', 1, 1),
 (16, 'BenQ', '', '0000-00-00', 0, '0000-00-00', 0, 720, 'MS550', 1, 2),
 (22, 'ViewSonic', NULL, NULL, NULL, NULL, NULL, 1080, 'PA503', NULL, NULL),
 (28, 'Epson', NULL, NULL, NULL, NULL, NULL, 1080, 'EB-E01', NULL, NULL),
@@ -392,6 +415,23 @@ CREATE TABLE `realiza` (
   `id_mantencion` int(11) NOT NULL,
   `id_evento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `realiza`
+--
+
+INSERT INTO `realiza` (`id_funcionario`, `id_mantencion`, `id_evento`) VALUES
+(1, 3, 10),
+(1, 3, 11),
+(1, 4, 14),
+(1, 4, 15),
+(1, 16, 13),
+(2, 13, 5),
+(3, 5, 18),
+(3, 5, 19),
+(5, 14, 6),
+(5, 15, 8),
+(5, 15, 9);
 
 -- --------------------------------------------------------
 
@@ -550,6 +590,12 @@ ALTER TABLE `servidor`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `correctiva`
+--
+ALTER TABLE `correctiva`
+  MODIFY `id_mantencion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT de la tabla `departamento`
 --
 ALTER TABLE `departamento`
@@ -562,10 +608,22 @@ ALTER TABLE `equipo_general`
   MODIFY `id_equipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
+-- AUTO_INCREMENT de la tabla `evento`
+--
+ALTER TABLE `evento`
+  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
 -- AUTO_INCREMENT de la tabla `funcionario`
 --
 ALTER TABLE `funcionario`
   MODIFY `id_funcionario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `preventiva`
+--
+ALTER TABLE `preventiva`
+  MODIFY `id_mantencion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
