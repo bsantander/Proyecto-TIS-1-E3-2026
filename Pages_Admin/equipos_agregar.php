@@ -1,6 +1,8 @@
 <?php
 require_once '../conexion.php'; 
 require_once '../models/Mod_Equipos.php';
+session_start();
+
 $listaFuncionarios = obtenerTodosFuncionarios($conexion);
 $listaProveedores = obtenerTodosProveedores($conexion); 
 $fecha_hoy = date('Y-m-d');    

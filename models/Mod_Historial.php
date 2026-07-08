@@ -10,12 +10,7 @@ function obtenerHistorialEquipos($conexion, $limite = 15, $offset = 0) {
             ve.marca,
             ve.modelo,
             f.nombre_completo AS funcionario,
-            r.id_mantencion,
-            r.id_evento,
-            COALESCE(co.costo, pr.costo, e.costo_asociado, 0) AS costo,
-            COALESCE(co.estado, pr.estado, e.estado_equipo, 'Sin estado') AS estado,
-            e.fecha_evento,
-            e.tipo_evento
+            COALESCE(eventos.total_eventos, 0) AS total_eventos
         FROM (
             SELECT id_equipo, tipo, marca, modelo
             FROM vista_equipos
@@ -36,11 +31,12 @@ function obtenerHistorialEquipos($conexion, $limite = 15, $offset = 0) {
             SELECT id_equipo, id_funcionario FROM otro_dispositivo
         ) equipo_funcionario ON ve.id_equipo = equipo_funcionario.id_equipo
         LEFT JOIN funcionario f ON equipo_funcionario.id_funcionario = f.id_funcionario
-        LEFT JOIN realiza r ON f.id_funcionario = r.id_funcionario
-        LEFT JOIN correctiva co ON r.id_mantencion = co.id_mantencion
-        LEFT JOIN preventiva pr ON r.id_mantencion = pr.id_mantencion
-        LEFT JOIN evento e ON r.id_evento = e.id_evento
-        ORDER BY ve.id_equipo ASC, e.fecha_evento DESC, r.id_mantencion DESC
+        LEFT JOIN (
+            SELECT id_equipo, COUNT(*) AS total_eventos
+            FROM evento
+            GROUP BY id_equipo
+        ) eventos ON ve.id_equipo = eventos.id_equipo
+        ORDER BY ve.id_equipo ASC, ve.tipo ASC
     ";
 
     $resultado = mysqli_query($conexion, $sql);
@@ -73,5 +69,64 @@ function contarEquiposHistorial($conexion) {
 
     $fila = mysqli_fetch_assoc($resultado);
     return (int) $fila['total'];
+}
+
+function obtenerEquipoHistorial($conexion, $id_equipo) {
+    $id_equipo = (int) $id_equipo;
+
+    $sql = "
+        SELECT id_equipo, tipo, marca, modelo
+        FROM vista_equipos
+        WHERE id_equipo = $id_equipo
+        LIMIT 1
+    ";
+
+    $resultado = mysqli_query($conexion, $sql);
+
+    if (!$resultado || mysqli_num_rows($resultado) === 0) {
+        return null;
+    }
+
+    return mysqli_fetch_assoc($resultado);
+}
+
+function obtenerEventosEquipo($conexion, $id_equipo) {
+    $id_equipo = (int) $id_equipo;
+
+    $sql = "
+        SELECT
+            e.id_evento,
+            e.id_equipo,
+            e.estado_equipo,
+            e.fecha_evento,
+            e.tipo_evento,
+            e.descripcion,
+            e.costo_asociado,
+            e.id_mantencion,
+            f.nombre_completo AS funcionario
+        FROM evento e
+        LEFT JOIN funcionario f ON e.id_funcionario = f.id_funcionario
+        WHERE e.id_equipo = $id_equipo
+        ORDER BY e.fecha_evento DESC, e.id_evento DESC
+    ";
+
+    $resultado = mysqli_query($conexion, $sql);
+
+    if (!$resultado) {
+        return [
+            'error' => mysqli_error($conexion),
+            'filas' => []
+        ];
+    }
+
+    $filas = [];
+    while ($fila = mysqli_fetch_assoc($resultado)) {
+        $filas[] = $fila;
+    }
+
+    return [
+        'error' => null,
+        'filas' => $filas
+    ];
 }
 ?>
