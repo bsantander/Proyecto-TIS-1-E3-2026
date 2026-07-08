@@ -39,6 +39,22 @@ function Consultar_funcionarios($conexion){
     return $resultado;
 }
 
+function contarMantencionesPrev($conexion){
+    $sql = "SELECT COUNT(*) as total FROM preventiva";
+    $resultado = mysqli_query($conexion, $sql);
+    $fila = mysqli_fetch_assoc($resultado);
+    return $fila['total'];
+}
+
+function contarMantencionesCorrec($conexion){
+    $sql = "SELECT COUNT(*) as total FROM correctiva";
+    $resultado = mysqli_query($conexion, $sql);
+    $fila = mysqli_fetch_assoc($resultado);
+    return $fila['total'];
+}
+
+
+
 function Registrar_evento_mantencion($conexion, $id_equipo, $tipo_evento, $descripcion, $costo, $id_funcionario, $id_mantencion, $estado_equipo = 'en reparacion'){
     $consulta_evento = "INSERT INTO evento (id_equipo,estado_equipo,fecha_evento,tipo_evento,
                         descripcion,costo_asociado,id_funcionario,id_mantencion)

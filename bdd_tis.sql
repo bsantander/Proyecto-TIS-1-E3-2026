@@ -163,7 +163,7 @@ CREATE TABLE `evento` (
   `id_equipo` int(11) DEFAULT NULL,
   `estado_equipo` enum('activo','en reparacion','dado de baja') DEFAULT NULL,
   `fecha_evento` datetime DEFAULT NULL,
-  `tipo_evento` enum('Ingreso Equipo','Asignacion a funcionario','Reasignacion a funcionario','Mantencion preventiva','Mantencion correctiva','Dado de baja') NOT NULL,
+  `tipo_evento` enum('Ingreso Equipo','Asignacion a funcionario','Reasignacion a funcionario','Mantencion preventiva','Mantencion correctiva','Actualizacion de software','Dado de baja') NOT NULL,
   `descripcion` varchar(255) DEFAULT NULL,
   `costo_asociado` double DEFAULT NULL,
   `id_funcionario` int(11) DEFAULT NULL,

@@ -23,9 +23,7 @@ $offset = ($pagina_actual - 1) * $equipos_por_pagina;
 $desde_equipo = $total_equipos > 0 ? $offset + 1 : 0;
 $hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
 
-$historial = obtenerHistorialEquipos($conexion, $equipos_por_pagina, $offset);
-$filasHistorial = $historial['filas'] ?? [];
-$errorHistorial = $historial['error'] ?? null;
+$filasHistorial = obtenerHistorialEquipos($conexion, $equipos_por_pagina, $offset);
 ?>
 
 <!DOCTYPE html>
@@ -129,12 +127,6 @@ $errorHistorial = $historial['error'] ?? null;
             </div>
         </div>
 
-        <?php if ($errorHistorial): ?>
-            <div class="alert alert-danger">
-                Error al cargar el historial: <?php echo htmlspecialchars($errorHistorial); ?>
-            </div>
-        <?php endif; ?>
-
         <div class="my-3 d-flex flex-row justify-content-between">
             <div class="input-group flex-nowrap" style="max-width: 450px">
                 <span class="input-group-text material-symbols-outlined">search</span>
@@ -157,27 +149,21 @@ $errorHistorial = $historial['error'] ?? null;
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!$errorHistorial && count($filasHistorial) > 0): ?>
-                            <?php foreach ($filasHistorial as $fila): ?>
-                                <tr>
-                                    <td class="p-3 text-muted"><?php echo htmlspecialchars($fila['id_equipo'] ?: 'Sin equipo'); ?></td>
-                                    <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo htmlspecialchars($fila['tipo'] ?: 'Sin tipo'); ?></td>
-                                    <td class="p-3 fw-medium text-dark"><?php echo htmlspecialchars($fila['marca'] ?: 'Sin marca'); ?></td>
-                                    <td class="p-3 text-secondary"><?php echo htmlspecialchars($fila['modelo'] ?: 'Sin modelo'); ?></td>
-                                    <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo htmlspecialchars($fila['funcionario'] ?: 'Sin funcionario'); ?></td>
-                                    <td class="p-3 fw-medium text-dark text-center"><?php echo (int) $fila['total_eventos']; ?></td>
-                                    <td class="p-3 text-center">
-                                        <a href="equipos_historial.php?id=<?php echo urlencode($fila['id_equipo']); ?>&tipo=<?php echo urlencode($fila['tipo']); ?>" class="Buttons_equipo btn btn-sm border">
-                                            <span class="material-symbols-outlined align-middle">visibility</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php elseif (!$errorHistorial): ?>
+                        <?php foreach ($filasHistorial as $fila): ?>
                             <tr>
-                                <td colspan="7" class="p-4 text-center text-muted">No hay equipos ingresados.</td>
+                                <td class="p-3 text-muted"><?php echo $fila['id_equipo']; ?></td>
+                                <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $fila['tipo']; ?></td>
+                                <td class="p-3 fw-medium text-dark"><?php echo $fila['marca']; ?></td>
+                                <td class="p-3 text-secondary"><?php echo $fila['modelo']; ?></td>
+                                <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $fila['funcionario']; ?></td>
+                                <td class="p-3 fw-medium text-dark text-center"><?php echo (int) $fila['total_eventos']; ?></td>
+                                <td class="p-3 text-center">
+                                    <a href="equipos_historial.php?id=<?php echo $fila['id_equipo']; ?>&tipo=<?php echo $fila['tipo']; ?>" class="Buttons_equipo btn btn-sm border">
+                                        <span class="material-symbols-outlined align-middle">visibility</span>
+                                    </a>
+                                </td>
                             </tr>
-                        <?php endif; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
