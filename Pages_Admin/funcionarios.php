@@ -493,7 +493,7 @@
                         <select name="rol" id="edit_rol" class="form-select" required>
                             <option value="">Seleccionar...</option>
                             <option value="Administrador">Administrador</option>
-                            <option value="Tecnico">Técnico</option>
+                            <option value="Tecnico">Tecnico</option>
                             <option value="Funcionario">Funcionario</option>
                         </select>
                     </div>
