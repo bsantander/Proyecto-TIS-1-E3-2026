@@ -152,11 +152,19 @@
 
         <div class="flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
             
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Departamentos</h2>
+            <div class="titulo-seccion d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="titulo-seccion-linea"></div>
+                    <div>
+                        <h2 class="fs-4 fw-bold m-0" style="color: #333333;">
+                            Departamentos
+                        </h2>
+                        <p class="titulo-seccion-texto m-0">
+                            Registro y administración de los departamentos del sistema
+                        </p>
+                    </div>
                 </div>
-                
+
                 <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;" data-bs-toggle="modal" data-bs-target="#modalAgregarDepartamento">
                     <span class="material-symbols-outlined fs-5">domain_add</span>
                     <p class="m-0">Agregar departamento</p>

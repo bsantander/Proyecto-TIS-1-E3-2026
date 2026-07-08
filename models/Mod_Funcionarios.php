@@ -12,7 +12,7 @@ class Mod_Funcionarios {
         return $resultado ? $resultado->fetch_assoc() : null; 
     }
 
-    public function agregarFuncionario($rut, $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena){
+    public function agregarFuncionario($rut, $nombre_completo, $id_equipo, $id_departamento, $rol){
 
         $sql = "SELECT * FROM funcionario 
                 WHERE rut = ?"; 
@@ -26,33 +26,63 @@ class Mod_Funcionarios {
             return "Ya existe un funcionario con ese RUT";
         }
 
-        $sql = "INSERT INTO funcionario(rut, nombre_completo, id_equipo, id_departamento, rol, contrasena)
-                VALUES(?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO funcionario(rut, nombre_completo, id_equipo, id_departamento, rol
+                VALUES(?, ?, ?, ?, ?)";
         $this->conexion->execute_query(
             $sql,
-            [$rut, $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena]
+            [$rut, $nombre_completo, $id_equipo, $id_departamento, $rol]
         );
 
         return "Funcionario registrado correctamente"; 
     }
 
-    public function editarFuncionario($id_funcionario, $rut,
-    $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena){
-        $sql = "UPDATE funcionario 
+    public function editarFuncionario(
+    $id_funcionario,
+    $rut,
+    $nombre_completo,
+    $id_equipo,
+    $id_departamento,
+    $rol
+    ){
+
+    // Verificar que no exista otro funcionario con el mismo RUT
+        $sql = "SELECT id_funcionario
+                FROM funcionario
+                WHERE rut = ?
+                AND id_funcionario <> ?";
+
+        $res = $this->conexion->execute_query(
+            $sql,
+            [$rut, $id_funcionario]
+        );
+
+        if($res->num_rows > 0){
+            return "Ya existe otro funcionario con ese RUT";
+        }
+
+        // Actualizar datos
+        $sql = "UPDATE funcionario
                 SET rut = ?,
-                nombre_completo = ?,
-                id_equipo = ?,
-                id_departamento = ?,
-                rol = ?,
-                contrasena = ?
+                    nombre_completo = ?,
+                    id_equipo = ?,
+                    id_departamento = ?,
+                    rol = ?
                 WHERE id_funcionario = ?";
+
         $this->conexion->execute_query(
             $sql,
-            [$rut, $nombre_completo, $id_equipo, $id_departamento, $rol, $contrasena, $id_funcionario]
+            [
+                $rut,
+                $nombre_completo,
+                $id_equipo,
+                $id_departamento,
+                $rol,
+                $id_funcionario
+            ]
         );
+
         return "Funcionario actualizado correctamente";
     }
-
     public function eliminarFuncionario($id_funcionario){
 
         $sql = "DELETE FROM funcionario

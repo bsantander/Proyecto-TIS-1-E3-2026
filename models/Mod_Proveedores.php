@@ -6,45 +6,86 @@ class Mod_Proveedores {
         $this->conexion = $conexion;
     }
 
-    public function agregarProveedor() {
-        $Rut_recibido      = trim($_POST['rut_proveedor']);
-        $Nombre_recibido   = trim($_POST['nombre_completo']);
-        $Contacto_recibido = trim($_POST['contacto']);
+    public function agregarProveedor($rut_proveedor, $nombre_completo, $contacto) {
 
-        if (!$this->rutValido($Rut_recibido)) {
-            return "El RUT del proveedor debe tener entre 8 y 9 digitos.";
+        if (!$this->rutValido($rut_proveedor)) {
+            return "El RUT del proveedor debe tener entre 8 y 9 dígitos.";
         }
 
-        $consulta = "INSERT INTO proveedor (rut_proveedor, nombre_completo, contacto) 
-                     VALUES ('$Rut_recibido', '$Nombre_recibido', '$Contacto_recibido')";
-        
-        mysqli_query($this->conexion, $consulta);
-        header("Location: proveedores.php");
+        // Verificar RUT repetido
+        $sql = "SELECT id_proveedor
+                FROM proveedor
+                WHERE rut_proveedor = ?";
+
+        $res = $this->conexion->execute_query(
+            $sql,
+            [$rut_proveedor]
+        );
+
+        if($res->num_rows > 0){
+            return "Ya existe un proveedor con ese RUT";
+        }
+
+        // Insertar proveedor
+        $sql = "INSERT INTO proveedor
+                (rut_proveedor, nombre_completo, contacto)
+                VALUES (?, ?, ?)";
+
+        $this->conexion->execute_query(
+            $sql,
+            [$rut_proveedor, $nombre_completo, $contacto]
+        );
+
+        return "Proveedor registrado correctamente";
     }
 
-    public function editarProveedor() {
-        $id                = $_POST['id_proveedor'];
-        $Rut_recibido      = trim($_POST['rut_proveedor']);
-        $Nombre_recibido   = trim($_POST['nombre_completo']);
-        $Contacto_recibido = trim($_POST['contacto']);
+    public function editarProveedor($id_proveedor, $rut_proveedor, $nombre_completo, $contacto) {
 
-        if (!$this->rutValido($Rut_recibido)) {
-            return "El RUT del proveedor debe tener entre 8 y 9 digitos.";
+        if (!$this->rutValido($rut_proveedor)) {
+            return "El RUT del proveedor debe tener entre 8 y 9 dígitos.";
         }
 
-        $consulta = "UPDATE proveedor SET rut_proveedor='$Rut_recibido', nombre_completo='$Nombre_recibido', contacto='$Contacto_recibido' 
-                     WHERE id_proveedor='$id'";
-        
-        mysqli_query($this->conexion, $consulta);
-        header("Location: proveedores.php");
-        exit;
+        // Verificar RUT repetido
+        $sql = "SELECT id_proveedor
+                FROM proveedor
+                WHERE rut_proveedor = ?
+                AND id_proveedor <> ?";
+
+        $res = $this->conexion->execute_query(
+            $sql,
+            [$rut_proveedor, $id_proveedor]
+        );
+
+        if($res->num_rows > 0){
+            return "Ya existe otro proveedor con ese RUT";
+        }
+
+        // Actualizar proveedor
+        $sql = "UPDATE proveedor
+                SET rut_proveedor = ?,
+                    nombre_completo = ?,
+                    contacto = ?
+                WHERE id_proveedor = ?";
+
+        $this->conexion->execute_query(
+            $sql,
+            [$rut_proveedor, $nombre_completo, $contacto, $id_proveedor]
+        );
+
+        return "Proveedor actualizado correctamente";
     }
 
     public function eliminarProveedor($id_proveedor) {
-        $consulta = "DELETE FROM proveedor WHERE id_proveedor = '$id_proveedor'";
-        mysqli_query($this->conexion, $consulta);   
-        header("Location: proveedores.php");
-        exit;
+
+        $sql = "DELETE FROM proveedor
+                WHERE id_proveedor = ?";
+
+        $this->conexion->execute_query(
+            $sql,
+            [$id_proveedor]
+        );
+
+        return "Proveedor eliminado correctamente";
     }
 
     private function rutValido($rut) {
