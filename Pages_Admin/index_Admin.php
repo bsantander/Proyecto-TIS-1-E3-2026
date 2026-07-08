@@ -3,8 +3,11 @@ require ("../conexion.php");
 session_start();
 require_once '../models/Mod_Equipos.php';
 require_once '../models/Mod_Funcionarios.php';
+require_once '../models/Mod_Tec_Mantenciones.php';
 $total_equipos = contarEquipos($conexion);
 $total_funcionarios = contarFuncionarios($conexion);
+$total_mantencionesPrev = contarMantencionesPrev($conexion);
+$total_mantencionesCorrec = contarMantencionesCorrec($conexion);
 
 ?>
 
@@ -108,8 +111,8 @@ $total_funcionarios = contarFuncionarios($conexion);
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
-                        <h6 class="text-muted">Total Equipos</h6>
-                        <h2 class="fw-bold">30</h2>
+                        <h6 class="text-muted">Total Equipos Registrados</h6>
+                        <h2 class="fw-bold"><?php echo $total_equipos; ?></h2>
                     </div>
                 </div>
             </div>
@@ -117,8 +120,8 @@ $total_funcionarios = contarFuncionarios($conexion);
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
-                        <h6 class="text-muted">Funcionarios</h6>
-                        <h2 class="fw-bold">4</h2>
+                        <h6 class="text-muted">Funcionarios Totales</h6>
+                        <h2 class="fw-bold"><?php echo $total_funcionarios; ?></h2>
                     </div>
                 </div>
             </div>
@@ -126,8 +129,8 @@ $total_funcionarios = contarFuncionarios($conexion);
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
-                        <h6 class="text-muted">Mant. Preventivas</h6>
-                        <h2 class="fw-bold">58</h2>
+                        <h6 class="text-muted">Mant. Preventivas Totales</h6>
+                        <h2 class="fw-bold"><?php echo $total_mantencionesPrev; ?></h2>
                     </div>
                 </div>
             </div>
@@ -135,8 +138,8 @@ $total_funcionarios = contarFuncionarios($conexion);
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
-                        <h6 class="text-muted">Mant. Correctivas</h6>
-                        <h2 class="fw-bold">20</h2>
+                        <h6 class="text-muted">Mant. Correctivas Totales</h6>
+                        <h2 class="fw-bold"><?php echo $total_mantencionesCorrec; ?></h2>
                     </div>
                 </div>
             </div>

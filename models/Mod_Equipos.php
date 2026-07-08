@@ -56,6 +56,13 @@ function obtenerEstadoActualEquipo($conexion, $id_equipo) {
     return $fila['estado_equipo'] ?: 'activo';
 }
 
+function _valoresEquipoDistintos($valor_actual, $valor_nuevo) {
+    $actual = $valor_actual === null ? '' : (string) $valor_actual;
+    $nuevo = $valor_nuevo === null ? '' : (string) $valor_nuevo;
+
+    return $actual !== $nuevo;
+}
+
 function darDeBajaEquipo($conexion, $id, $tipo) {
     $tabla = _obtenerTabla($tipo);
     if (!$tabla) {
@@ -143,21 +150,34 @@ function actualizarEquipo($conexion, $id, $tipo, $datos) {
     }
 
     $id = (int) $id;
+    $resultado_equipo_actual = mysqli_query($conexion, "SELECT * FROM $tabla WHERE id_equipo = $id LIMIT 1");
+    if (!$resultado_equipo_actual || mysqli_num_rows($resultado_equipo_actual) === 0) {
+        return false;
+    }
+
+    $equipo_actual = mysqli_fetch_assoc($resultado_equipo_actual);
     $cambia_funcionario = array_key_exists('id_funcionario', $datos);
-    $funcionario_anterior = null;
-    $funcionario_nuevo = null;
+    $funcionario_anterior = empty($equipo_actual['id_funcionario']) ? null : (int) $equipo_actual['id_funcionario'];
+    $funcionario_nuevo = $funcionario_anterior;
+    $campos_actualizados = [];
 
     if ($cambia_funcionario) {
-        $sql_funcionario_actual = "SELECT id_funcionario FROM $tabla WHERE id_equipo = $id";
-        $resultado_funcionario_actual = mysqli_query($conexion, $sql_funcionario_actual);
+        $funcionario_nuevo = $datos['id_funcionario'] === '' ? null : (int) $datos['id_funcionario'];
+    }
 
-        if (!$resultado_funcionario_actual) {
-            return false;
+    foreach ($datos as $columna => $valor) {
+        $valor_nuevo = $valor;
+        if (in_array($columna, ['id_funcionario', 'id_proveedor'], true) && $valor === '') {
+            $valor_nuevo = null;
         }
 
-        $fila_funcionario_actual = mysqli_fetch_assoc($resultado_funcionario_actual);
-        $funcionario_anterior = empty($fila_funcionario_actual['id_funcionario']) ? null : (int) $fila_funcionario_actual['id_funcionario'];
-        $funcionario_nuevo = $datos['id_funcionario'] === '' ? null : (int) $datos['id_funcionario'];
+        if (
+            $columna !== 'id_funcionario'
+            && array_key_exists($columna, $equipo_actual)
+            && _valoresEquipoDistintos($equipo_actual[$columna], $valor_nuevo)
+        ) {
+            $campos_actualizados[] = str_replace('_', ' ', $columna);
+        }
     }
     
     $set_parts = [];
@@ -185,6 +205,16 @@ function actualizarEquipo($conexion, $id, $tipo, $datos) {
             : "Equipo reasignado del funcionario $funcionario_anterior al funcionario $funcionario_nuevo";
 
         if (!_insertarEventoEquipo($conexion, $id, $tipo_evento, $descripcion_evento, $funcionario_nuevo)) {
+            mysqli_rollback($conexion);
+            return false;
+        }
+    }
+
+    if (!empty($campos_actualizados)) {
+        $estado_evento = obtenerEstadoActualEquipo($conexion, $id);
+        $descripcion_evento = 'Datos actualizados: ' . implode(', ', $campos_actualizados);
+
+        if (!_insertarEventoEquipo($conexion, $id, 'Actualizacion de software', $descripcion_evento, $funcionario_nuevo, $estado_evento)) {
             mysqli_rollback($conexion);
             return false;
         }
@@ -230,9 +260,19 @@ function insertarEquipo($conexion, $tipo, $datos) {
     $permitidas = $columnas_permitidas[$tabla];
     
     $datos_limpios = array_intersect_key($datos, array_flip($permitidas));
+
+    foreach (['id_funcionario', 'id_proveedor'] as $campo_nullable) {
+        if (array_key_exists($campo_nullable, $datos_limpios) && $datos_limpios[$campo_nullable] === '') {
+            $datos_limpios[$campo_nullable] = null;
+        }
+    }
     
     $columnas = implode(', ', array_keys($datos_limpios));
     $valores = array_map(function($val) use ($conexion) {
+        if ($val === null) {
+            return 'NULL';
+        }
+
         return "'" . mysqli_real_escape_string($conexion, $val) . "'";
     }, array_values($datos_limpios));
     

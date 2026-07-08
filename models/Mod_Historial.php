@@ -40,34 +40,20 @@ function obtenerHistorialEquipos($conexion, $limite = 15, $offset = 0) {
     ";
 
     $resultado = mysqli_query($conexion, $sql);
-
-    if (!$resultado) {
-        return [
-            'error' => mysqli_error($conexion),
-            'filas' => []
-        ];
-    }
-
     $filas = [];
+
     while ($fila = mysqli_fetch_assoc($resultado)) {
         $filas[] = $fila;
     }
 
-    return [
-        'error' => null,
-        'filas' => $filas
-    ];
+    return $filas;
 }
 
 function contarEquiposHistorial($conexion) {
     $sql = "SELECT COUNT(*) AS total FROM vista_equipos";
     $resultado = mysqli_query($conexion, $sql);
-
-    if (!$resultado) {
-        return 0;
-    }
-
     $fila = mysqli_fetch_assoc($resultado);
+
     return (int) $fila['total'];
 }
 
@@ -82,10 +68,6 @@ function obtenerEquipoHistorial($conexion, $id_equipo) {
     ";
 
     $resultado = mysqli_query($conexion, $sql);
-
-    if (!$resultado || mysqli_num_rows($resultado) === 0) {
-        return null;
-    }
 
     return mysqli_fetch_assoc($resultado);
 }
@@ -102,7 +84,6 @@ function obtenerEventosEquipo($conexion, $id_equipo) {
             e.tipo_evento,
             e.descripcion,
             e.costo_asociado,
-            e.id_mantencion,
             f.nombre_completo AS funcionario
         FROM evento e
         LEFT JOIN funcionario f ON e.id_funcionario = f.id_funcionario
@@ -111,22 +92,12 @@ function obtenerEventosEquipo($conexion, $id_equipo) {
     ";
 
     $resultado = mysqli_query($conexion, $sql);
-
-    if (!$resultado) {
-        return [
-            'error' => mysqli_error($conexion),
-            'filas' => []
-        ];
-    }
-
     $filas = [];
+
     while ($fila = mysqli_fetch_assoc($resultado)) {
         $filas[] = $fila;
     }
 
-    return [
-        'error' => null,
-        'filas' => $filas
-    ];
+    return $filas;
 }
 ?>
