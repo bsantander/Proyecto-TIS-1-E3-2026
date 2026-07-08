@@ -352,7 +352,7 @@
                               
                               <td class="p-3 text-center">
 
-                              <button class="btn btn-sm btn-outline-primary" 
+                              <button class="btn btn-outline-dark  btn-sm" 
                             onclick='abrirEditar(<?php echo $row["id_proveedor"]; ?>, 
                             <?php echo json_encode($row["nombre_completo"]); ?>, 
                             <?php echo json_encode($row["rut_proveedor"]); ?>, 
