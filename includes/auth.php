@@ -32,7 +32,7 @@ function obtenerRol() {
 
 function requireLogin() {
     if (!estaLogueado()) {
-        header('Location: /Proyecto-TIS-1-E3-2026/secion.php');
+        header('Location: /Proyecto-TIS-1-E3-2026/sesion.php');
         exit();
     }
 }
@@ -45,7 +45,7 @@ function requireRol($roles) {
     }
     $roles = array_map('strtolower', $roles);
     if (!in_array($rol, $roles, true)) {
-        header('Location: /Proyecto-TIS-1-E3-2026/secion.php');
+        header('Location: /Proyecto-TIS-1-E3-2026/sesion.php');
         exit();
     }
 }
@@ -57,7 +57,7 @@ function redirigirPorRol() {
     } elseif ($rol === 'tecnico') {
         header('Location: /Proyecto-TIS-1-E3-2026/Pages_Tecnico/index_tecnico.php');
     } else {
-        header('Location: /Proyecto-TIS-1-E3-2026/secion.php');
+        header('Location: /Proyecto-TIS-1-E3-2026/sesion.php');
     }
     exit();
 }

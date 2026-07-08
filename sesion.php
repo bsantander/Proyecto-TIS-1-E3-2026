@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__ . '/includes(Cod reciclado)/auth.php';
+require_once __DIR__ . '/includes/auth.php';
 
 if (isset($_GET['logout'])) {
     cerrarSesion();
-    header('Location: secion.php');
+    header('Location: sesion.php');
     exit();
 }
 
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
             <div class="col-12 col-lg-5">
-                <div class="card inicio_secion bg-white h-100 p-4">
+                <div class="card inicio_sesion bg-white h-100 p-4">
                     <?php if (!empty($error)): ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <?php echo htmlspecialchars($error); ?>
@@ -72,11 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <form method="POST" action="">
                         <div class="mb-4">
                             <label for="rut" class="form-label fw-semibold">RUT</label>
-                            <input type="text" id="rut" name="rut" class="form-control campos_inicio_secion" placeholder="12345678" required>
+                            <input type="text" id="rut" name="rut" class="form-control campos_inicio_sesion" placeholder="12345678" required>
                         </div>
                         <div class="mb-4">
                             <label for="contrasena" class="form-label fw-semibold">Contraseña</label>
-                            <input type="password" id="contrasena" name="contrasena" class="form-control campos_inicio_secion" placeholder="Contraseña123" required>
+                            <input type="password" id="contrasena" name="contrasena" class="form-control campos_inicio_sesion" placeholder="Contraseña123" required>
                         </div>
                         <button type="submit" class="btn button btn-lg w-100 mb-3">Iniciar sesión</button>
                     </form>

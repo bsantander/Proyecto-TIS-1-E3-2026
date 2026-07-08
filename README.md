@@ -39,7 +39,7 @@ Para poner en marcha el proyecto en su entorno local:
 | `index.php` | Página de inicio del sistema |
 | `LICENSE` | Licencias del proyecto |
 | `README.md` | Documentación del proyecto |
-| `secion.php` | Gestión de inicio de sesión |
+| `sesion.php` | Gestión de inicio de sesión |
 
 ## Contribución
 

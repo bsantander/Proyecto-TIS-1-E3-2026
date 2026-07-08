@@ -1,4 +1,4 @@
 <?php
 session_start();
-header('Location: secion.php');
+header('Location: sesion.php');
 exit();
