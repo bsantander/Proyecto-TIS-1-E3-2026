@@ -38,7 +38,7 @@
             <div class="Inicio">
                 <a href="index_tecnico.php" class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">dashboard</span>
-                    <p class="m-0 fs-6">Dashboard</p>
+                    <p class="m-0 fs-6">Inicio</p>
                 </a>
             </div>
 

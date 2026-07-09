@@ -143,13 +143,8 @@
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
-<<<<<<< HEAD:Pages_Admin/index_Admin.php
-                        <h6 class="text-muted">Total Equipos Registrados</h6>
-                        <h2 class="fw-bold"><?php echo $total_equipos; ?></h2>
-=======
                         <h6 class="text-muted">Total Equipos</h6>
                         <h2 class="fw-bold"><?php echo $total_equipos ?></h2>
->>>>>>> fa0e897b70e2f85e41fda5db0e9c746098bfcce9:Pages_Admin/index_admin.php
                     </div>
                 </div>
             </div>
@@ -157,13 +152,8 @@
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
-<<<<<<< HEAD:Pages_Admin/index_Admin.php
-                        <h6 class="text-muted">Funcionarios Totales</h6>
-                        <h2 class="fw-bold"><?php echo $total_funcionarios; ?></h2>
-=======
                         <h6 class="text-muted">Funcionarios</h6>
                         <h2 class="fw-bold"><?php echo $total_funcionarios ?> </h2>
->>>>>>> fa0e897b70e2f85e41fda5db0e9c746098bfcce9:Pages_Admin/index_admin.php
                     </div>
                 </div>
             </div>
@@ -171,13 +161,9 @@
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
-<<<<<<< HEAD:Pages_Admin/index_Admin.php
-                        <h6 class="text-muted">Mant. Preventivas Totales</h6>
-                        <h2 class="fw-bold"><?php echo $total_mantencionesPrev; ?></h2>
-=======
+
                         <h6 class="text-muted">Mant. Preventivas</h6>
                         <h2 class="fw-bold"><?php echo $total_preventivas ?></h2>
->>>>>>> fa0e897b70e2f85e41fda5db0e9c746098bfcce9:Pages_Admin/index_admin.php
                     </div>
                 </div>
             </div>
@@ -185,13 +171,9 @@
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
-<<<<<<< HEAD:Pages_Admin/index_Admin.php
-                        <h6 class="text-muted">Mant. Correctivas Totales</h6>
-                        <h2 class="fw-bold"><?php echo $total_mantencionesCorrec; ?></h2>
-=======
+
                         <h6 class="text-muted">Mant. Correctivas</h6>
                         <h2 class="fw-bold"><?php echo $total_correctivas ?></h2>
->>>>>>> fa0e897b70e2f85e41fda5db0e9c746098bfcce9:Pages_Admin/index_admin.php
                     </div>
                 </div>
             </div>
@@ -210,7 +192,7 @@
                         <div class="w-100" style="max-width: 750px; height: 360px;">
                             <canvas id="Izquierda"></canvas>
                         </div>
-                        <div class="d-flex justify-content-center align-items-center mt-3" style="margin: 20px;">
+                        <div class="d-flex justify-content-center align-items-center mt-3 gap-2" style="margin: 20px;">
                             <label for="selectorMeses">Mostrar últimos: </label>
                             <select id="selectorMeses" class="form-select form-select-sm shadow-sm" 
                             style="width: auto; border-color: #05ad98;" onchange="cambiarIntervalo(this.value)">

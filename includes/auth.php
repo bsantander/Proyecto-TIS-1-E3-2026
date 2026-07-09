@@ -45,7 +45,7 @@ function requireRol($roles) {
     }
     $roles = array_map('strtolower', $roles);
     if (!in_array($rol, $roles, true)) {
-        header('Location: /../sesion.php');
+        header('Location: ../sesion.php');
         exit();
     }
 }
@@ -53,11 +53,11 @@ function requireRol($roles) {
 function redirigirPorRol() {
     $rol = obtenerRol();
     if ($rol === 'administrador') {
-        header('Location: /../Pages_Admin/index_admin.php');
+        header('Location: Pages_Admin/index_admin.php');
     } elseif ($rol === 'tecnico') {
-        header('Location: /../Pages_Tecnico/index_tecnico.php');
+        header('Location: Pages_Tecnico/index_tecnico.php');
     } else {
-        header('Location: /../sesion.php');
+        header('Location: sesion.php');
     }
     exit();
 }

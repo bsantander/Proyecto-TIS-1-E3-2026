@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($usuario) {
                 guardarSesionUsuario($usuario);
                 if($usuario["cambiar_contrasena"]==1){
-                    header("Location:cambiar_contrasena.php");
+                    header("Location: cambiar_contrasena.php");
                     exit();
                 }
                 redirigirPorRol();
@@ -86,8 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </form>
                     <div class="d-flex justify-content-between small">
                         <a href="recuperar.php" class="link-success fw-semibold">¿Olvidaste la contraseña?</a>
-                        <a href="index.php" class="link-success fw-semibold">Volver</a>
-                    </div>
+                        </div>
                     <p class="text-muted text-center mt-4">Ingresa tu RUT y contraseña para continuar.</p>
                 </div>
             </div>

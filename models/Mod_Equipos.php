@@ -286,7 +286,7 @@ function insertarEquipo($conexion, $tipo, $datos) {
         ? (int) $datos['id_funcionario']
         : null;
 
-    if (!_insertarEventoEquipo($conexion, $nuevo_id, 'Ingreso Equipo', "Ingreso de equipo $tipo al inventario", $id_funcionario)) {
+    if (!_insertarEventoEquipo($conexion, $nuevo_id, 'Ingreso Equipo', "Ingreso de equipo $tipo al inventario", $id_funcionario, 'activo')) {
         mysqli_rollback($conexion);
         return false;
     }
