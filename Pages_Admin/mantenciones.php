@@ -2,40 +2,15 @@
     session_start();
     require ('../conexion.php');
     require('../models/Mod_Mantenciones.php');
-    $modelo = new Mod_Mantenciones($conexion);
 
     // accion de botones
     if(isset($_POST['programar'])) {
-        $_SESSION['mensaje'] = $modelo->crear_mant_correctiva();
+        $_SESSION['mensaje'] = pass;
     }
 
-    $sql = "
-        SELECT
-            SUM(costo) AS total,
-            AVG(costo) AS promedio,
-            COUNT(*) AS cantidad
-        FROM correctiva
-    ";
+    $datos = consultarCostoCorrectiva($conexion);
 
-    $res = mysqli_query($conexion, $sql);
-    $datos = mysqli_fetch_assoc($res);
-
-    $consultaMantencionesCorrectivas = '
-        SELECT COUNT(*) AS total
-        FROM correctiva
-        WHERE fecha_entrega > NOW()
-    ';
-
-    
-    $resultado = mysqli_query($conexion, $consultaMantencionesCorrectivas);
-    
-    if ($resultado) {
-        $fila = mysqli_fetch_assoc($resultado);
-        
-        $mantenciones_actuales = (int) $fila['total'];
-    } else {
-        $mantenciones_actuales = 0; 
-    }
+    $mantenciones_actuales = consultaTotalMantenciones($conexion); 
 
 ?>
 
@@ -126,22 +101,22 @@
     </div>
 
     <div class="flex-grow-1 p-4" style="background-color: #F4F6F8; overflow-y: auto;">
-        
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="fs-3 fw-bold m-0" style="color: #333333;">Módulo de Mantenciones</h2>
-                
-                <p class="text-secondary mb-0">Control de intervenciones y reparaciones.</p>
+        <div class="titulo-seccion d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="titulo-seccion-linea"></div>
+                <div>
+                    <h2 class="fs-4 fw-bold m-0" style="color: #333333;">Módulo de Mantenciones</h2>
+                    <p class="titulo-seccion-texto m-0">Control de intervenciones y reparaciones.</p>
+                </div>
             </div>
-            
-            
+        
             <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
-                <span class="material-symbols-outlined fs-5">add_circle</span>
-                Programar Mantención
+            <span class="material-symbols-outlined fs-5">add_circle</span>
+            <p class="m-0 text-decoration-none text-white">Programar Mantención</p>
             </button>
         </div>
-
-            <div class="card p-3 mb-4">
+        <div class="row g-2 m-0">
+            <div class="card p-3 mb-4 col-sm-8">
                 <h5>Reporte de Costos de Mantención</h5>
 
                 <p>
@@ -157,31 +132,32 @@
                 </p>
             </div>
 
-        <div class="row mb-4 g-3">
-            <div class="col-12 col-md-4">
-                <div class="card shadow-sm rounded-3" style="border-left: 10px solid #05ad98;">
-                    <div class="card-body p-3">
-                        <p class="text-muted fw-semibold mb-1" style="font-size: 0.9rem;">Costo Acumulado</p>
-                        <h3 class="fw-bold m-0 fs-4">$0</h3>
+            <div class="row-col-1 align-items-center col-sm-4">
+                <div class="col-12 col-md-auto mb-2">
+                    <div class="card shadow-sm rounded-3" style="border-left: 10px solid #05ad98;">
+                        <div class="card-body p-3">
+                            <p class="text-muted fw-semibold mb-1" style="font-size: 0.9rem;">Costo Ultimo Mes</p>
+                            <h3 class="fw-bold m-0 fs-4">$<?php echo number_format((int)costoUltimoMes($conexion), 0, ',', '.');?></h3>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="card shadow-sm rounded-3" style="border-left: 10px solid #ffc107;">
-                    <div class="card-body p-3">
-                        <p class="text-muted fw-semibold mb-1" style="font-size: 0.9rem;">En Proceso</p>
-                        <h3 class="fw-bold m-0 fs-4"><?php echo $mantenciones_actuales ?> </h3>
+                <div class="col-12 col-md-auto">
+                    <div class="card shadow-sm rounded-3" style="border-left: 10px solid #ffc107;">
+                        <div class="card-body p-3">
+                            <p class="text-muted fw-semibold mb-1" style="font-size: 0.9rem;">Equipos En Mantención</p>
+                            <h3 class="fw-bold m-0 fs-4"><?php echo $mantenciones_actuales ?> </h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <ul class="nav nav-tabs mb-4 border-bottom" id="mantencionesTabs" role="tablist">
+        
+        <ul class="nav nav-tabs mb-4 border-bottom" id="mantencionesTabs" role="tablist" style="--bs-nav-tabs-link-active-color: #05ad98; --bs-nav-link-color: #6c757d; --bs-nav-tabs-link-active-border-color: #05ad98;">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active fw-semibold" id="preventiva-tab" data-bs-toggle="tab" data-bs-target="#preventiva" type="button" role="tab" style="color: #05ad98; border-bottom: 2px solid #05ad98; background-color: transparent;">Mantención Preventiva</button>
+                <button class="nav-link active fw-semibold" id="preventiva-tab" data-bs-toggle="tab" data-bs-target="#preventiva" type="button" role="tab">Mantención Preventiva</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link fw-semibold text-secondary" id="correctiva-tab" data-bs-toggle="tab" data-bs-target="#correctiva" type="button" role="tab" style="border: none; background-color: transparent;">Mantención Correctiva</button>
+                <button class="nav-link fw-semibold text-secondary" id="correctiva-tab" data-bs-toggle="tab" data-bs-target="#correctiva" type="button" role="tab">Mantención Correctiva</button>
             </li>
         </ul>
 
@@ -252,7 +228,7 @@
                 <div class="card shadow-sm border-0 rounded-3" style="overflow: hidden;">
                     <div class="card-body p-0">
                         <?php
-                        $consulta = "SELECT id_mantencion, tipo_de_fallo, estado, costo, descripcion, id_funcionario FROM correctiva WHERE id_funcionario = (SELECT id_funcionario from funcionario where rut = '" . $_SESSION['username'] . "')";
+                        $consulta = "SELECT id_mantencion, tipo_de_fallo, estado, costo, descripcion, id_funcionario FROM correctiva ";
                         $resultado = mysqli_query($conexion, $consulta);
 
                         if (!$resultado) {
@@ -280,27 +256,19 @@
                                     $costo = $row["costo"];
                                     $descripcion = $row["descripcion"];
                                     $id_funcionario = $row["id_funcionario"];
-                                    $descripcion = row["descripcion"];
-                                    $id_funcionario = row["id_funcionario"];
                                 ?>
                                 <tr>
-                                    <th scope="row" class="p-3 text-muted"><?php echo $id_mantencion;
-                                    ?>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $id_mantencion;?>
                                     </th>
-                                    <th scope="row" class="p-3 text-muted"><?php echo $tipo_fallo;
-                                    ?>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $tipo_fallo;?>
                                     </th>
-                                    <th scope="row" class="p-3 text-muted"><?php echo $estado;
-                                    ?>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $estado;?>
                                     </th>
-                                    <th scope="row" class="p-3 text-muted"><?php echo $costo;
-                                    ?>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $costo;?>
                                     </th>
-                                    <th scope="row" class="p-3 text-muted"><?php echo $descripcion;
-                                    ?>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $descripcion;?>
                                     </th>
-                                    <th scope="row" class="p-3 text-muted"><?php echo $id_funcionario;
-                                    ?>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $id_funcionario;?>
                                     </th>
                                 </tr>
                                 <?php

@@ -165,6 +165,7 @@
                         <p class="m-0 text-decoration-none text-white">Agregar Proveedor</p>
                 </button>
             </div>
+            
             <?php if (isset($_SESSION['mensaje'])): ?>
             <div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
                 <div id="toastMensaje"
