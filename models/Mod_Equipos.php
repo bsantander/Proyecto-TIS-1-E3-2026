@@ -261,5 +261,11 @@ function contarEquipos($conexion){
     $fila = mysqli_fetch_assoc($resultado);
     return $fila['total'];
 }
+function contarBajas($conexion){
+    $sql = "SELECT COUNT(*) as total FROM evento where tipo_evento = 'dado de baja' ";
+    $resultado = mysqli_query($conexion, $sql);
+    $fila = mysqli_fetch_assoc($resultado);
+    return $fila['total'];
+}
 
 ?>

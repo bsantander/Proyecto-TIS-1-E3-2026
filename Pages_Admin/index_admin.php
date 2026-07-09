@@ -1,10 +1,42 @@
 <?php
-require ("../conexion.php");
-session_start();
-require_once '../models/Mod_Equipos.php';
-require_once '../models/Mod_Funcionarios.php';
-$total_equipos = contarEquipos($conexion);
-$total_funcionarios = contarFuncionarios($conexion);
+    require ("../conexion.php");
+    session_start();
+    require_once '../models/Mod_Equipos.php';
+    require_once '../models/Mod_Funcionarios.php';
+    require_once '../models/Mod_Correctivas.php';
+    require_once '../models/Mod_Preventivas.php';
+    $total_equipos = contarEquipos($conexion);
+    $total_funcionarios = contarFuncionarios($conexion);
+    $total_preventivas = contarPreventivas($conexion);
+    $total_correctivas = contarCorrectivas($conexion);
+    $equipos_operativos = $total_equipos - $total_correctivas;
+    $equipos_mantencion = $total_correctivas + $total_preventivas;
+    $equipos_baja = contarBajas($conexion);
+
+    // Query para costos por mes
+
+    $sql = "SELECT DATE_FORMAT(fecha_evento, '%Y-%m') AS anio_mes, DATE_FORMAT(fecha_evento, '%b') as nombre_mes, SUM(costo_asociado) AS costo_total
+            FROM evento
+            WHERE fecha_evento >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+            GROUP BY anio_mes
+            ORDER BY anio_mes ASC";
+
+    $resultado = mysqli_query($conexion, $sql);
+
+    $labels = [];
+    $value = [];
+
+    if ($resultado) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
+            $labels[] = $fila['nombre_mes'];
+            $value[] = (int)$fila['costo_total'];
+        }
+    }
+
+    $costos_mensuales = [
+        'labels' => $labels,
+        'data' => $value
+    ];
 
 ?>
 
@@ -109,7 +141,7 @@ $total_funcionarios = contarFuncionarios($conexion);
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
                         <h6 class="text-muted">Total Equipos</h6>
-                        <h2 class="fw-bold">30</h2>
+                        <h2 class="fw-bold"><?php echo $total_equipos ?></h2>
                     </div>
                 </div>
             </div>
@@ -118,7 +150,7 @@ $total_funcionarios = contarFuncionarios($conexion);
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
                         <h6 class="text-muted">Funcionarios</h6>
-                        <h2 class="fw-bold">4</h2>
+                        <h2 class="fw-bold"><?php echo $total_funcionarios ?> </h2>
                     </div>
                 </div>
             </div>
@@ -127,7 +159,7 @@ $total_funcionarios = contarFuncionarios($conexion);
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
                         <h6 class="text-muted">Mant. Preventivas</h6>
-                        <h2 class="fw-bold">58</h2>
+                        <h2 class="fw-bold"><?php echo $total_preventivas ?></h2>
                     </div>
                 </div>
             </div>
@@ -136,7 +168,7 @@ $total_funcionarios = contarFuncionarios($conexion);
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
                         <h6 class="text-muted">Mant. Correctivas</h6>
-                        <h2 class="fw-bold">20</h2>
+                        <h2 class="fw-bold"><?php echo $total_correctivas ?></h2>
                     </div>
                 </div>
             </div>
@@ -177,7 +209,21 @@ $total_funcionarios = contarFuncionarios($conexion);
     </div>
 </div>
     
-            
+
+
+
+<script>
+    window.dashboardAdminData = {
+        equipos: {
+            operativos: <?php echo (int) $equipos_operativos; ?>,
+            mantencion: <?php echo (int) $equipos_mantencion; ?>,
+            baja: <?php echo (int) $equipos_baja; ?>
+        }
+    }
+</script>
+<script>
+    window.dashboardCostosData = <?php echo json_encode($costos_mensuales); ?>;
+</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
