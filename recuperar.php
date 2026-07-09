@@ -31,7 +31,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
     }else{
 
-        $error="Ese RUT no existe.";
+        $error="El RUT no existe.";
 
     }
 
@@ -84,10 +84,12 @@ Generar contraseña
 
 if($mensaje!=""){
     echo "<div class='alert alert-success'>$mensaje</div>";
+    echo '<a href="index.php" class="btn btn-primary">Volver al inicio de sesión</a>';
 }
 
 if($error!=""){
     echo "<div class='alert alert-danger'>$error</div>";
+    echo '<a href="index.php" class="btn btn-secondary">Volver al inicio de sesión</a>';
 }
 
 ?>
