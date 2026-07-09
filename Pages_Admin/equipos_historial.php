@@ -3,8 +3,14 @@ require_once("../conexion.php");
 require_once("../models/Mod_Historial.php");
 session_start();
 
-$id_equipo = (int) $_GET['id'];
+$id_equipo = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 $equipo = obtenerEquipoHistorial($conexion, $id_equipo);
+
+if (!$equipo) {
+    header('Location: historial.php');
+    exit();
+}
+
 $eventos = obtenerEventosEquipo($conexion, $id_equipo);
 $costoTotalEquipo = 0;
 
@@ -17,10 +23,14 @@ function fechaEvento($fecha) {
 }
 
 function estadoEvento($evento) {
+    if (empty($evento)) {
+        return 'activo';
+    }
+
     return in_array($evento['tipo_evento'], ['Mantencion preventiva', 'Mantencion correctiva'], true)
         && $evento['estado_equipo'] === 'en reparacion'
         ? 'en mantencion'
-        : $evento['estado_equipo'];
+        : ($evento['estado_equipo'] ?: 'activo');
 }
 ?>
 
@@ -83,7 +93,7 @@ function estadoEvento($evento) {
             <div class="detalle-campo">
                 <span class="detalle-label">Estado</span>
                 <div class="detalle-valor">
-                    <?php echo estadoEvento($eventos[0]); ?>
+                    <?php echo estadoEvento($eventos[0] ?? null); ?>
                 </div>
             </div>
         </div>
@@ -103,6 +113,14 @@ function estadoEvento($evento) {
                     </tr>
                 </thead>
                 <tbody>
+                    <?php if (empty($eventos)): ?>
+                        <tr>
+                            <td colspan="6" class="p-4 text-center text-secondary">
+                                Este equipo esta activo y aun no tiene eventos registrados.
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+
                     <?php foreach ($eventos as $evento): ?>
                         <tr>
                             <td class="p-3 text-secondary"><?php echo fechaEvento($evento['fecha_evento']); ?></td>

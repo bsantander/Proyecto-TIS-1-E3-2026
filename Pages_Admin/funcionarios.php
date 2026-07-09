@@ -432,6 +432,12 @@
                     <div>
                         <label class="form-label">Rol</label>
                         <input type="text" name="rol" class="form-control" required>
+                        <select name="rol" id="edit_rol" class="form-select" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Tecnico">Tecnico</option>
+                            <option value="Funcionario">Funcionario</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">

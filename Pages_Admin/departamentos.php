@@ -134,13 +134,6 @@
             </div>
             
             <div class="Inferior">
-                <div class="Configuracion" >
-                    <a href="#" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2">
-                        <span class="material-symbols-outlined">build</span>                   
-                        <p class="m-0 fs-6">Configuracion</p>
-                    </a>
-                </div>
-
                 <div class="Cerrar_Sesion">
                     <a href="../sesion.php?logout=1" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                         <span class="material-symbols-outlined">logout</span>
