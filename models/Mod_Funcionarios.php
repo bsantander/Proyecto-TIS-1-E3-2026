@@ -60,7 +60,7 @@ class Mod_Funcionarios {
             return "Ya existe un funcionario con ese RUT";
         }
 
-        $sql = "INSERT INTO funcionario(rut, nombre_completo, id_equipo, id_departamento, rol
+        $sql = "INSERT INTO funcionario(rut, nombre_completo, id_equipo, id_departamento, rol)
                 VALUES(?, ?, ?, ?, ?)";
         $this->conexion->execute_query(
             $sql,
