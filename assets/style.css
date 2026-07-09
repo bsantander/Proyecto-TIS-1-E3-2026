@@ -11,6 +11,14 @@
     background-color: #BBBFBF;
     height: 100vh;
     flex-shrink: 0;
+    width: 180px;
+}
+
+.Barra_Lateral .Superior,
+.Barra_Lateral .Inferior,
+.Barra_Lateral .Superior > div,
+.Barra_Lateral .Inferior > div {
+    width: 100%;
 }
 
 .Barra_Lateral a {
@@ -21,6 +29,7 @@
     padding: 10px;
     border-radius: 8px;
     transition: 0.2s ease;
+    width: 100%;
 }
 
 .Barra_Lateral a:hover {
@@ -212,3 +221,4 @@
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
     padding: 16px 20px;
 }
+

@@ -6,6 +6,7 @@ session_start();
 $listaFuncionarios = obtenerTodosFuncionarios($conexion);
 $listaProveedores = obtenerTodosProveedores($conexion); 
 $fecha_hoy = date('Y-m-d');    
+$fecha_futura = date('Y-m-d', strtotime('+1 day'));
 $fecha_maxima = date('Y-m-d', strtotime('+ 5 Years '));
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -72,8 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="col-md-6 mb-3">
                         <label class="fw-semibold">Funcionario Responsable</label>
                         <select name="id_funcionario" class="form-select" required>
+                            <option value="">Seleccione un funcionario</option>
                             <?php foreach ($listaFuncionarios as $f): ?>
-                                <option value="">Seleccione un funcionario</option>
                                 <option value="<?php echo $f['id_funcionario']; ?>"><?php echo $f['nombre_completo']; ?></option>
                             <?php endforeach; ?>
                         </select>
@@ -81,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="col-md-6 mb-3">
                         <label class="fw-semibold">Proveedor del Equipo</label>
                         <select name="id_proveedor" class="form-select" required >
+                            <option value="">Seleccione un proovedor</option>
                             <?php foreach ($listaProveedores as $p): ?>
-                                <option value="">Seleccione un proovedor</option>
                                 <option value="<?php echo $p['id_proveedor']; ?>"><?php echo $p['nombre_completo']; ?></option>
                             <?php endforeach; ?>
                         </select>
@@ -92,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="col-md-4 mb-3"><label>N° Serie</label><input type="number" name="numero_serie" class="form-control" required></div>
                     <input type="hidden" name="fecha_compra" class="form-control" value="<?php echo $fecha_hoy; ?>" min="<?php echo $fecha_hoy; ?>">
                     <div class="col-md-6 mb-3"><label>Fecha Garantía</label><input type="date" name="fecha_garantia" class="form-control" required
-                    min="<?php echo $fecha_hoy; ?>" max="<?php echo $fecha_maxima; ?>"></div>
+                    min="<?php echo $fecha_futura; ?>" max="<?php echo $fecha_maxima; ?>"></div>
                     <div class="col-md-12 mb-3"><label>Valor Equipo</label><input type="number" step="any" name="valor_equipo" class="form-control" required></div>
                 </div>
             </div>

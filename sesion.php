@@ -22,6 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($usuario) {
                 guardarSesionUsuario($usuario);
+                if($usuario["cambiar_contrasena"]==1){
+                    header("Location: cambiar_contrasena.php");
+                    exit();
+                }
                 redirigirPorRol();
             } else {
                 $error = 'RUT o contraseña incorrectos.';
@@ -58,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="fs-2 m-0 text-black fw-bold">Activo</p>
                     </div>
                     <h1 class="h3 mt-4">Conéctate con tu cuenta</h1>
-                    <p class="text-secondary">Accede a tu panel de control para revisar equipos, funcionarios y mantenciones de forma rápida.</p>
+                    <p class="text-secondary">Accede al panel de control para revisar equipos, funcionarios y mantenciones de forma rápida.</p>
                 </div>
             </div>
             <div class="col-12 col-lg-5">
@@ -81,10 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <button type="submit" class="btn button btn-lg w-100 mb-3">Iniciar sesión</button>
                     </form>
                     <div class="d-flex justify-content-between small">
-                        <a href="#" class="link-success fw-semibold">¿Olvidaste la contraseña?</a>
+                        <a href="recuperar.php" class="link-success fw-semibold">¿Olvidó su contraseña?</a>
                         <a href="index.php" class="link-success fw-semibold">Volver</a>
                     </div>
-                    <p class="text-muted text-center mt-4">Ingresa tu RUT y contraseña para continuar.</p>
+                    <p class="text-muted text-center mt-4">Ingrese su RUT y contraseña para continuar.</p>
+>>>>>>> debora
                 </div>
             </div>
         </div>

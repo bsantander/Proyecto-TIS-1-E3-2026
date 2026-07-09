@@ -13,8 +13,6 @@
     $equipos_mantencion = $total_correctivas + $total_preventivas;
     $equipos_baja = contarBajas($conexion);
 
-    // Query para costos por mes
-
     $meses_a_mostrar = isset($_GET['meses']) ? (int)$_GET['meses'] : 6;
 
     if ($meses_a_mostrar <= 0) { 
@@ -43,7 +41,6 @@
         'labels' => $labels,
         'data' => $value
     ];
-
 ?>
 
 <!DOCTYPE html>
@@ -164,6 +161,7 @@
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
+
                         <h6 class="text-muted">Mant. Preventivas</h6>
                         <h2 class="fw-bold"><?php echo $total_preventivas ?></h2>
                     </div>
@@ -173,6 +171,7 @@
             <div class="col-xl-3 col-md-6">
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
+
                         <h6 class="text-muted">Mant. Correctivas</h6>
                         <h2 class="fw-bold"><?php echo $total_correctivas ?></h2>
                     </div>
@@ -193,7 +192,7 @@
                         <div class="w-100" style="max-width: 750px; height: 360px;">
                             <canvas id="Izquierda"></canvas>
                         </div>
-                        <div class="d-flex justify-content-center align-items-center mt-3" style="margin: 20px;">
+                        <div class="d-flex justify-content-center align-items-center mt-3 gap-2" style="margin: 20px;">
                             <label for="selectorMeses">Mostrar últimos: </label>
                             <select id="selectorMeses" class="form-select form-select-sm shadow-sm" 
                             style="width: auto; border-color: #05ad98;" onchange="cambiarIntervalo(this.value)">

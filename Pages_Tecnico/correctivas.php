@@ -3,7 +3,7 @@
     require('../conexion.php');
     require('../models/Mod_Tec_Mantenciones.php');
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['entregar_correctiva'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Entregar_correctiva($conexion, $_POST['id_mantencion']);
         header('Location: correctivas.php');
         exit;
@@ -17,10 +17,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mantenciones Correctivas - NodoActivo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../assets/style.css?v=7">
-    <script src="../assets/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -40,7 +38,7 @@
             <div class="Inicio">
                 <a href="index_tecnico.php" class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">dashboard</span>
-                    <p class="m-0 fs-6">Dashboard</p>
+                    <p class="m-0 fs-6">Inicio</p>
                 </a>
             </div>
 
@@ -117,23 +115,16 @@
                             <tbody id="tablaCorrectivas" >
                             <?php
                             while($row = mysqli_fetch_assoc($resultado)){
-                                $id_mantencion    = $row["id_mantencion"];
-                                $id_equipo   = $row["id_equipo"];
-                                $tipo_de_fallo = $row["tipo_de_fallo"];
-                                $descripcion        = $row["descripcion"];
-                                $fecha_entrega        = $row["fecha_entrega"];
-                                $estado = $row["estado"];
-
                             ?>
                             <tr>
-                              <th scope="row" class="p-3 text-muted"><?php echo $id_mantencion; ?></th>
-                              <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $id_equipo; ?></td>
-                              <td class="p-3 fw-medium text-dark"><?php echo $tipo_de_fallo; ?></td>
-                              <td class="p-3 text-secondary"><?php echo $descripcion; ?></td>
-                              <td class="p-3 fw-medium text-dark"><?php echo $fecha_entrega; ?></td>
-                              <td class="p-3 text-secondary"><?php echo $estado; ?></td>
+                              <th scope="row" class="p-3 text-muted"><?php echo $row["id_mantencion"]; ?></th>
+                              <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $row["id_equipo"]; ?></td>
+                              <td class="p-3 fw-medium text-dark"><?php echo $row["tipo_de_fallo"]; ?></td>
+                              <td class="p-3 text-secondary"><?php echo $row["descripcion"]; ?></td>
+                              <td class="p-3 fw-medium text-dark"><?php echo $row["fecha_entrega"]; ?></td>
+                              <td class="p-3 text-secondary"><?php echo $row["estado"]; ?></td>
                               <td class="p-3 text-center">
-                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEntregarCorrectiva" data-id="<?php echo $id_mantencion; ?>">
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEntregarCorrectiva" data-id="<?php echo $row["id_mantencion"]; ?>">
                                     Entregar
                                 </button>
                               </td>
@@ -161,7 +152,6 @@
                 <div class="modal-body">
                     <p class="m-0">Estas seguro que quieres entregar el equipo?</p>
                     <input type="hidden" name="id_mantencion" id="idCorrectivaEntregar">
-                    <input type="hidden" name="entregar_correctiva" value="1">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>

@@ -163,7 +163,7 @@ CREATE TABLE `evento` (
   `id_equipo` int(11) DEFAULT NULL,
   `estado_equipo` enum('activo','en reparacion','dado de baja') DEFAULT NULL,
   `fecha_evento` datetime DEFAULT NULL,
-  `tipo_evento` enum('Ingreso Equipo','Asignacion a funcionario','Reasignacion a funcionario','Mantencion preventiva','Mantencion correctiva','Dado de baja') NOT NULL,
+  `tipo_evento` enum('Ingreso Equipo','Asignacion a funcionario','Reasignacion a funcionario','Mantencion preventiva','Mantencion correctiva','Actualizacion de software','Dado de baja') NOT NULL,
   `descripcion` varchar(255) DEFAULT NULL,
   `costo_asociado` double DEFAULT NULL,
   `id_funcionario` int(11) DEFAULT NULL,
@@ -709,6 +709,12 @@ ALTER TABLE `servidor`
   ADD CONSTRAINT `fk_serv_equipo_gen` FOREIGN KEY (`id_equipo`) REFERENCES `equipo_general` (`id_equipo`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_serv_func` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionario` (`id_funcionario`);
 COMMIT;
+
+--
+-- indicador para obligarlo a cambiar la contraseña
+--
+ALTER TABLE funcionario
+ADD cambiar_contrasena TINYINT(1) NOT NULL DEFAULT 0;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

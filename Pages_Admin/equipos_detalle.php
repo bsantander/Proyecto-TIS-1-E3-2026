@@ -178,7 +178,7 @@ $listaproovedores = obtenerTodosProveedores($conexion);
             <?php if ($modo == 'ver'): ?>
                 <?php if ($estado_actual !== 'dado de baja'): ?>
                     <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>&modo=editar" class="btn button px-5 shadow-sm">Editar</a>
-                    <button type="submit" name="dar_baja" value="1" class="btn btn-outline-danger px-4 shadow-sm">Dar de baja</button>
+                    <button type="button" class="btn btn-outline-danger px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalDarBajaEquipo">Dar de baja</button>
                 <?php else: ?>
                     <button type="button" class="btn btn-outline-secondary px-4 shadow-sm" disabled>Equipo dado de baja</button>
                 <?php endif; ?>
@@ -186,6 +186,26 @@ $listaproovedores = obtenerTodosProveedores($conexion);
                 <a href="?id=<?php echo $id; ?>&tipo=<?php echo $tipo; ?>" class="btn btn-secondary px-4 shadow-sm">Cancelar</a>
                 <button type="submit" class="btn button px-5 shadow-sm">Guardar Cambios</button>
             <?php endif; ?>
+        </div>
+
+        <div class="modal fade" id="modalDarBajaEquipo" tabindex="-1" aria-labelledby="modalDarBajaEquipoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0 pb-0">
+                        <h2 class="modal-title fs-6 fw-bold" id="modalDarBajaEquipoLabel">Dar de baja</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="m-0">¿Estas seguro que quieres darlo de baja?</p>
+                    </div>
+
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" name="dar_baja" value="1" class="btn btn-outline-danger btn-sm">Dar de baja</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>

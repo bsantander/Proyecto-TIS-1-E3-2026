@@ -11,6 +11,8 @@
 
     $equipos_disponibles = Consultar_equipos($conexion);
     $funcionarios_disponibles = Consultar_funcionarios($conexion);
+    $fecha_futura = date('Y-m-d', strtotime('+1 day'));
+    $fecha_hora_futura = date('Y-m-d\TH:i', strtotime('+1 day'));
 ?>
 
 <!DOCTYPE html>
@@ -20,10 +22,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Mantencion - NodoActivo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../assets/style.css?v=7">
-    <script src="../assets/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"> 
@@ -43,7 +43,7 @@
             <div class="Inicio">
                 <a href="index_tecnico.php" class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
                     <span class="material-symbols-outlined fs-5">dashboard</span>
-                    <p class="m-0 fs-6">Dashboard</p>
+                    <p class="m-0 fs-6">Inicio</p>
                 </a>
             </div>
 
@@ -90,7 +90,7 @@
             </div>
         </div>
 
-        <form id="formMantencion" class="card shadow-sm border-0 rounded-3" novalidate method="POST">
+        <form id="formMantencion" class="card shadow-sm border-0 rounded-3" method="POST">
             <div class="card-header bg-white border-bottom d-flex flex-column flex-lg-row justify-content-between gap-2 p-3">
                 <div>
                     <h3 class="fs-5 fw-bold m-0">Datos de la mantencion</h3>
@@ -99,11 +99,6 @@
             </div>
 
             <div class="card-body p-4">
-                <div id="alertaCampos" class="alert alert-danger d-none align-items-center gap-2" role="alert">
-                    <i class="bi bi-exclamation-circle"></i>
-                    <p class="m-0">Todos los campos son obligatorios</p>
-                </div>
-
                 <div class="row g-3 mb-4">
                     <div class="col-12 col-lg-6">
                         <input type="radio" class="btn-check" name="tipo_mantencion" id="tipoPreventiva" value="preventiva" checked required>
@@ -143,7 +138,7 @@
                         <div class="col-12 col-md-6 col-xl-4">
                             <label for="funcionarioMantencion" class="form-label fw-semibold text-secondary">ID funcionario</label>
                             <select class="form-select" id="funcionarioMantencion" name="id_funcionario" required>
-                                <option value="" selected disabled id="funcionarioPlaceholder">Seleccione un equipo primero</option>
+                                <option value="" selected disabled>Seleccione un equipo primero</option>
                                 <?php while ($funcionario = mysqli_fetch_assoc($funcionarios_disponibles)): ?>
                                     <option value="<?php echo $funcionario['id_funcionario']; ?>">
                                         <?php echo $funcionario['id_funcionario']; ?> - <?php echo $funcionario['nombre_completo']; ?>
@@ -175,12 +170,12 @@
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
                             <label for="fechaProxima" class="form-label fw-semibold text-secondary">Fecha proxima mantencion</label>
-                            <input type="date" class="form-control" id="fechaProxima" name="fecha_prox_mantencion" required>
+                            <input type="date" class="form-control" id="fechaProxima" name="fecha_prox_mantencion" min="<?php echo $fecha_futura; ?>" required>
                         </div>
 
                         <div class="col-12 col-md-6">
                             <label for="frecuenciaMantencion" class="form-label fw-semibold text-secondary">Frecuencia mantencion</label>
-                            <input type="datetime-local" class="form-control" id="frecuenciaMantencion" name="frecuencia_mantencion" required>
+                            <input type="datetime-local" class="form-control" id="frecuenciaMantencion" name="frecuencia_mantencion" min="<?php echo $fecha_hora_futura; ?>" required>
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -190,7 +185,7 @@
 
                         <div class="col-12 col-md-6">
                             <label for="fechaEntregaPreventiva" class="form-label fw-semibold text-secondary">Fecha de entrega</label>
-                            <input type="date" class="form-control" id="fechaEntregaPreventiva" name="fecha_entrega_preventiva" required>
+                            <input type="date" class="form-control" id="fechaEntregaPreventiva" name="fecha_entrega_preventiva" min="<?php echo $fecha_futura; ?>" required>
                         </div>
                     </div>
                 </div>
@@ -214,7 +209,7 @@
 
                         <div class="col-12 col-md-6">
                             <label for="fechaEntregaCorrectiva" class="form-label fw-semibold text-secondary">Fecha de entrega</label>
-                            <input type="date" class="form-control" id="fechaEntregaCorrectiva" name="fecha_entrega_correctiva" required>
+                            <input type="date" class="form-control" id="fechaEntregaCorrectiva" name="fecha_entrega_correctiva" min="<?php echo $fecha_futura; ?>" required>
                         </div>
                     </div>
                 </div>
@@ -239,35 +234,14 @@
 
 <script>
 const opcionesTipo = document.querySelectorAll('input[name="tipo_mantencion"]');
-const formMantencion = document.getElementById('formMantencion');
-const alertaCampos = document.getElementById('alertaCampos');
 const camposPreventiva = document.getElementById('camposPreventiva');
 const camposCorrectiva = document.getElementById('camposCorrectiva');
 const equipoMantencion = document.getElementById('equipoMantencion');
 const funcionarioMantencion = document.getElementById('funcionarioMantencion');
-const funcionarioPlaceholder = document.getElementById('funcionarioPlaceholder');
 
 function sincronizarFuncionarioEquipo() {
     const equipoSeleccionado = equipoMantencion.options[equipoMantencion.selectedIndex];
-    const idFuncionario = equipoSeleccionado ? equipoSeleccionado.dataset.funcionario : '';
-    if (!equipoSeleccionado || !equipoSeleccionado.value) {
-        funcionarioPlaceholder.textContent = 'Seleccione un equipo primero';
-        funcionarioMantencion.value = '';
-        return;
-    }
-
-    const existeFuncionario = Array.from(funcionarioMantencion.options).some((opcion) => {
-        return opcion.value === idFuncionario;
-    });
-
-    if (idFuncionario && existeFuncionario) {
-        funcionarioPlaceholder.textContent = 'Seleccione un equipo primero';
-        funcionarioMantencion.value = idFuncionario;
-        return;
-    }
-
-    funcionarioPlaceholder.textContent = 'Sin funcionario asignado';
-    funcionarioMantencion.value = '';
+    funcionarioMantencion.value = equipoSeleccionado.dataset.funcionario;
 }
 
 function alternarTipoMantencion() {
@@ -291,19 +265,6 @@ opcionesTipo.forEach((opcion) => {
 });
 
 equipoMantencion.addEventListener('change', sincronizarFuncionarioEquipo);
-
-formMantencion.addEventListener('submit', (evento) => {
-    if (!formMantencion.checkValidity()) {
-        evento.preventDefault();
-        alertaCampos.classList.remove('d-none');
-        alertaCampos.classList.add('d-flex');
-        formMantencion.reportValidity();
-        return;
-    }
-
-    alertaCampos.classList.add('d-none');
-    alertaCampos.classList.remove('d-flex');
-});
 
 alternarTipoMantencion();
 sincronizarFuncionarioEquipo();

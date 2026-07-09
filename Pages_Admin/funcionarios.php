@@ -432,6 +432,12 @@
                     <div>
                         <label class="form-label">Rol</label>
                         <input type="text" name="rol" class="form-control" required>
+                        <select name="rol" id="edit_rol" class="form-select" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Tecnico">Tecnico</option>
+                            <option value="Funcionario">Funcionario</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -484,12 +490,17 @@
                     </div>
                     <div>
                         <label class="form-label">Rol</label>
-                        <input type="text" name="rol" id="edit_rol" class="form-control" required>
+                        <select name="rol" id="edit_rol" class="form-select" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Tecnico">Tecnico</option>
+                            <option value="Funcionario">Funcionario</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" name="guardar" class="btn btn-primary">Guardar cambios</button>
+                    <button type="submit" name="guardar" class="btn btn-success">Guardar cambios</button>
                 </div>
             </form>
         </div>
