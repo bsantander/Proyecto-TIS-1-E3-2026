@@ -1,10 +1,48 @@
 <?php
-require ("../conexion.php");
-session_start();
-require_once '../models/Mod_Equipos.php';
-require_once '../models/Mod_Funcionarios.php';
-$total_equipos = contarEquipos($conexion);
-$total_funcionarios = contarFuncionarios($conexion);
+    require ("../conexion.php");
+    session_start();
+    require_once '../models/Mod_Equipos.php';
+    require_once '../models/Mod_Funcionarios.php';
+    require_once '../models/Mod_Correctivas.php';
+    require_once '../models/Mod_Preventivas.php';
+    $total_equipos = contarEquipos($conexion);
+    $total_funcionarios = contarFuncionarios($conexion);
+    $total_preventivas = contarPreventivas($conexion);
+    $total_correctivas = contarCorrectivas($conexion);
+    $equipos_operativos = $total_equipos - $total_correctivas;
+    $equipos_mantencion = $total_correctivas + $total_preventivas;
+    $equipos_baja = contarBajas($conexion);
+
+    // Query para costos por mes
+
+    $meses_a_mostrar = isset($_GET['meses']) ? (int)$_GET['meses'] : 6;
+
+    if ($meses_a_mostrar <= 0) { 
+        $meses_a_mostrar = 6; 
+        }
+
+    $sql = "SELECT DATE_FORMAT(fecha_evento, '%Y-%m') AS anio_mes, DATE_FORMAT(fecha_evento, '%b') as nombre_mes, SUM(costo_asociado) AS costo_total
+            FROM evento
+            WHERE fecha_evento >= DATE_SUB(NOW(), INTERVAL $meses_a_mostrar MONTH)
+            GROUP BY anio_mes
+            ORDER BY anio_mes ASC";
+
+    $resultado = mysqli_query($conexion, $sql);
+
+    $labels = [];
+    $value = [];
+
+    if ($resultado) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
+            $labels[] = $fila['nombre_mes'];
+            $value[] = (int)$fila['costo_total'];
+        }
+    }
+
+    $costos_mensuales = [
+        'labels' => $labels,
+        'data' => $value
+    ];
 
 ?>
 
@@ -109,7 +147,7 @@ $total_funcionarios = contarFuncionarios($conexion);
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
                         <h6 class="text-muted">Total Equipos</h6>
-                        <h2 class="fw-bold">30</h2>
+                        <h2 class="fw-bold"><?php echo $total_equipos ?></h2>
                     </div>
                 </div>
             </div>
@@ -118,7 +156,7 @@ $total_funcionarios = contarFuncionarios($conexion);
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
                         <h6 class="text-muted">Funcionarios</h6>
-                        <h2 class="fw-bold">4</h2>
+                        <h2 class="fw-bold"><?php echo $total_funcionarios ?> </h2>
                     </div>
                 </div>
             </div>
@@ -127,7 +165,7 @@ $total_funcionarios = contarFuncionarios($conexion);
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
                         <h6 class="text-muted">Mant. Preventivas</h6>
-                        <h2 class="fw-bold">58</h2>
+                        <h2 class="fw-bold"><?php echo $total_preventivas ?></h2>
                     </div>
                 </div>
             </div>
@@ -136,7 +174,7 @@ $total_funcionarios = contarFuncionarios($conexion);
                 <div class="card shadow-sm border-0 rounded-4">
                     <div class="card-body">
                         <h6 class="text-muted">Mant. Correctivas</h6>
-                        <h2 class="fw-bold">20</h2>
+                        <h2 class="fw-bold"><?php echo $total_correctivas ?></h2>
                     </div>
                 </div>
             </div>
@@ -151,9 +189,19 @@ $total_funcionarios = contarFuncionarios($conexion);
                         <span class="material-symbols-outlined">show_chart</span>
                     </div>
      
-                    <div class="card-body d-flex justify-content-center align-items-center">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
                         <div class="w-100" style="max-width: 750px; height: 360px;">
                             <canvas id="Izquierda"></canvas>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mt-3" style="margin: 20px;">
+                            <label for="selectorMeses">Mostrar últimos: </label>
+                            <select id="selectorMeses" class="form-select form-select-sm shadow-sm" 
+                            style="width: auto; border-color: #05ad98;" onchange="cambiarIntervalo(this.value)">
+                                <option value="3" <?php echo $meses_a_mostrar == 3 ? 'selected' : ''; ?>>3 meses</option>
+                                <option value="6" <?php echo $meses_a_mostrar == 6 ? 'selected' : ''; ?>>6 meses</option>
+                                <option value="12" <?php echo $meses_a_mostrar == 12 ? 'selected' : ''; ?>>12 meses</option>
+                                <option value="24" <?php echo $meses_a_mostrar == 24 ? 'selected' : ''; ?>>24 meses</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -177,7 +225,27 @@ $total_funcionarios = contarFuncionarios($conexion);
     </div>
 </div>
     
-            
+
+<script>
+        function cambiarIntervalo(meses) {
+            window.location.search = '?meses=' + meses;
+        }
+        window.dashboardCostosData = <?php echo json_encode($datosCostos); ?>;
+    </script>
+
+
+<script>
+    window.dashboardAdminData = {
+        equipos: {
+            operativos: <?php echo (int) $equipos_operativos; ?>,
+            mantencion: <?php echo (int) $equipos_mantencion; ?>,
+            baja: <?php echo (int) $equipos_baja; ?>
+        }
+    }
+</script>
+<script>
+    window.dashboardCostosData = <?php echo json_encode($costos_mensuales); ?>;
+</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

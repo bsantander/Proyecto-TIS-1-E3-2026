@@ -8,9 +8,10 @@
     $total_preventivas = contarPreventivas($conexion);
     $total_correctivas = contarCorrectivas($conexion);
     $total_equipos = contarEquipos($conexion);
-    $equipos_operativos = 20;
-    $equipos_mantencion = 15;
-    $equipos_baja = 10;
+    $total_bajas = contarBajas($conexion);
+    $equipos_operativos = $total_equipos - $total_correctivas;
+    $equipos_mantencion = $total_correctivas + $total_preventivas;
+    $equipos_baja = $total_bajas;
 
     
 ?>
@@ -73,7 +74,7 @@
 
         <div class="Inferior">
             <div class="Cerrar_Sesion">
-                <a href="../secion.php?logout=1" class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
+                <a href="../sesion.php?logout=1" class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>
