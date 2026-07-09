@@ -120,7 +120,7 @@
             </div>
                 <div class="Proovedores">
                     <a href="proveedores.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-black p-2 rounded-1">
-                        <span class="material-symbols-outlined">person_4</span>                    
+                        <span class="material-symbols-outlined ">person_4</span>                    
                         <p class="m-0 fs-6">Proveedores</p>
                     </a>
                 </div>
@@ -186,30 +186,33 @@
             </div>
         </div>
         <?php endif; ?>
-
-            <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
-
-                <form method="GET" class="w-100" style="max-width: 450px;">
+        <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
+            <form method="GET" class="w-100" style="max-width: 550px;">
 
                     <div class="input-group">
-
                         <span class="input-group-text bg-white border-end-0 rounded-start-3">
                             <span class="material-symbols-outlined text-secondary fs-5">search</span>
                         </span>
 
+                        <select name="buscar_por"
+                                class="form-select border-start-0 border-end-0"
+                                style="max-width: 110px; box-shadow: none;">
+                            <option value="nombre" <?php echo (($_GET['buscar_por'] ?? 'nombre') == 'nombre') ? 'selected' : ''; ?>>Nombre</option>
+                            <option value="id" <?php echo (($_GET['buscar_por'] ?? '') == 'id') ? 'selected' : ''; ?>>ID</option>
+                            <option value="rut" <?php echo (($_GET['buscar_por'] ?? '') == 'rut') ? 'selected' : ''; ?>>RUT</option>
+                        </select>
+
                         <input
                             type="text"
                             name="buscar"
-                            class="Buscador form-control border-start-0 rounded-end-3 py-2"
+                            class="Buscador form-control border-start-0 py-2"
                             placeholder="Buscar funcionario..."
-                            value="<?php echo $_GET['buscar'] ?? ''; ?>">
+                            value="<?php echo htmlspecialchars($_GET['buscar'] ?? ''); ?>">
 
-                        <button class="btn btn-outline-primary" type="submit">
+                        <button class="btn btn-outline-primary rounded-end-3" type="submit">
                             Buscar
                         </button>
-
                     </div>
-
                 </form>
             <div class="dropdown">
 
@@ -317,13 +320,27 @@
                             trim($_GET['buscar'])
                         );
 
-                        $consulta .= "
-                            WHERE
-                                nombre_completo LIKE '%$buscar%'
-                                OR rut LIKE '%$buscar%'
-                                OR rol LIKE '%$buscar%'
-                        ";
+                        $buscar_por = $_GET['buscar_por'] ?? 'nombre';
+
+                        if($buscar_por === 'id'){
+                            if(is_numeric($buscar)){
+                                $consulta .= "
+                                    WHERE id_funcionario LIKE '%$buscar%'
+                                ";
+                            } else {
+                                $consulta .= " WHERE 1=0 ";
+                            }
+                        } elseif($buscar_por === 'rut'){
+                            $consulta .= "
+                                WHERE rut LIKE '%$buscar%'
+                            ";
+                        } else {
+                            $consulta .= "
+                                WHERE nombre_completo LIKE '%$buscar%'
+                            ";
+                        }
                     }
+
 
                     $consulta .= " $orden";
 

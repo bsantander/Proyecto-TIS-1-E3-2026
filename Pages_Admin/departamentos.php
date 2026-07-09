@@ -190,11 +190,19 @@
                             <span class="material-symbols-outlined text-secondary fs-5">search</span>
                         </span>
 
+                        <select name="buscar_por"
+                                class="form-select border-start-0 border-end-0"
+                                style="max-width: 110px; border-color: #dbe4e2; box-shadow: none;">
+                            <option value="nombre" <?php echo (($_GET['buscar_por'] ?? 'nombre') == 'nombre') ? 'selected' : ''; ?>>Nombre</option>
+                            <option value="id" <?php echo (($_GET['buscar_por'] ?? '') == 'id') ? 'selected' : ''; ?>>ID</option>
+                        </select>
+
                         <input
                             type="text"
                             name="buscar"
-                            class="Buscador form-control border-start-0 rounded-end-3 py-2"
+                            class="Buscador form-control border-start-0 py-2"
                             placeholder="Buscar departamento..."
+                            style="border-color: #dbe4e2;"
                             value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
                         >
 
@@ -283,26 +291,40 @@
                                 }
                             }
 
+                           
+
                             /* ===========================
-                            CONSULTA CON BUSCADOR
-                            =========================== */
+                                CONSULTA CON BUSCADOR
+                                =========================== */
 
-                            $consulta = "
-                                SELECT id_departamento, nombre_departamento
-                                FROM departamento
-                            ";
-
-                            if(isset($_GET['buscar']) && trim($_GET['buscar']) != ""){
-
-                                $buscar = mysqli_real_escape_string(
-                                    $conexion,
-                                    trim($_GET['buscar'])
-                                );
-
-                                $consulta .= "
-                                    WHERE nombre_departamento LIKE '%$buscar%'
+                                $consulta = "
+                                    SELECT id_departamento, nombre_departamento
+                                    FROM departamento
                                 ";
-                            }
+
+                                if(isset($_GET['buscar']) && trim($_GET['buscar']) != ""){
+
+                                    $buscar = mysqli_real_escape_string(
+                                        $conexion,
+                                        trim($_GET['buscar'])
+                                    );
+
+                                    $buscar_por = $_GET['buscar_por'] ?? 'nombre';
+
+                                    if($buscar_por === 'id'){
+                                        if(is_numeric($buscar)){
+                                            $consulta .= "
+                                                WHERE id_departamento LIKE '%$buscar%'
+                                            ";
+                                        } else {
+                                            $consulta .= " WHERE 1=0 ";
+                                        }
+                                    } else {
+                                        $consulta .= "
+                                            WHERE nombre_departamento LIKE '%$buscar%'
+                                        ";
+                                    }
+                                }
 
                             $consulta .= " $orden";
 

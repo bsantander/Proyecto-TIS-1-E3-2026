@@ -193,7 +193,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
 
                 <!-- BUSCADOR -->
-                <form method="GET" class="w-100" style="max-width: 450px;">
+                <form method="GET" class="w-100" style="max-width: 550px;">
                     <div class="input-group">
 
                         <span class="input-group-text bg-white border-end-0 rounded-start-3"
@@ -203,22 +203,30 @@
                             </span>
                         </span>
 
+                        <select name="buscar_por"
+                                class="form-select border-start-0 border-end-0"
+                                style="max-width: 110px; border-color: #dbe4e2; box-shadow: none;">
+                            <option value="nombre" <?php echo (($_GET['buscar_por'] ?? 'nombre') == 'nombre') ? 'selected' : ''; ?>>Nombre</option>
+                            <option value="id" <?php echo (($_GET['buscar_por'] ?? '') == 'id') ? 'selected' : ''; ?>>ID</option>
+                            <option value="rut" <?php echo (($_GET['buscar_por'] ?? '') == 'rut') ? 'selected' : ''; ?>>RUT</option>
+                        </select>
+
                         <input
                             type="text"
                             name="buscar"
-                            class="Buscador form-control border-start-0 rounded-end-3 py-2"
+                            class="Buscador form-control border-start-0 py-2"
                             placeholder="Buscar proveedor..."
+                            style="border-color: #dbe4e2;"
                             value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
                             >
 
-                        <button class="btn btn-outline-primary" type="submit">
+                        <button class="btn btn-outline-primary rounded-end-3" type="submit">
                             Buscar
                         </button>
 
                     </div>
 
                 </form>
-
                 <!-- BOTÓN ORDENAR -->
                 <div class="dropdown">
 
@@ -297,7 +305,7 @@
                             $consulta = "
                                 SELECT id_proveedor, rut_proveedor, nombre_completo, contacto
                                 FROM proveedor
-                            ";
+                                ";
 
                             if(isset($_GET['buscar']) && trim($_GET['buscar']) != ""){
 
@@ -306,12 +314,29 @@
                                     trim($_GET['buscar'])
                                 );
 
-                                $consulta .= "
-                                    WHERE nombre_completo LIKE '%$buscar%'
-                                ";
+                                $buscar_por = $_GET['buscar_por'] ?? 'nombre';
+
+                                if($buscar_por === 'id'){
+                                    if(is_numeric($buscar)){
+                                        $consulta .= "
+                                            WHERE id_proveedor LIKE '%$buscar%'
+                                        ";
+                                    } else {
+                                        $consulta .= " WHERE 1=0 ";
+                                    }
+                                } elseif($buscar_por === 'rut'){
+                                    $consulta .= "
+                                        WHERE rut_proveedor LIKE '%$buscar%'
+                                    ";
+                                } else {
+                                    $consulta .= "
+                                        WHERE nombre_completo LIKE '%$buscar%'
+                                    ";
+                                }
                             }
+
                             $consulta .= " $orden";                
-                             
+                                
                             $resultado = mysqli_query($conexion, $consulta);
 
                             if (!$resultado) {
