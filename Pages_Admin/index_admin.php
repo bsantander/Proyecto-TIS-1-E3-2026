@@ -15,9 +15,15 @@
 
     // Query para costos por mes
 
+    $meses_a_mostrar = isset($_GET['meses']) ? (int)$_GET['meses'] : 6;
+
+    if ($meses_a_mostrar <= 0) { 
+        $meses_a_mostrar = 6; 
+        }
+
     $sql = "SELECT DATE_FORMAT(fecha_evento, '%Y-%m') AS anio_mes, DATE_FORMAT(fecha_evento, '%b') as nombre_mes, SUM(costo_asociado) AS costo_total
             FROM evento
-            WHERE fecha_evento >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+            WHERE fecha_evento >= DATE_SUB(NOW(), INTERVAL $meses_a_mostrar MONTH)
             GROUP BY anio_mes
             ORDER BY anio_mes ASC";
 
@@ -183,9 +189,19 @@
                         <span class="material-symbols-outlined">show_chart</span>
                     </div>
      
-                    <div class="card-body d-flex justify-content-center align-items-center">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
                         <div class="w-100" style="max-width: 750px; height: 360px;">
                             <canvas id="Izquierda"></canvas>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center mt-3" style="margin: 20px;">
+                            <label for="selectorMeses">Mostrar últimos: </label>
+                            <select id="selectorMeses" class="form-select form-select-sm shadow-sm" 
+                            style="width: auto; border-color: #05ad98;" onchange="cambiarIntervalo(this.value)">
+                                <option value="3" <?php echo $meses_a_mostrar == 3 ? 'selected' : ''; ?>>3 meses</option>
+                                <option value="6" <?php echo $meses_a_mostrar == 6 ? 'selected' : ''; ?>>6 meses</option>
+                                <option value="12" <?php echo $meses_a_mostrar == 12 ? 'selected' : ''; ?>>12 meses</option>
+                                <option value="24" <?php echo $meses_a_mostrar == 24 ? 'selected' : ''; ?>>24 meses</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -210,6 +226,12 @@
 </div>
     
 
+<script>
+        function cambiarIntervalo(meses) {
+            window.location.search = '?meses=' + meses;
+        }
+        window.dashboardCostosData = <?php echo json_encode($datosCostos); ?>;
+    </script>
 
 
 <script>
