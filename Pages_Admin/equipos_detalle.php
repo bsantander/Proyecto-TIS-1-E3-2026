@@ -52,7 +52,7 @@ $listaproovedores = obtenerTodosProveedores($conexion);
 </head>
 <body class="detalle-page">
 
-<div class="detalle-contenedor container my-5">
+<div class="detalle-contenedor container-fluid my-5">
     <form method="POST">
         <input type="hidden" name="id" value="<?php echo $id; ?>">
         <input type="hidden" name="tipo" value="<?php echo $tipo; ?>">

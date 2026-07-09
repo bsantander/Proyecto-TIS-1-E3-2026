@@ -24,7 +24,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="Container d-flex flex-row vh-100 overflow-hidden">
+<div class="container-fluid d-flex flex-row vh-100 overflow-hidden">
 
     <div class="Barra_Lateral d-flex flex-column justify-content-between p-3" style="background-color: #BBBFBF;">
         <div class="Superior d-flex flex-column justify-content-start align-items-start gap-2">

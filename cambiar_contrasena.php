@@ -58,7 +58,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 </head>
 
-<body class="container mt-5">
+<body class="container-fluid mt-5">
 
 <h2>Cambiar contraseña</h2>
 
