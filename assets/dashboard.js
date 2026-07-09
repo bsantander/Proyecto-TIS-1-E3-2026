@@ -1,18 +1,20 @@
 const chartIzquierda = document.getElementById('Izquierda');
 const chartDerecha = document.getElementById('Derecha');
-const chartBar = document.getElementById('bar');
-const chartPie = document.getElementById('pie');
+const chartBarEstadoEquipos = document.getElementById('bar');
+const chartPieTipoMantencion = document.getElementById('pie');
     
 const dashboardTecnicoData = window.dashboardTecnicoData || null;
+const dashboardAdminData = window.dashboardAdminData || null;
+const dashboardCostosData = window.dashboardCostosData || null;
 
 if (chartIzquierda) {
     new Chart(chartIzquierda, {
         type: 'line',
         data: {
-            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+            labels: dashboardCostosData.labels,
             datasets: [{
                 label: 'Costos durante el mes',
-                data: [56000, 40000, 22000, 100000, 70000, 90000],
+                data: dashboardCostosData.data,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
@@ -44,7 +46,12 @@ if (chartDerecha) {
         data: {
             labels: ['Operativos', 'En Mantencion', 'Baja'],
             datasets: [{
-                data: [170, 60, 120],
+                data: dashboardAdminData
+                ? [
+                    dashboardAdminData.equipos.operativos,
+                    dashboardAdminData.equipos.mantencion,
+                    dashboardAdminData.equipos.baja
+                ] : [0, 0, 0],
                 backgroundColor: [
                     '#05ad98',
                     '#ffc107',
@@ -59,8 +66,8 @@ if (chartDerecha) {
     });
 }
 
-if (chartBar) {
-    new Chart(chartBar, {
+if (chartBarEstadoEquipos) {
+    new Chart(chartBarEstadoEquipos, {
         type: 'bar',
         data: {
             labels: ['Operativos', 'En Mantencion', 'Dados de baja'],
@@ -72,7 +79,7 @@ if (chartBar) {
                         dashboardTecnicoData.equipos.mantencion,
                         dashboardTecnicoData.equipos.baja
                     ]
-                    : [20, 15, 10],
+                    : [0, 0, 0],
                 backgroundColor: [
                     '#05ad98',
                     '#ffc107',
@@ -110,8 +117,8 @@ if (chartBar) {
     });
 }
 
-if (chartPie) {
-    new Chart(chartPie, {
+if (chartPieTipoMantencion) {
+    new Chart(chartPieTipoMantencion, {
         type: 'pie',
         data: {
             labels: ['Preventivas', 'Correctivas'],
