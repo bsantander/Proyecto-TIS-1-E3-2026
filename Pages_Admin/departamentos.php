@@ -190,11 +190,19 @@
                             <span class="material-symbols-outlined text-secondary fs-5">search</span>
                         </span>
 
+                        <select name="buscar_por"
+                                class="form-select border-start-0 border-end-0"
+                                style="max-width: 110px; border-color: #dbe4e2; box-shadow: none;">
+                            <option value="nombre" <?php echo (($_GET['buscar_por'] ?? 'nombre') == 'nombre') ? 'selected' : ''; ?>>Nombre</option>
+                            <option value="id" <?php echo (($_GET['buscar_por'] ?? '') == 'id') ? 'selected' : ''; ?>>ID</option>
+                        </select>
+
                         <input
                             type="text"
                             name="buscar"
-                            class="Buscador form-control border-start-0 rounded-end-3 py-2"
+                            class="Buscador form-control border-start-0 py-2"
                             placeholder="Buscar departamento..."
+                            style="border-color: #dbe4e2;"
                             value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>"
                         >
 
