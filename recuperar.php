@@ -53,7 +53,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
 </head>
 
-<body class="container mt-5">
+<body class="container-fluid mt-5">
 
 <h2>Recuperar contraseña</h2>
 

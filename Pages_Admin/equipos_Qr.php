@@ -40,7 +40,7 @@ function estadoEvento($evento) {
 </head>
 <body class="detalle-page">
 
-<div class="detalle-contenedor container my-5">
+<div class="detalle-contenedor container-fluid my-5">
     <div class="titulo-seccion d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex align-items-center gap-3">
             <div class="titulo-seccion-linea"></div>

@@ -9,6 +9,34 @@
         $_SESSION['mensaje'] = $modelo->crear_mant_correctiva();
     }
 
+    $sql = "
+        SELECT
+            SUM(costo) AS total,
+            AVG(costo) AS promedio,
+            COUNT(*) AS cantidad
+        FROM correctiva
+    ";
+
+    $res = mysqli_query($conexion, $sql);
+    $datos = mysqli_fetch_assoc($res);
+
+    $consultaMantencionesCorrectivas = '
+        SELECT COUNT(*) AS total
+        FROM correctiva
+        WHERE fecha_entrega > NOW()
+    ';
+
+    
+    $resultado = mysqli_query($conexion, $consultaMantencionesCorrectivas);
+    
+    if ($resultado) {
+        $fila = mysqli_fetch_assoc($resultado);
+        
+        $mantenciones_actuales = (int) $fila['total'];
+    } else {
+        $mantenciones_actuales = 0; 
+    }
+
 ?>
 
 
@@ -28,7 +56,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="Container d-flex flex-row vh-100 overflow-hidden">
+    
+<div class="container-fluid d-flex flex-row vh-100 overflow-hidden">
 
     <div class="Barra_Lateral d-flex flex-column  justify-content-between p-3" style="background-color: #BBBFBF;">
         <div class="Superior d-flex flex-column justify-content-start align-items-start gap-2">
@@ -88,7 +117,7 @@
         <div class="Inferior">
 
             <div class="Cerrar_Sesion">
-                <a href="sesion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
+                <a href="../sesion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>
@@ -102,7 +131,6 @@
             <div>
                 <h2 class="fs-3 fw-bold m-0" style="color: #333333;">Módulo de Mantenciones</h2>
                 
-                
                 <p class="text-secondary mb-0">Control de intervenciones y reparaciones.</p>
             </div>
             
@@ -113,42 +141,25 @@
             </button>
         </div>
 
-        <?php
-            $sql = "
-            SELECT
-                SUM(costo) AS total,
-                AVG(costo) AS promedio,
-                COUNT(*) AS cantidad
-            FROM correctiva
-            ";
-
-            $res = mysqli_query($conexion, $sql);
-            $datos = mysqli_fetch_assoc($res);
-
-            ?>
-
             <div class="card p-3 mb-4">
                 <h5>Reporte de Costos de Mantención</h5>
 
                 <p>
-                    Total Mantenciones:
-                    <strong><?php echo $datos['cantidad']; ?></strong>
+                    Total Mantenciones: <strong><?php echo $datos['cantidad']; ?></strong>
                 </p>
 
                 <p>
-                    Costo Total:
-                    <strong>$<?php echo number_format($datos['total'], 0, ',', '.'); ?></strong>
+                    Costo Total: <strong>$<?php echo number_format($datos['total'], 0, ',', '.'); ?></strong>
                 </p>
 
                 <p>
-                    Costo Promedio:
-                    <strong>$<?php echo number_format($datos['promedio'], 0, ',', '.'); ?></strong>
+                    Costo Promedio: <strong>$<?php echo number_format($datos['promedio'], 0, ',', '.'); ?></strong>
                 </p>
             </div>
 
         <div class="row mb-4 g-3">
             <div class="col-12 col-md-4">
-                <div class="card shadow-sm border-0 rounded-3" style="border-left: 4px solid #05ad98;">
+                <div class="card shadow-sm rounded-3" style="border-left: 10px solid #05ad98;">
                     <div class="card-body p-3">
                         <p class="text-muted fw-semibold mb-1" style="font-size: 0.9rem;">Costo Acumulado</p>
                         <h3 class="fw-bold m-0 fs-4">$0</h3>
@@ -156,10 +167,10 @@
                 </div>
             </div>
             <div class="col-12 col-md-4">
-                <div class="card shadow-sm border-0 rounded-3" style="border-left: 4px solid #ffc107;">
+                <div class="card shadow-sm rounded-3" style="border-left: 10px solid #ffc107;">
                     <div class="card-body p-3">
                         <p class="text-muted fw-semibold mb-1" style="font-size: 0.9rem;">En Proceso</p>
-                        <h3 class="fw-bold m-0 fs-4">0</h3>
+                        <h3 class="fw-bold m-0 fs-4"><?php echo $mantenciones_actuales ?> </h3>
                     </div>
                 </div>
             </div>
@@ -181,7 +192,8 @@
                 <div class="card shadow-sm border-0 rounded-3" style="overflow: hidden;">
                     <div class="card-body p-0">
                         <?php
-                        $consulta = "SELECT id_mantencion, costo, fecha_prox_mantencion, frecuencia_mantencion, id_funcionario FROM preventiva";
+                        $consulta = "SELECT id_mantencion, costo, fecha_prox_mantencion, frecuencia_mantencion, id_funcionario 
+                                    FROM preventiva";
                         $resultado = mysqli_query($conexion, $consulta);
 
                         if (!$resultado) {
@@ -204,15 +216,14 @@
                                 <?php
                                 while($row = mysqli_fetch_assoc($resultado)){
                                     $activo = $row["activo"];
-                                    $frecuencia =row["frecuencia_mantencion"];
-                                    $proxima_fecha = row["fecha_prox_mantencion"];
-                                    $responsable = row["id_funcionario"];
-                                    $estado = row["estado"];
-                                    $costo_estimado = row["costo"];
+                                    $frecuencia =$row["frecuencia_mantencion"];
+                                    $proxima_fecha = $row["fecha_prox_mantencion"];
+                                    $responsable = $row["id_funcionario"];
+                                    $estado = $row["estado"];
+                                    $costo_estimado = $row["costo"];
                                 ?>
                                 <tr>
-                                    <th scope="row" class="p-3 text-muted"><?php echo $activo;
-                                    ?>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $activo; ?>
                                     </th>
                                     <td class="p-3 fw-medium text-dark"><?php echo $frecuencia; ?></td>
                                     <td class="p-3 fw-medium text-dark"><?php echo $proxima_fecha; ?></td>
@@ -223,13 +234,11 @@
 
                                 </tr>
                                 
-                                
-                                
                                 <?php
                                     }
                                 ?>
 
-
+                            </tbody>
 
 
                         </table>
@@ -237,8 +246,6 @@
                 </div>
             </div>
             
-
-
             <div class="tab-pane fade" id="correctiva" role="tabpanel">
                 <h5 class="fw-bold mb-3" style="color: #05ad98;">Revisiones Programadas</h5>
                 
@@ -300,17 +307,12 @@
                                     }
                                 ?>
 
-
-
+                            </tbody>
 
                         </table>
                     </div>
                 </div>
             </div>
-
-
-
-
 
         </div>
     </div>

@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body class="bg-light">
 
-<div class="container my-5" style="max-width: 800px;">
+<div class="container-fluid my-5" style="max-width: 800px;">
     <a href="equipos.php" class="btn btn-secondary mb-4">Volver</a>
 
     <form method="POST">

@@ -18,8 +18,20 @@ function guardarSesionUsuario($usuario) {
 }
 
 function cerrarSesion() {
-    session_destroy();
     $_SESSION = array();
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(), 
+            '', 
+            time() - 42000,
+            $params["path"], 
+            $params["domain"], 
+            $params["secure"], 
+            $params["httponly"]
+        );
+    }    
+    session_destroy();
 }
 
 function estaLogueado() {
@@ -53,11 +65,11 @@ function requireRol($roles) {
 function redirigirPorRol() {
     $rol = obtenerRol();
     if ($rol === 'administrador') {
-        header('Location: Pages_Admin/index_admin.php');
+        header('Location: /Pages_Admin/index_admin.php');
     } elseif ($rol === 'tecnico') {
-        header('Location: Pages_Tecnico/index_tecnico.php');
+        header('Location: /Pages_Tecnico/index_tecnico.php');
     } else {
-        header('Location: sesion.php');
+        header('Location: /sesion.php');
     }
     exit();
 }
