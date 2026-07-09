@@ -22,6 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($usuario) {
                 guardarSesionUsuario($usuario);
+<<<<<<< Updated upstream
+=======
+                if($usuario["cambiar_contrasena"]==1){
+                    header("Location: /cambiar_contrasena.php");
+                    exit();
+                }
+>>>>>>> Stashed changes
                 redirigirPorRol();
             } else {
                 $error = 'RUT o contraseña incorrectos.';
