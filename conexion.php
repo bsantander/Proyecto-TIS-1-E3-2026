@@ -1,6 +1,6 @@
 <?php
 $host = "localhost";
-$dbname = "bdd_tis_2"; 
+$dbname = "bdd_tis"; 
 $username = "root";  
 $password = "";      
 

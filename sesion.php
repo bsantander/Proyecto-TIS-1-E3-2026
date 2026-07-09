@@ -3,7 +3,7 @@ require_once __DIR__ . '/includes/auth.php';
 
 if (isset($_GET['logout'])) {
     cerrarSesion();
-    header('Location: sesion.php');
+    header('Location: /sesion.php');
     exit();
 }
 
@@ -89,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <a href="index.php" class="link-success fw-semibold">Volver</a>
                     </div>
                     <p class="text-muted text-center mt-4">Ingrese su RUT y contraseña para continuar.</p>
->>>>>>> debora
                 </div>
             </div>
         </div>
