@@ -324,12 +324,12 @@
                     <table class="table table-hover m-0 align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 10%;">ID</th>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 40%;">Nombre del Departamento</th>
-                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Acciones</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600; width: 18%;">ID Departamento</th>
+                                <th class="p-3 text-secondary" style="font-size: 0.9rem; font-weight: 600;">Nombre del Departamento</th>
+                                <th class="p-3 text-secondary text-center" style="font-size: 0.9rem; font-weight: 600; width: 32%;">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tablaDepartamentos">
                             <?php
                             while($row = mysqli_fetch_assoc($resultado)){
                                 $id_departamento = $row["id_departamento"];
@@ -337,10 +337,10 @@
 
                             ?>
                             <tr>
-                            <th scope="row"><?php echo $id_departamento; ?></th>
-                            <td><?php echo $nombre_departamento; ?></td>
+                            <th scope="row" class="p-3 text-muted"><?php echo $id_departamento; ?></th>
+                            <td class="p-3 fw-semibold" style="color: #05ad98;"><?php echo $nombre_departamento; ?></td>
 
-                            <td>
+                            <td class="p-3 text-center">
                                 <button class="btn btn-outline-dark btn-sm"
                                 onclick='abrirEditar(
                                     <?php echo $id_departamento; ?>,
@@ -355,11 +355,9 @@
                                         Eliminar
                                 </a>
                                 <a href="ver_departamento.php?id=<?php echo $id_departamento; ?>"
-                                    class="btn btn-ouline-info btn-sm">
+                                    class="btn btn-outline-info btn-sm d-inline-flex align-items-center justify-content-center">
 
-                                        <span class="material-symbols-outlined">
-                                            visibility
-                                        </span>
+                                    <span class="material-symbols-outlined fs-6">visibility</span>
 
                                 </a>
                             </td>
