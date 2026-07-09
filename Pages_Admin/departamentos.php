@@ -291,26 +291,40 @@
                                 }
                             }
 
+                           
+
                             /* ===========================
-                            CONSULTA CON BUSCADOR
-                            =========================== */
+                                CONSULTA CON BUSCADOR
+                                =========================== */
 
-                            $consulta = "
-                                SELECT id_departamento, nombre_departamento
-                                FROM departamento
-                            ";
-
-                            if(isset($_GET['buscar']) && trim($_GET['buscar']) != ""){
-
-                                $buscar = mysqli_real_escape_string(
-                                    $conexion,
-                                    trim($_GET['buscar'])
-                                );
-
-                                $consulta .= "
-                                    WHERE nombre_departamento LIKE '%$buscar%'
+                                $consulta = "
+                                    SELECT id_departamento, nombre_departamento
+                                    FROM departamento
                                 ";
-                            }
+
+                                if(isset($_GET['buscar']) && trim($_GET['buscar']) != ""){
+
+                                    $buscar = mysqli_real_escape_string(
+                                        $conexion,
+                                        trim($_GET['buscar'])
+                                    );
+
+                                    $buscar_por = $_GET['buscar_por'] ?? 'nombre';
+
+                                    if($buscar_por === 'id'){
+                                        if(is_numeric($buscar)){
+                                            $consulta .= "
+                                                WHERE id_departamento LIKE '%$buscar%'
+                                            ";
+                                        } else {
+                                            $consulta .= " WHERE 1=0 ";
+                                        }
+                                    } else {
+                                        $consulta .= "
+                                            WHERE nombre_departamento LIKE '%$buscar%'
+                                        ";
+                                    }
+                                }
 
                             $consulta .= " $orden";
 
