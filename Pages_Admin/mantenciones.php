@@ -172,8 +172,10 @@
                 <div class="card shadow-sm border-0 rounded-3" style="overflow: hidden;">
                     <div class="card-body p-0">
                         <?php
-                        $consulta = "SELECT id_mantencion, costo, fecha_prox_mantencion, frecuencia_mantencion, id_funcionario 
-                                    FROM preventiva";
+                        $consulta = "SELECT p.id_mantencion, p.costo, p.fecha_prox_mantencion, p.frecuencia_mantencion, f.nombre_completo as responsable 
+                                    FROM preventiva p
+                                    INNER JOIN funcionario f
+                                    ON p.id_funcionario = f.id_funcionario";
                         $resultado = mysqli_query($conexion, $consulta);
 
                         if (!$resultado) {
@@ -195,23 +197,19 @@
                             <tbody id = "tablaMantencionesProgramadas">
                                 <?php
                                 while($row = mysqli_fetch_assoc($resultado)){
-                                    $activo = $row["activo"];
-                                    $frecuencia =$row["frecuencia_mantencion"];
+                                    $id_mantencion = $row["id_mantencion"];
+                                    $frecuencia = $row["frecuencia_mantencion"];
                                     $proxima_fecha = $row["fecha_prox_mantencion"];
-                                    $responsable = $row["id_funcionario"];
-                                    $estado = $row["estado"];
-                                    $costo_estimado = $row["costo"];
+                                    $responsable = $row["responsable"];
+                                    $costo = $row["costo"];
                                 ?>
                                 <tr>
-                                    <th scope="row" class="p-3 text-muted"><?php echo $activo; ?>
-                                    </th>
-                                    <td class="p-3 fw-medium text-dark"><?php echo $frecuencia; ?></td>
-                                    <td class="p-3 fw-medium text-dark"><?php echo $proxima_fecha; ?></td>
-                                    <td class="p-3 fw-medium text-dark"><?php echo $responsable; ?></td>
-                                    <td class="p-3 fw-medium text-dark"><?php echo $estado; ?></td>
-                                    <td class="p-3 fw-medium text-dark"><?php echo $costo_estimado; ?></td>
-
-
+                                    <td><?php echo $id_mantencion; ?></td>
+                                    <td><?php echo $frecuencia; ?> meses</td>
+                                    <td><?php echo $proxima_fecha; ?></td>
+                                    <td><?php echo $responsable; ?></td>
+                                    <td><span class="badge bg-success">Programada</span></td>
+                                    <td>$<?php echo number_format($costo,0,",","."); ?></td>
                                 </tr>
                                 
                                 <?php
@@ -232,7 +230,10 @@
                 <div class="card shadow-sm border-0 rounded-3" style="overflow: hidden;">
                     <div class="card-body p-0">
                         <?php
-                        $consulta = "SELECT id_mantencion, tipo_de_fallo, estado, costo, descripcion, id_funcionario FROM correctiva ";
+                        $consulta = "SELECT c.id_mantencion, c.tipo_de_fallo, c.estado, c.costo, c.descripcion, f.nombre_completo AS responsable 
+                                     FROM correctiva c
+                                     INNER JOIN funcionario f
+                                     ON c.id_funcionario = f.id_funcionario";
                         $resultado = mysqli_query($conexion, $consulta);
 
                         if (!$resultado) {
@@ -259,7 +260,7 @@
                                     $estado = $row["estado"];
                                     $costo = $row["costo"];
                                     $descripcion = $row["descripcion"];
-                                    $id_funcionario = $row["id_funcionario"];
+                                    $responsable = $row["responsable"];
                                 ?>
                                 <tr>
                                     <th scope="row" class="p-3 text-muted"><?php echo $id_mantencion;?>
@@ -272,7 +273,7 @@
                                     </th>
                                     <th scope="row" class="p-3 text-muted"><?php echo $descripcion;?>
                                     </th>
-                                    <th scope="row" class="p-3 text-muted"><?php echo $id_funcionario;?>
+                                    <th scope="row" class="p-3 text-muted"><?php echo $responsable;?>
                                     </th>
                                 </tr>
                                 <?php
