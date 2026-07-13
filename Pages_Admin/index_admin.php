@@ -1,6 +1,9 @@
 <?php
+
+    require_once "../includes/auth.php";
+    requireLogin();
+    requireRol("administrador");
     require ("../conexion.php");
-    session_start();
     require_once '../models/Mod_Equipos.php';
     require_once '../models/Mod_Funcionarios.php';
     require_once '../models/Mod_Correctivas.php';

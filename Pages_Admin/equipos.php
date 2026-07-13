@@ -1,28 +1,32 @@
 <?php
-require('../conexion.php');
-session_start();
+    require_once "../includes/auth.php";
+    requireLogin();
+    requireRol("administrador");
 
-$equipos_por_pagina = 15;
-$pagina_actual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
+    require_once("../conexion.php");
+    require_once("../models/Mod_Equipos.php");
 
-if ($pagina_actual < 1) {
-    $pagina_actual = 1;
-}
+    $equipos_por_pagina = 15;
+    $pagina_actual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
 
-$consulta_total = "SELECT COUNT(*) AS total FROM vista_equipos";
-$resultado_total = mysqli_query($conexion, $consulta_total);
+    if ($pagina_actual < 1) {
+        $pagina_actual = 1;
+    }
+
+    $consulta_total = "SELECT COUNT(*) AS total FROM vista_equipos";
+    $resultado_total = mysqli_query($conexion, $consulta_total);
 
 
-$total_equipos = (int) mysqli_fetch_assoc($resultado_total)['total'];
-$total_paginas = max(1, (int) ceil($total_equipos / $equipos_por_pagina));
+    $total_equipos = (int) mysqli_fetch_assoc($resultado_total)['total'];
+    $total_paginas = max(1, (int) ceil($total_equipos / $equipos_por_pagina));
 
-if ($pagina_actual > $total_paginas) {
-    $pagina_actual = $total_paginas;
-}
+    if ($pagina_actual > $total_paginas) {
+        $pagina_actual = $total_paginas;
+    }
 
-$offset = ($pagina_actual - 1) * $equipos_por_pagina;
-$desde_equipo = $total_equipos > 0 ? $offset + 1 : 0;
-$hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
+    $offset = ($pagina_actual - 1) * $equipos_por_pagina;
+    $desde_equipo = $total_equipos > 0 ? $offset + 1 : 0;
+    $hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
 ?>
 
 <!DOCTYPE html>
@@ -106,7 +110,8 @@ $hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
         <div class="Inferior">
 
             <div class="Cerrar_Sesion">
-                <a href="../sesion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
+                <a href="/Proyecto-TIS-1-E3-2026/sesion.php?logout=1"
+                class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>

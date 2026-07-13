@@ -3,7 +3,7 @@ require_once __DIR__ . '/includes/auth.php';
 
 if (isset($_GET['logout'])) {
     cerrarSesion();
-    header('Location: /sesion.php');
+    header('Location: /Proyecto-TIS-1-E3-2026/sesion.php');
     exit();
 }
 
@@ -22,10 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($usuario) {
                 guardarSesionUsuario($usuario);
-                if($usuario["cambiar_contrasena"]==1){
+                /*if($usuario["cambiar_contrasena"]==1){
                     header("Location: cambiar_contrasena.php");
                     exit();
-                }
+                }*/
                 redirigirPorRol();
             } else {
                 $error = 'RUT o contraseña incorrectos.';

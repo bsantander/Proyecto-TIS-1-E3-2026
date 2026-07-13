@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/includes/carga_env.php';
+require_once __DIR__ . '/includes/carga_env.php';
 
 cargarEnv(__DIR__ . '/.env');
 

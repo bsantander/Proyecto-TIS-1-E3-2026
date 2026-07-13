@@ -1,16 +1,54 @@
 <?php
-    session_start();
-    require ('../conexion.php');
-    require('../models/Mod_Mantenciones.php');
+    require_once "../includes/auth.php";
+    requireLogin();
+    requireRol("administrador");
+    require_once("../conexion.php");
+    require_once("../models/Mod_Mantenciones.php");
 
     // accion de botones
-    if(isset($_POST['programar'])) {
-        $_SESSION['mensaje'] = pass;
+    if(isset($_POST['guardar_preventiva'])){
+        $datos = [
+            'costo'                    => $_POST['costo'],
+            'id_funcionario'           => $_POST['id_funcionario'],
+            'id_equipo'                => $_POST['id_equipo'],
+            'fecha_prox_mantencion'    => $_POST['fecha_prox_mantencion'],
+            'frecuencia_mantencion'    => $_POST['frecuencia_mantencion'],
+            'descripcion_preventiva'   => trim($_POST['descripcion_preventiva']),
+            'fecha_entrega_preventiva' => $_POST['fecha_entrega_preventiva'],
+        ];
+
+        Guardar_preventiva($conexion, $datos);
+
+        $_SESSION['mensaje'] = "Mantención preventiva programada correctamente";
+        $_SESSION['tipo'] = "success";
+        header("Location: mantenciones.php");
+        exit;
     }
+
+    if(isset($_POST['guardar_correctiva'])){
+        $datos = [
+            'costo'                    => $_POST['costo'],
+            'id_funcionario'           => $_POST['id_funcionario'],
+            'id_equipo'                => $_POST['id_equipo'],
+            'tipo_de_fallo'            => trim($_POST['tipo_de_fallo']),
+            'descripcion_correctiva'   => trim($_POST['descripcion_correctiva']),
+            'fecha_entrega_correctiva' => $_POST['fecha_entrega_correctiva'],
+        ];
+
+        Guardar_correctiva($conexion, $datos);
+
+        $_SESSION['mensaje'] = "Mantención correctiva registrada correctamente";
+        $_SESSION['tipo'] = "success";
+        header("Location: mantenciones.php");
+        exit;
+    }
+
+    $funcionarios_lista = mysqli_query($conexion, "SELECT id_funcionario, nombre_completo FROM funcionario ORDER BY nombre_completo ASC");
+    $equipos_lista = mysqli_query($conexion, "SELECT id_equipo, tipo_equipo FROM equipo_general ORDER BY id_equipo ASC");
 
     $datos = consultarCostoCorrectiva($conexion);
 
-    $mantenciones_actuales = consultaTotalMantenciones($conexion); 
+    $mantenciones_actuales = consultaTotalMantenciones($conexion);
 
 ?>
 
@@ -35,7 +73,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    
+
+    <?php if(isset($_SESSION['mensaje'])){ ?>
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+            <div id="toastMensaje"
+                class="toast align-items-center text-white bg-<?php echo $_SESSION['tipo'] ?? 'success'; ?> border-0"
+                role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <?php
+                            echo $_SESSION['mensaje'];
+                            unset($_SESSION['mensaje']);
+                            unset($_SESSION['tipo']);
+                        ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+
 <div class="container-fluid d-flex flex-row vh-100 overflow-hidden">
 
     <div class="Barra_Lateral d-flex flex-column  justify-content-between p-3" style="background-color: #BBBFBF;">
@@ -96,7 +153,8 @@
         <div class="Inferior">
 
             <div class="Cerrar_Sesion">
-                <a href="../sesion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
+                <a href="/Proyecto-TIS-1-E3-2026/sesion.php?logout=1"
+                class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>
@@ -114,7 +172,8 @@
                 </div>
             </div>
         
-            <button class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;">
+            <button type="button" class="btn button d-flex align-items-center gap-2 px-3 py-2 fw-semibold" style="border-radius: 10px;"
+                data-bs-toggle="modal" data-bs-target="#modalProgramarMantencion">
             <span class="material-symbols-outlined fs-5">add_circle</span>
             <p class="m-0 text-decoration-none text-white">Programar Mantención</p>
             </button>
@@ -290,6 +349,142 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalProgramarMantencion" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Programar Mantención</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <ul class="nav nav-tabs px-3 pt-2" id="tipoMantencionTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="modal-preventiva-tab" data-bs-toggle="tab" data-bs-target="#modal-preventiva" type="button" role="tab">Preventiva</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="modal-correctiva-tab" data-bs-toggle="tab" data-bs-target="#modal-correctiva" type="button" role="tab">Correctiva</button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+
+        <div class="tab-pane fade show active p-3" id="modal-preventiva" role="tabpanel">
+          <form method="POST">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Equipo</label>
+                <select name="id_equipo" class="form-select" required>
+                  <option value="">Seleccionar...</option>
+                  <?php mysqli_data_seek($equipos_lista, 0); while($eq = mysqli_fetch_assoc($equipos_lista)): ?>
+                    <option value="<?php echo $eq['id_equipo']; ?>">
+                      #<?php echo $eq['id_equipo']; ?> - <?php echo htmlspecialchars($eq['tipo_equipo']); ?>
+                    </option>
+                  <?php endwhile; ?>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Responsable</label>
+                <select name="id_funcionario" class="form-select" required>
+                  <option value="">Seleccionar...</option>
+                  <?php mysqli_data_seek($funcionarios_lista, 0); while($f = mysqli_fetch_assoc($funcionarios_lista)): ?>
+                    <option value="<?php echo $f['id_funcionario']; ?>">
+                      <?php echo htmlspecialchars($f['nombre_completo']); ?>
+                    </option>
+                  <?php endwhile; ?>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Costo</label>
+                <input type="number" name="costo" class="form-control" min="0" step="1" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Próxima mantención</label>
+                <input type="date" name="fecha_prox_mantencion" class="form-control" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Frecuencia</label>
+                <input type="datetime-local" name="frecuencia_mantencion" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Fecha de entrega estimada</label>
+                <input type="date" name="fecha_entrega_preventiva" class="form-control" required>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">Descripción</label>
+                <textarea name="descripcion_preventiva" class="form-control" rows="2" required></textarea>
+              </div>
+            </div>
+            <div class="modal-footer px-0 pb-0 mt-3">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" name="guardar_preventiva" class="btn btn-success">Guardar Preventiva</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="tab-pane fade p-3" id="modal-correctiva" role="tabpanel">
+          <form method="POST">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Equipo</label>
+                <select name="id_equipo" class="form-select" required>
+                  <option value="">Seleccionar...</option>
+                  <?php mysqli_data_seek($equipos_lista, 0); while($eq = mysqli_fetch_assoc($equipos_lista)): ?>
+                    <option value="<?php echo $eq['id_equipo']; ?>">
+                      #<?php echo $eq['id_equipo']; ?> - <?php echo htmlspecialchars($eq['tipo_equipo']); ?>
+                    </option>
+                  <?php endwhile; ?>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Responsable</label>
+                <select name="id_funcionario" class="form-select" required>
+                  <option value="">Seleccionar...</option>
+                  <?php mysqli_data_seek($funcionarios_lista, 0); while($f = mysqli_fetch_assoc($funcionarios_lista)): ?>
+                    <option value="<?php echo $f['id_funcionario']; ?>">
+                      <?php echo htmlspecialchars($f['nombre_completo']); ?>
+                    </option>
+                  <?php endwhile; ?>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Costo</label>
+                <input type="number" name="costo" class="form-control" min="0" step="1" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Fecha de entrega estimada</label>
+                <input type="date" name="fecha_entrega_correctiva" class="form-control" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Tipo de fallo</label>
+                <input type="text" name="tipo_de_fallo" class="form-control" required>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">Descripción</label>
+                <textarea name="descripcion_correctiva" class="form-control" rows="2" required></textarea>
+              </div>
+            </div>
+            <div class="modal-footer px-0 pb-0 mt-3">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" name="guardar_correctiva" class="btn btn-success">Guardar Correctiva</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toastEl = document.getElementById("toastMensaje");
+    if (toastEl) {
+        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
+    }
+});
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

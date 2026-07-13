@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . '/Mod_Eventos.php';
+
 function contarPreventivas($conexion) {
     $sql = "SELECT COUNT(*) as total FROM preventiva";
     $result = mysqli_query($conexion, $sql);

@@ -1,7 +1,11 @@
 <?php
-    session_start();
-    require('../conexion.php');
-    require('../models/Mod_Departamentos.php');
+    require_once "../includes/auth.php";
+    requireLogin();
+    requireRol("administrador");
+
+    require_once("../conexion.php");
+    require_once("../models/Mod_Departamentos.php");
+
     $modelo = new Mod_Departamentos($conexion);
 
 
@@ -139,7 +143,7 @@
         
         <div class="Inferior">
             <div class="Cerrar_Sesion">
-                <a href="../sesion.php" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
+                <a href="/Proyecto-TIS-1-E3-2026/sesion.php?logout=1" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>

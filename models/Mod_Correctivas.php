@@ -1,4 +1,8 @@
 <?php
+
+require_once __DIR__ . '/Mod_Eventos.php';
+
+    
 function contarCorrectivas($conexion) {
     $sql = "SELECT COUNT(*) as total FROM correctiva";
     $result = mysqli_query($conexion, $sql);
@@ -51,3 +55,4 @@ function Guardar_correctiva($conexion, $datos){
 }
 
 ?>
+

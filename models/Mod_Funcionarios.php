@@ -38,7 +38,7 @@ class Mod_Funcionarios {
     }
 
     public function autenticar($rut, $contrasena) {
-        $sql = "SELECT id_funcionario, nombre_completo, rol, cambiar_contrasena
+        $sql = "SELECT id_funcionario, nombre_completo, rol
                 FROM funcionario
                 WHERE rut=?
                 AND contrasena=?";
