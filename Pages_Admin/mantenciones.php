@@ -264,7 +264,7 @@
                                 ?>
                                 <tr>
                                     <td><?php echo $id_mantencion; ?></td>
-                                    <td><?php echo $frecuencia; ?> meses</td>
+                                    <td><?php echo $frecuencia; ?> <?php echo ($frecuencia == 1) ? 'mes' : 'meses'; ?></td>
                                     <td><?php echo $proxima_fecha; ?></td>
                                     <td><?php echo $responsable; ?></td>
                                     <td><span class="badge bg-success">Programada</span></td>
@@ -404,7 +404,7 @@
               </div>
               <div class="col-md-4">
                 <label class="form-label">Frecuencia</label>
-                <input type="datetime-local" name="frecuencia_mantencion" class="form-control" required>
+                <input type="number" name="frecuencia_mantencion" class="form-control" min="1" step="1" placeholder="Ej: 3" required>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Fecha de entrega estimada</label>
