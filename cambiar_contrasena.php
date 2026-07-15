@@ -6,7 +6,7 @@ require_once "conexion.php";
 
 if(!isset($_SESSION["id_funcionario"])){
 
-    header("Location: /sesion.php");
+    header("Location:sesion.php");
 
     exit();
 
@@ -36,7 +36,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
     );
 
-    header("Location: /sesion.php");
+    header("Location:sesion.php");
 
     exit();
 

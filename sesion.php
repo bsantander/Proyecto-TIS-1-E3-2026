@@ -3,7 +3,7 @@ require_once __DIR__ . '/includes/auth.php';
 
 if (isset($_GET['logout'])) {
     cerrarSesion();
-    header('Location: /sesion.php');
+    header('Location:sesion.php');
     exit();
 }
 
