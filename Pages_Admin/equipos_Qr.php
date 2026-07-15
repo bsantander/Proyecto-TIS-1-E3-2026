@@ -176,7 +176,9 @@ function estadoEvento($evento) {
         <div class="detalle-card-body text-center">
             <div class="bg-white border rounded-3 d-inline-block p-3">
                 <div id="qrcode"></div>
+                <a id="url_generada">qr_generated_link</a>
             </div>
+            
         </div>
     </div>
 </div>
@@ -190,6 +192,7 @@ function estadoEvento($evento) {
         colorDark: "#000000",
         colorLight: "#ffffff"
     });
+    document.getElementById("url_generada").href = window.location.href;
 </script>
 </body>
 </html>

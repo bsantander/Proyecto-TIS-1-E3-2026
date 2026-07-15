@@ -194,7 +194,7 @@
                                 </a>
                               </td>
                               <td class="p-3 text-center">
-                                <a href="equipos_QR.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
+                                <a href="equipos_Qr.php?id=<?php echo $id_equipo; ?>&tipo=<?php echo $tipo; ?>" class="Buttons_equipo btn btn-sm border">
                                     <span class="material-symbols-outlined align-middle">qr_code</span>
                                 </a>
                               </td>
