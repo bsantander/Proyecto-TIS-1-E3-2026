@@ -68,7 +68,10 @@ function redirigirPorRol() {
         header('Location: Pages_Admin/index_admin.php');
     } elseif ($rol === 'tecnico') {
         header('Location: Pages_Tecnico/index_tecnico.php');
-    } else {
+    } elseif ($rol === 'funcionario'){
+        header('Location: Pages_Funcionario/index_funcionario.php');
+
+    }else {
         header('Location:sesion.php');
     }
     exit();
