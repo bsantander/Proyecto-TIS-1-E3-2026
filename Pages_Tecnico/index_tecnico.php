@@ -1,6 +1,10 @@
 <?php
-    session_start();
-    require('../conexion.php');
+   
+    require_once "../includes/auth.php";
+    requireLogin();
+    requireRol("tecnico");
+
+    require("../conexion.php");
     require_once '../models/Mod_Preventivas.php';
     require_once '../models/Mod_Correctivas.php';
     require_once '../models/Mod_Equipos.php';

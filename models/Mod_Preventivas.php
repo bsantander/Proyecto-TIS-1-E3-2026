@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . '/Mod_Eventos.php';
+
 function contarPreventivas($conexion) {
     $sql = "SELECT COUNT(*) as total FROM preventiva";
     $result = mysqli_query($conexion, $sql);
@@ -31,7 +34,7 @@ function Guardar_preventiva($conexion, $datos){
     $id_funcionario = $datos['id_funcionario'];
     $id_equipo = $datos['id_equipo'];
     $fecha_prox_mantencion = $datos['fecha_prox_mantencion'];
-    $frecuencia_mantencion = str_replace('T', ' ', $datos['frecuencia_mantencion']);
+    $frecuencia_mantencion = (int) $datos['frecuencia_mantencion'];
     $descripcion = mysqli_real_escape_string($conexion, $datos['descripcion_preventiva']);
     $fecha_entrega = $datos['fecha_entrega_preventiva'];
 

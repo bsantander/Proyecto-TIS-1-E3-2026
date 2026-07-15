@@ -1,7 +1,11 @@
 <?php
-    session_start();
-    require('../conexion.php');
-    require('../models/Mod_Departamentos.php');
+    require_once "../includes/auth.php";
+    requireLogin();
+    requireRol("administrador");
+
+    require_once("../conexion.php");
+    require_once("../models/Mod_Departamentos.php");
+
     $modelo = new Mod_Departamentos($conexion);
 
 

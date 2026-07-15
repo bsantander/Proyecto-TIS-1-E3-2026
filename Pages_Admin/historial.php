@@ -1,29 +1,31 @@
 <?php
-require_once("../conexion.php");
-require_once("../models/Mod_Historial.php");
-session_start();
+    require_once "../includes/auth.php";
+    requireLogin();
+    requireRol("administrador");
+
+    require_once("../conexion.php");
+    require_once("../models/Mod_Historial.php");
 
 
+    $equipos_por_pagina = 15;
+    $pagina_actual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
 
-$equipos_por_pagina = 15;
-$pagina_actual = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
+    if ($pagina_actual < 1) {
+        $pagina_actual = 1;
+    }
 
-if ($pagina_actual < 1) {
-    $pagina_actual = 1;
-}
+    $total_equipos = contarEquiposHistorial($conexion);
+    $total_paginas = max(1, (int) ceil($total_equipos / $equipos_por_pagina));
 
-$total_equipos = contarEquiposHistorial($conexion);
-$total_paginas = max(1, (int) ceil($total_equipos / $equipos_por_pagina));
+    if ($pagina_actual > $total_paginas) {
+        $pagina_actual = $total_paginas;
+    }
 
-if ($pagina_actual > $total_paginas) {
-    $pagina_actual = $total_paginas;
-}
+    $offset = ($pagina_actual - 1) * $equipos_por_pagina;
+    $desde_equipo = $total_equipos > 0 ? $offset + 1 : 0;
+    $hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
 
-$offset = ($pagina_actual - 1) * $equipos_por_pagina;
-$desde_equipo = $total_equipos > 0 ? $offset + 1 : 0;
-$hasta_equipo = min($offset + $equipos_por_pagina, $total_equipos);
-
-$filasHistorial = obtenerHistorialEquipos($conexion, $equipos_por_pagina, $offset);
+    $filasHistorial = obtenerHistorialEquipos($conexion, $equipos_por_pagina, $offset);
 ?>
 
 <!DOCTYPE html>

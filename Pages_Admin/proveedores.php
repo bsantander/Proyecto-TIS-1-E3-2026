@@ -1,7 +1,10 @@
 <?php
-    session_start();
-    require('../conexion.php');
-    require('../models/Mod_Proveedores.php');
+    require_once "../includes/auth.php";
+    requireLogin();
+    requireRol("administrador");
+
+    require_once("../conexion.php");
+    require_once("../models/Mod_Proveedores.php");
     $modelo = new Mod_Proveedores($conexion);
 
     if(isset($_POST['agregar'])){
@@ -142,7 +145,8 @@
         
         <div class="Inferior">
             <div class="Cerrar_Sesion">
-                <a href="../sesion.php?logout=1" class=" d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
+               <a href="../sesion.php?logout=1"
+                class="d-flex flex-row justify-content-start gap-2 align-items-center text-decoration-none text-danger p-2">
                     <span class="material-symbols-outlined">logout</span>
                     <p class="m-0 fs-6">Cerrar Sesion</p>
                 </a>
@@ -407,11 +411,23 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <form method="POST"> 
+      <form method="POST" id="formAgregarProveedor"> 
         <div class="modal-body">
             <div class="mb-3">
                 <label class="form-label">Rut del Proveedor</label>
-                <input type="text" name="rut_proveedor" class="form-control" inputmode="numeric" pattern="[0-9]{8,9}" minlength="8" maxlength="9" title="Ingrese su Rut completo, sin ningun signo" required>
+                <input
+                    type="text"
+                    name="rut_proveedor"
+                    id="rut_proveedor"
+                    class="form-control"
+                    maxlength="9"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                    placeholder="Ej: 21422321"
+                    required>
+
+                <div id="errorRutAgregar" class="text-danger small mt-1"></div>
             </div>
             <div class="mb-3">
                 <label class="form-label">Nombre del Proveedor</label>
@@ -419,7 +435,16 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Contacto</label>
-                <input type="email" name="contacto" class="form-control" placeholder="ejemplo@correo.com">
+
+                <input
+                    type="email"
+                    name="contacto"
+                    id="contacto"
+                    class="form-control"
+                    placeholder="ejemplo@correo.com"
+                    required>
+
+                <div id="errorCorreoAgregar" class="text-danger small mt-1"></div>
             </div>
         </div>
         <div class="modal-footer">
@@ -439,13 +464,25 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <form method="POST"> 
+      <form method="POST" id="formEditarProveedor"> 
         <div class="modal-body">
             <input type="hidden" name="id_proveedor" id="edit_id">
 
             <div class="mb-3">
                 <label class="form-label">Rut del Proveedor</label>
-                <input type="text" name="rut_proveedor" id="edit_rut" class="form-control" inputmode="numeric" pattern="[0-9]{8,9}" minlength="8" maxlength="9" title="Ingrese su Rut completo, sin ningun signo" required>
+                <input
+                    type="text"
+                    name="rut_proveedor"
+                    id="edit_rut"
+                    class="form-control"
+                    maxlength="9"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                    placeholder="Ej: 21422321"
+                    required>
+
+                <div id="errorRutEditar" class="text-danger small mt-1"></div>
             </div>
             <div class="mb-3">
                 <label class="form-label">Nombre del Proveedor</label>
@@ -453,7 +490,16 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Contacto</label>
-                <input type="email" name="contacto" id="edit_contacto" class="form-control" required>
+
+                <input
+                    type="email"
+                    name="contacto"
+                    id="edit_contacto"
+                    class="form-control"
+                    placeholder="ejemplo@correo.com"
+                    required>
+
+                <div id="errorCorreoEditar" class="text-danger small mt-1"></div>
             </div>
         </div>
         <div class="modal-footer">
@@ -492,6 +538,101 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         toast.show();
     }
+});
+</script>
+<script>
+function validarRutProveedor(inputId, errorId) {
+    const input = document.getElementById(inputId);
+    const error = document.getElementById(errorId);
+
+    input.addEventListener("input", function () {
+
+        const rut = this.value;
+
+        if (rut.length === 0) {
+            error.textContent = "";
+            this.classList.remove("is-valid", "is-invalid");
+            return;
+        }
+
+        if (rut.length < 8 || rut.length > 9) {
+            error.textContent = "El RUT debe tener entre 8 y 9 números.";
+            this.classList.add("is-invalid");
+            this.classList.remove("is-valid");
+            return;
+        }
+
+        error.textContent = "";
+        this.classList.remove("is-invalid");
+        this.classList.add("is-valid");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    validarRutProveedor("rut_proveedor", "errorRutAgregar");
+    validarRutProveedor("edit_rut", "errorRutEditar");
+});
+</script>
+<script>
+function validarCorreo(inputId, errorId){
+
+    const input = document.getElementById(inputId);
+    const error = document.getElementById(errorId);
+
+    input.addEventListener("input", function(){
+
+        const correo = this.value.trim();
+
+        if(correo === ""){
+            error.textContent = "";
+            this.classList.remove("is-valid","is-invalid");
+            return;
+        }
+
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if(!regex.test(correo)){
+            error.textContent = "Ingrese un correo electrónico válido.";
+            this.classList.add("is-invalid");
+            this.classList.remove("is-valid");
+        }else{
+            error.textContent = "";
+            this.classList.remove("is-invalid");
+            this.classList.add("is-valid");
+        }
+
+    });
+
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    validarCorreo("contacto", "errorCorreoAgregar");
+    validarCorreo("edit_contacto", "errorCorreoEditar");
+
+});
+</script>
+<script>
+function validarFormulario(formId){
+
+    document.getElementById(formId).addEventListener("submit", function(e){
+
+        const invalidos = this.querySelectorAll(".is-invalid");
+
+        if(invalidos.length > 0){
+            e.preventDefault();
+            alert("Corrija los datos antes de guardar.");
+        }
+
+    });
+
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    validarFormulario("formAgregarProveedor");
+    validarFormulario("formEditarProveedor");
+
 });
 </script>
 
